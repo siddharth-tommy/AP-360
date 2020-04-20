@@ -1,0 +1,451 @@
+<div *ngIf="loader" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div #side class="side-bar">
+<div #myDiv class="additional-box-main" id="additional-box">
+  <div class="row mt-4 ml-1 pb-2">
+
+    <svg _ngcontent-c3="" xml:space="preserve" (click)="closeHelpcontainer({createMode:this.createMode})" class="side-bar-back-icon"
+      xmlns:xlink="http://www.w3.org/1999/xlink" height="20px" id="Capa_1"
+      style="enable-background:new 0 0 31.494 31.494;" version="1.1" viewBox="0 0 31.494 31.494" width="20px" x="0px"
+      xmlns="http://www.w3.org/2000/svg" y="0px">
+      <path _ngcontent-c3=""
+        d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+        fill="#169bd7"></path>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+    </svg>
+  </div>
+  <div class="row pt-1">
+
+    <div class="col-3 bf-five-text"></div>
+    <div class="col-4"></div>
+    <div *ngIf="false" (click)="editHome()" class="col-3 additional-box-edit-text">
+      <img src="../../../../assets/icon/edit-pen.png" alt=""> Edit
+    </div>
+    <a *ngIf="editHomeEnabled" (click)="cancelEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+      <span class="cancel-text"> Cancel </span></a>
+    <a *ngIf="editHomeEnabled" class="ml-2" (click)="save()"> <img src="../../../assets/icon/icons-apply-ic.png"
+        alt=""> <span class="apply-text"> Apply </span></a>
+  </div>
+  <div class="row">
+
+    <div class="ml-3 byd-text"></div>
+  </div>
+  <div class="row">
+
+    <div style="color: #cdcde2;" class="col-3 station-txt">Name</div>
+    <div class="btn-group" dropdown [isDisabled]="true">
+      <div style="color: #b1b1b7;" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+        aria-controls="dropdown-disabled-menu">
+        {{name}}
+        <span style="position: absolute;right:0;margin-right:20px">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="nameList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of userList">
+          <div class="text-left help-site-name" (click)="name=data">{{data}}</div>
+        </li>
+      </ul>
+    </div>
+    <!-- <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt"> {{selectdropdownitem.trim()}}</div>
+
+    <div *ngIf="editHomeEnabled" class="btn-group " dropdown [isDisabled]="disabled">
+      <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+        {{selectdropdownitem.trim()}}
+        <span style="position: absolute;right:0;margin-right:20px">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="dropdown-disabled-menu" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let sites of usersites">
+          <div class="text-left help-site-name" (click)="SelectSiteMenu(sites)">{{sites.Name}}</div>
+        </li>
+      </ul>
+    </div> -->
+
+  </div>
+
+  <div class="row pt-1">
+    <div style="color: #cdcde2;" class="col-3 station-txt">Role</div>
+
+    <!-- <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt"> Klins</div> -->
+    <div class="btn-group" dropdown [isDisabled]="true">
+      <div style="color: #b1b1b7;" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+        aria-controls="dropdown-disabled-menu">
+        {{role}}
+        <span style="position: absolute;right:0;margin-right:20px">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="roleList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of roleList">
+          <div class="text-left help-site-name" (click)="role=data">{{data}}</div>
+        </li>
+      </ul>
+    </div>
+    <div style="color: #78cbf1;" class="col-2 pad-0">
+      <span class="add-txt1">Advanced</span>
+    </div>
+  </div>
+
+  <!-- title-text -->
+  <div class="row pt-3">
+
+
+  </div>
+  <hr class="hr-line pb-2"> <br>
+  <div class="row">
+    <div class="col-7 title-role-function">ROLE FUNCTIONS</div>
+    <div *ngIf="!editEnabled" (click)="onEditClilck()" class="col-3 additional-box-edit-text edit-pen-img"><img
+        src="../../../assets/icon/tick-apply.png" alt="">
+      Edit</div>
+    <a *ngIf="editEnabled" (click)="cancelEdit()"> <img class="edit-img-one"
+        src="../../../assets/icon/icons-cancel-ic.png" alt="">
+      <span class="cancel-text"> Cancel </span></a>
+    <a *ngIf="editEnabled" class="ml-2" (click)="resetEdit()"> <img class="edit-img-two"
+        src="../../../../assets/icon/icons-reset-ic.png" alt="">
+      <span class="reset-text"> Reset </span></a>
+    <a *ngIf="editEnabled" class="ml-2" (click)="save()"> <img class="edit-img-three"
+        src="../../../assets/icon/icons-apply-ic.png" alt="">
+      <span class="apply-text"> Apply </span></a>
+  </div><br>
+
+  <div class="row">
+    <div class="col-1 col-sm-1 col-xs-12 txt-head pt-2 pb-2">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]='model.dashboard'>
+        <b>DASHBOARD</b></mat-checkbox>
+    </div>
+
+  </div>
+
+  <!--   
+
+  <div class="row">
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxsloperators">Status List (Operators)</mat-checkbox></div>
+  
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxalarms">Alarms</mat-checkbox></div>
+
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxmessages">Messages</mat-checkbox></div>
+  
+ </div>
+  <div class="row">
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxslbatteries">Status List (Batteries)</mat-checkbox></div>
+  
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxalerts">Alerts</mat-checkbox></div>
+  
+ </div> -->
+  <!-- <div class="row pb-2" >
+  <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxslchargers">Status List (Chargers)</mat-checkbox></div>
+
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxincidents">Incidents</mat-checkbox></div>
+
+</div> -->
+  <div class="row pb-2">
+    <div class="col-3 txt-head pt-2 pb-2 col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.asset" (ngModelChange)="assetChange()"><b>ASSETS</b>
+      </mat-checkbox>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.equipment"  (ngModelChange)="asseChange()">Equipment</mat-checkbox>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.batteries" (ngModelChange)="asseChange()">Battery</mat-checkbox>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.charges" (ngModelChange)="asseChange()">Charges</mat-checkbox>
+    </div>
+  </div>
+  <div class="row">
+
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.gateways" (ngModelChange)="asseChange()">Gateways</mat-checkbox>
+    </div>
+  </div>
+
+  <div *ngIf="!userdirectory" class="row pt-1 pb-1">
+    <div class="col-1 txt-head pt-2 pb-2 col-sm-1 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.userDirectory" (ngModelChange)="userDirectoryChange()">
+        <b>USER DIRECTORY</b></mat-checkbox>
+    </div>
+
+  </div>
+
+  <div *ngIf="!userdirectory" class="row">
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.operator" (ngModelChange)="userDireChange()">Operator</mat-checkbox>
+    </div>
+
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.webUser" (ngModelChange)="userDireChange()">Web User</mat-checkbox>
+    </div>
+
+  </div>
+  <div class="row pb-2">
+    <div class="col-3 txt-head pt-2 pb-2 col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.tracker" (ngModelChange)="trackChange()"><b>TRACKER</b>
+      </mat-checkbox>
+    </div>
+
+  </div>
+<!-- 
+  <div class="row">
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.location">Locations</mat-checkbox>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.history">History</mat-checkbox>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.geofence">Geofence</mat-checkbox>
+    </div> 
+
+  </div>-->
+
+
+  <div *ngIf="!userdirectory" class="row">
+    <div class="col-3 txt-head pt-2 pb-2 col-sm-3 col-xs-12">
+      <mat-checkbox [(ngModel)]="model.configuration" (ngModelChange)="configurationChange()" [disabled]="editMode">
+        <b>CONFIGURATION</b></mat-checkbox>
+    </div>
+  </div>
+  <div *ngIf="!userdirectory" class="row">
+    <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.assetType" (ngModelChange)="configchange()">Asset Type</mat-checkbox>
+    </div>
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.checkList" (ngModelChange)="configchange()">CheckList</mat-checkbox>
+    </div>
+
+  </div>
+  <div class="row" *ngIf="!hide">
+    <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.debug" (ngModelChange)="configchange()">Debug</mat-checkbox>
+    </div>
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.comserver" (ngModelChange)="configchange()">Comserver</mat-checkbox>
+    </div>
+
+  </div>
+  <!-- <div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassetset">Asset Settings</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxmanagecommands">Manage Commands</mat-checkbox></div>
+ 
+</div> -->
+  <!-- <div class="row">
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassigncommands">Assign Operator</mat-checkbox></div>
+ 
+</div>
+  -->
+  <div class="row pt-1 pb-1">
+    <div class="col-1 txt-head pt-2 pb-2 col-sm-1 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.reports"><b>REPORTS</b></mat-checkbox>
+    </div>
+  </div>
+  <div class="row pt-1 pb-1">
+    <div class="col-1 txt-head pt-2 pb-2 col-sm-1 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.messaging"><b>MESSAGING</b></mat-checkbox>
+    </div>
+  </div>
+  <div class="row pt-1 pb-1">
+    <div class="col-1 txt-head pt-2 pb-2 col-sm-1 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.notification"><b>NOTIFICATION</b></mat-checkbox>
+    </div>
+  </div>
+  <div *ngIf="!adminHide" class="row">
+    <div class="col-3 txt-head pt-2 pb-2 col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.admin" (ngModelChange)="adminChange()"><b>ADMIN</b>
+      </mat-checkbox>
+    </div>
+  </div>
+
+  <div *ngIf="!adminHide" class="row">
+    <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.company" (ngModelChange)="admChange()">Company</mat-checkbox>
+    </div>
+    <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.vendortype" (ngModelChange)="admChange()">Vendor</mat-checkbox>
+    </div>
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12">
+      <mat-checkbox [disabled]="editMode" [(ngModel)]="model.stockpage" (ngModelChange)="admChange()">Stock Page</mat-checkbox>
+    </div>
+
+  </div>
+  <!-- <div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode"  [(ngModel)]="input_chkBoxwebusers">Web Users</mat-checkbox></div>
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxvendors">Vendors</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxcomserver">Com Server</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassettypes">Asset Types</mat-checkbox></div>
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxnotify">Notifications</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxexcludeunits">Exclude Units</mat-checkbox></div>
+</div>
+<div class="row pb-5">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxsafetychklist">Safety Checklists</mat-checkbox></div>
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxreportdel">Report Deliveries</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassetdiagnostics">Asset Diagonstics</mat-checkbox></div>
+</div> -->
+  <!-- <div class="row">
+    <div class="col-1 col-sm-1 col-xs-12 txt-head pt-2 pb-2"><mat-checkbox [disabled]="editMode" [(ngModel)]='input_chkBoxdash' (ngModelChange)="dashBoardChange()"><b>DASHBOARD</b></mat-checkbox></div>
+   
+  </div>
+  <div class="row">
+    <div class="col-1 txt-data-inner col-sm-1 col-xs-12" ><mat-checkbox [disabled]="editMode"  [(ngModel)]="input_chkBoxequip">Equipment Dashboard</mat-checkbox></div>
+   
+  </div>
+  <div class="row">
+     <div class="col-1 txt-data-inner col-sm-1 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxbatterydash">Batteries Dashboard</mat-checkbox></div>
+   
+  </div>
+  <div class="row">
+     <div class="col-1 txt-data-inner col-sm-1 col-xs-12" ><mat-checkbox [disabled]="editMode"  [(ngModel)]="input_chkBoxchargerdash">Chargers Dashboard</mat-checkbox></div>
+   
+  </div>
+
+  <div class="row pt-1 pb-1">
+    <div class="col-1 txt-head pt-2 pb-2 col-sm-1 col-xs-12"><mat-checkbox [disabled]="editMode"  [(ngModel)]="input_chkBoxstatus" (ngModelChange)="statusChange()"><b>STATUS</b></mat-checkbox></div>
+   
+  </div>
+  
+
+  <div class="row">
+     <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12"><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxstatusone">Status List (Equipment)</mat-checkbox></div>
+   
+     <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox [disabled]="editMode"  [(ngModel)]="input_chkBoxstatustwo">Status List (Gateway)</mat-checkbox></div>
+
+     <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox [disabled]="editMode"  [(ngModel)]="input_chkBoxevents">Events</mat-checkbox></div>
+   
+  </div>
+  <div class="row">
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxsloperators">Status List (Operators)</mat-checkbox></div>
+  
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxalarms">Alarms</mat-checkbox></div>
+
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxmessages">Messages</mat-checkbox></div>
+  
+ </div>
+  <div class="row">
+    <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxslbatteries">Status List (Batteries)</mat-checkbox></div>
+  
+    <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxalerts">Alerts</mat-checkbox></div>
+  
+ </div>
+ <div class="row pb-2" >
+  <div class="col-3 mr-5 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxslchargers">Status List (Chargers)</mat-checkbox></div>
+
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxincidents">Incidents</mat-checkbox></div>
+
+</div>
+<div class="row pb-2">
+  <div class="col-3 txt-head pt-2 pb-2 col-sm-3 col-xs-12"><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxtrackassets" (ngModelChange)="trackChange()"><b>TRACK ASSETS</b></mat-checkbox></div>
+
+</div>
+
+<div class="row">
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12"><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxlocations">Locations</mat-checkbox></div>
+ 
+</div>
+ 
+ <div class="row">
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxhistory">History</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxgeo">Geofence</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxrtls">RTLS</mat-checkbox></div>
+ 
+</div>
+
+<div class="row">
+  <div class="col-3 txt-head pt-2 pb-2 col-sm-3 col-xs-12"><mat-checkbox [(ngModel)]="input_chkBoxconfiguration" (ngModelChange)="configurationChange()" [disabled]="editMode" ><b>CONFIGURATION</b></mat-checkbox></div>
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassetlist">Asset List</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassignunits">Assign Units</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxglob">Global Settings</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox [disabled]="editMode"  [(ngModel)]="input_chkBoxassigngateways">Assign Gateways</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassetset">Asset Settings</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxmanagecommands">Manage Commands</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassigncommands">Assign Operator</mat-checkbox></div>
+ 
+</div>
+ 
+<div class="row">
+  <div class="col-3 txt-head pt-2 pb-2 col-sm-3 col-xs-12"><mat-checkbox  [disabled]="editMode"  [(ngModel)]="input_chkBoxadmin" (ngModelChange)="adminChange()"><b>ADMIN</b></mat-checkbox></div>
+</div>
+
+<div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxorg">Organization</mat-checkbox></div>
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxoperators">Operators</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxdebugscreen">Debug Screen</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode"  [(ngModel)]="input_chkBoxwebusers">Web Users</mat-checkbox></div>
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxvendors">Vendors</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxcomserver">Com Server</mat-checkbox></div>
+ 
+</div>
+<div class="row">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassettypes">Asset Types</mat-checkbox></div>
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxnotify">Notifications</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxexcludeunits">Exclude Units</mat-checkbox></div>
+</div>
+<div class="row pb-5">
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxsafetychklist">Safety Checklists</mat-checkbox></div>
+  <div class="col-3 txt-data-inner mr-5 col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxreportdel">Report Deliveries</mat-checkbox></div>
+  <div class="col-3 txt-data-inner col-sm-3 col-xs-12" ><mat-checkbox  [disabled]="editMode" [(ngModel)]="input_chkBoxassetdiagnostics">Asset Diagonstics</mat-checkbox></div>
+</div> -->
+  <div class="row pb-5"></div>
+  <br><br><br>
+</div>
+</div>

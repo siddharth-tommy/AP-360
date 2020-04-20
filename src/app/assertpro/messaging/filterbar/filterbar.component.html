@@ -1,0 +1,370 @@
+<div *ngIf="loader==true" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div #side class="side-bar">
+<div #myDiv class="additional-box" id="additional-box">
+  <div class="row arrow-left">
+    <div class="col-6">
+        <div><i (click)="goBack()" class="material-icons">
+            arrow_back
+          </i>
+        </div>
+    </div>
+    <div class="col-6">
+        <a (click)="clear()"> <img class="img-pos2" src="../../../../assets/icon/icons-reset-ic.png" alt="">
+          <span class="reset-text"> Clear </span></a>
+        <a (click)="cancelSidebar()" class="img-pos2"><img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+          <span class="cancel-text"> Cancel </span></a>
+        <a (click)="apply()" class="img-pos2"><img src="../../../assets/icon/icons-apply-ic.png" alt=""> <span class="apply-text">
+            Apply
+          </span></a>
+    </div>
+  </div>
+  
+   
+  <div class="nt-txt"> 
+    FILTERS
+  </div>
+  <div class="p-t-15"></div>
+  <mat-tab-group [(selectedIndex)]="tabIndex"  >
+    <mat-tab class="title-fonts" label="BY ASSET">
+      <div class="row">
+        <div class="col-6 pl-2">
+          <div class="help-slide-p">
+            <div class="row">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-5 col-xl-4">
+                  DEPARTMENTS<span class="star-style">*</span>
+              </div>
+              <div class="col-6">
+                  <span class="help-selected-asset" (click)="selectAllDepartment()">{{departmentSelectionList.length}}
+                      selected<span>Select all</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-pos">
+            <div class="help-asset-search-2">
+              <div class="help-search-btn" id="search-scroll">
+                <div class="row">
+                  <!-- <div class="col-10">
+                    <input type="text" class="help-asset-search-input" placeholder="Search for department....">
+                  </div> -->
+                  <div class="example-chip-list col-10">
+                    <div id="style-5" class="search-btn">
+                      <mat-chip-list #chipListdepartment>
+                        <mat-chip selectedColor="accent" *ngFor="let fruit of departmentSelectionList" [selectable]="selectable"
+                          [removable]="removable" (removed)="removedeparment(fruit)">
+                          {{fruit.name}}
+                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                        <input [(ngModel)]="department" class="help-asset-search-input" placeholder="Search for department...."
+                          [matChipInputFor]="chipListdepartment" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                        <img src="assets/icon/icon-search.png">
+                      </mat-chip-list>
+                    </div>
+                  </div>
+                  <!-- <div class="col-2">
+                    <div class="text-text">
+                      <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="help-asset-container" id="search-scroll">
+                <div (click)="departmentSelection(i,item)" *ngFor="let item of departmentList|commonsearchPipe:'NAME':department;let i=index;"><a><span class="help-asset-txt">{{item.NAME}}</span></a></div>
+                <!-- <div><a><span class="help-asset-txt">Department #2</span></a></div>
+                <div><a><span class="help-asset-txt">Department #3</span></a></div>
+                <div><a><span class="help-asset-txt">Department #4</span></a></div>
+                <div><a><span class="help-asset-txt">Department #5</span></a></div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="row help-slide-p1">
+          <div class="pl-0 col-6 col-sm-6 col-md-6 col-lg-5 col-xl-4">
+              TIMEFRAME<span class="star-style">*</span>
+          </div>
+        </div>
+          <div class="pt-11 row">
+            <input id="my_id2" style="border:1px solid #169bd7;font-size: 90%;"
+             [(ngModel)]="fromtimeBy_Asset" autocomplete="off" onpaste="return false" oncopy="return false" [max]='to_timeBy_Asset' [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
+              placeholder="From Date">
+            <i [owlDateTimeTrigger]="dt1" class="material-icons" style="cursor: pointer;    vertical-align: text-top">
+              date_range
+            </i>
+            <owl-date-time #dt1></owl-date-time>
+          </div>
+          <div class="pt-11 row">
+            <input id="my_id2" style="border:1px solid #169bd7;font-size: 90%;" 
+            [min]="fromtimeBy_Asset" autocomplete="off" onpaste="return false" oncopy="return false" [(ngModel)]="to_timeBy_Asset" [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2"
+              placeholder="To Date">
+            <i [owlDateTimeTrigger]="dt2" class="material-icons" style="cursor: pointer;    vertical-align: text-top">
+              date_range
+            </i>
+            <owl-date-time #dt2></owl-date-time>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-6 pl-2">
+          <div class="help-slide-p">
+            <div class="row">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-5 col-xl-4 pr-0">
+                ASSET TYPES<span class="star-style">*</span>
+              </div>
+              <div class="col-6">
+                  <span class="help-selected-asset" (click)="selectAllAssetType()">{{assetTypeSelected.length}}
+                      selected<span>Select all</span></span>
+              </div>
+            </div>
+           
+          </div>
+
+          <div class="table-pos">
+            <div class="help-asset-search-2">
+              <div class="help-search-btn" id="search-scroll">
+                <div class="row">
+                  <!-- <div class="col-10">
+                  <input type="text" class="help-asset-search-input" placeholder="Search for asset type....">
+                </div> -->
+                  <div class="example-chip-list col-10">
+                    <div id="style-5" class="search-btn">
+                      <mat-chip-list #chipList>
+                        <mat-chip selectedColor="accent" *ngFor="let fruit of assetTypeSelected" [selectable]="selectable"
+                          [removable]="removable" (removed)="remove(fruit)">
+                          {{fruit.name}}
+                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                        <input [(ngModel)]="assettypetxt" class="help-asset-search-input" placeholder="Search for asset types...."
+                          [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                        <img src="assets/icon/icon-search.png">
+                      </mat-chip-list>
+                    </div>
+                  </div>
+                  <!-- <div class="col-2">
+                  <div class="text-text">
+                    <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                  </div>
+                </div> -->
+                </div>
+              </div>
+              <div class="help-asset-container" id="search-scroll">
+                <div  (click)="assetTypeSelection(i,items)" *ngFor="let items of assets|commonsearchPipe:'assetstype':assettypetxt;let i=index;"><a><span class="help-asset-txt">{{items.assetstype}}</span></a></div>
+                <!-- <div><a><span class="help-asset-txt">Asset_type #2</span></a></div>
+              <div><a><span class="help-asset-txt">Asset_type #3</span></a></div>
+              <div><a><span class="help-asset-txt">Asset_type #4</span></a></div>
+              <div><a><span class="help-asset-txt">Asset_type #5</span></a></div> -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-6 pl-0">
+          <div class="help-slide-p1">
+            <div class="row">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-5 col-xl-5">
+                  ASSETS<span class="star-style">*</span>
+              </div>
+              <div class="col-6 pl-0">
+                  <span class="help-selected-asset1" (click)="selectAllAssets()">{{assetSelected.length}} selected<span>Select
+                      all</span></span>
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="table-pos-2">
+            <div class="help-asset-search-2">
+              <div class="help-search-btn" id="search-scroll">
+                <div class="row">
+                  <!-- <div class="col-10">
+                    <input type="text" class="help-asset-search-input" placeholder="Search for asset....">
+                  </div> -->
+                  <div class="example-chip-list col-10">
+                    <div id="style-5" class="search-btn">
+                      <mat-chip-list #chipList2>
+                        <mat-chip selectedColor="accent" *ngFor="let fruit of assetSelected" [selectable]="selectable"
+                          [removable]="removable" (removed)="remove2(fruit)">
+                          {{fruit.name}}
+                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                        <input  [(ngModel)]="assettxt"  class="help-asset-search-input" placeholder="Search for asset...." [matChipInputFor]="chipList2"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                        <img src="assets/icon/icon-search.png">
+                      </mat-chip-list>
+                    </div>
+                  </div>
+                  <!-- <div class="col-2">
+                    <div class="text-text">
+                      <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="help-asset-container" id="search-scroll">
+                <div  (click)="assetSelection(i,items)" *ngFor="let items of assetsList|commonsearchPipe:'name':assettxt;let i=index;"><a><span class="help-asset-txt">{{items.name}}</span></a></div>
+                <!-- <div><a><span class="help-asset-txt">Asset #2</span></a></div>
+                <div><a><span class="help-asset-txt">Asset #3</span></a></div>
+                <div><a><span class="help-asset-txt">Asset #4</span></a></div>
+                <div><a><span class="help-asset-txt">Asset #5</span></a></div> -->
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+    </mat-tab>
+    <mat-tab class="title-fonts" label="BY OPERATOR">
+
+      <div class="row">
+        <div class="col-6">
+          <div class="help-slide-p">
+            <div class="row">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-5 col-xl-5">
+                  DEPARTMENTS<span class="star-style">*</span>
+              </div>
+              <div class="col-6 pl-0">
+                  <span class="help-selected-asset" (click)="selectAllDepartment2()">{{departmentSelectionList2.length}}
+                      selected<span>Select all</span></span>
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="table-pos">
+            <div class="help-asset-search-3">
+              <div class="help-search-btn" id="search-scroll">
+                <div class="row">
+                  <!-- <div class="col-10">
+                    <input type="text" class="help-asset-search-input" placeholder="Search for department....">
+                  </div> -->
+                  <div class="example-chip-list col-10">
+                    <div id="style-5" class="search-btn">
+                      <mat-chip-list #chipListdepartment2>
+                        <mat-chip selectedColor="accent" *ngFor="let fruit of departmentSelectionList2" [selectable]="selectable"
+                          [removable]="removable" (removed)="removedeparment2(fruit)">
+                          {{fruit.name}}
+                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                        <input [(ngModel)]="department2txt" class="help-asset-search-input" placeholder="Search for department...."
+                          [matChipInputFor]="chipListdepartment2" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                        <img src="assets/icon/icon-search.png">
+                      </mat-chip-list>
+                    </div>
+                  </div>
+                  <!-- <div class="col-2">
+                    <div class="text-text">
+                      <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="help-asset-container" id="search-scroll">
+                <div (click)="departmentSelection2(i,item)" *ngFor="let item of departmentList2|commonsearchPipe:'NAME':department2txt;let i=index;"><a><span class="help-asset-txt">{{item.NAME}}</span></a></div>
+                <!-- <div><a><span class="help-asset-txt">Department #2</span></a></div>
+                <div><a><span class="help-asset-txt">Department #3</span></a></div>
+                <div><a><span class="help-asset-txt">Department #4</span></a></div>
+                <div><a><span class="help-asset-txt">Department #5</span></a></div> -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-6">
+            <div class="help-slide-p1">
+            <div class="row">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-5 col-xl-5 pl-0">
+                    TIMEFRAME<span class="star-style">*</span>
+                </div>
+              </div>
+            </div>
+
+          <div class="pt-11 row">
+            <input id="my_id" style="border:1px solid #169bd7;font-size: 90%;" 
+            [(ngModel)]="fromtimeBy_Operator" autocomplete="off" onpaste="return false" oncopy="return false" [max]='to_timeBy_Operator' [owlDateTime]="dt3" [owlDateTimeTrigger]="dt3"
+              placeholder="From Date">
+            <i [owlDateTimeTrigger]="dt3" class="material-icons" style="cursor: pointer;    vertical-align: text-top">
+              date_range
+            </i>
+            <owl-date-time #dt3></owl-date-time>
+          </div>
+          <div class="pt-11 row">
+            <input id="my_id2" style="border:1px solid #169bd7;font-size: 90%;" 
+            [(ngModel)]="to_timeBy_Operator" autocomplete="off" onpaste="return false" oncopy="return false" [min]='fromtimeBy_Operator' [owlDateTime]="dt4" [owlDateTimeTrigger]="dt4"
+              placeholder="To Date">
+            <i [owlDateTimeTrigger]="dt4" class="material-icons" style="cursor: pointer;    vertical-align: text-top">
+              date_range
+            </i>
+            <owl-date-time #dt4></owl-date-time>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="help-slide-p">
+            <div class="row">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-5 col-xl-5">
+                  OPERATORS<span class="star-style">*</span>
+              </div>
+              <div class="col-6 pl-0">
+                  <span class="help-selected-asset" (click)="selectAlloperator()">{{operatorSelectionList.length}}
+                      selected<span>Select all</span></span>
+              </div>
+            </div>
+          
+          </div>
+
+          <div class="table-pos">
+            <div class="help-asset-search-3">
+              <div class="help-search-btn" id="search-scroll">
+                <div class="row">
+                  <!-- <div class="col-10">
+                    <input type="text" class="help-asset-search-input" placeholder="Search for operator....">
+                  </div> -->
+                  <div class="example-chip-list col-10">
+                    <div id="style-5" class="search-btn">
+                      <mat-chip-list #chipListoperator>
+                        <mat-chip selectedColor="accent" *ngFor="let fruit of operatorSelectionList" [selectable]="selectable"
+                          [removable]="removable" (removed)="removeoperator(fruit)">
+                          {{fruit.name}}
+                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                        <input [(ngModel)]="operatortxt" class="help-asset-search-input" placeholder="Search for operator...." [matChipInputFor]="chipListoperator"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                        <img src="assets/icon/icon-search.png">
+                      </mat-chip-list>
+                    </div>
+                  </div>
+                  <!-- <div class="col-2">                      
+                    <div class="text-text">
+                      <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="help-asset-container" id="search-scroll">
+                <div (click)="operatorSelection(i,item)" *ngFor="let item of operatorList|commonsearchPipe:'OperatorName':operatortxt;let i=index;"><a><span class="help-asset-txt">{{item.OperatorName}}</span></a></div>
+                <!-- <div><a><span class="help-asset-txt">operator #2</span></a></div>
+                <div><a><span class="help-asset-txt">operator #3</span></a></div>
+                <div><a><span class="help-asset-txt">operator #4</span></a></div>
+                <div><a><span class="help-asset-txt">operator #5</span></a></div> -->
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+    </mat-tab>
+  </mat-tab-group>
+
+</div>
+</div>

@@ -1,0 +1,98 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css"; */
+  @import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";  
+  /* @import "../node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css"; */
+  /* @import "../node_modules/@angular/material/prebuilt-themes/purple-green.css"; */
+  @import "../node_modules/ng-pick-datetime/assets/style/picker.min.css";
+@font-face {
+    font-family: 'robotoregular';
+    src: url('assets/fonts/Roboto-Regular.ttf');
+  }
+
+  @font-face {
+    font-family: 'robotothin';
+    src: url('assets/fonts/Roboto-Thin.ttf');
+  }
+
+  @font-face {
+    font-family: 'robotolight';
+    src: url('assets/fonts/Roboto-Light.ttf');
+  }
+
+  @font-face {
+    font-family: 'robotoCondensedregular';
+    src: url('assets/fonts/RobotoCondensed-Regular.ttf');
+  }
+
+  @font-face {
+    font-family: 'robotoCondensedbold';
+    src: url('assets/fonts/RobotoCondensed-Bold.ttf');
+  }
+
+  @font-face {
+    font-family: 'robotomedium';
+    src: url('assets/fonts/Roboto-Medium.ttf');
+  }
+  @font-face {
+    font-family: 'robotobold';
+    src: url('assets/fonts/Roboto-Bold.ttf');
+  }
+  #toast-container > div {
+    opacity: 1;
+  }
+  .custom-dialog-container .mat-dialog-container{
+    border-left: 2px solid #EA4256 !important;
+    
+}
+.mat-button{
+  background:  #43637E;
+  color: white;
+}
+.mat-dialog-container{
+  /* width: auto !important; */
+  border: 2px solid #43637E;
+}
+/* .mat-button[disabled]{
+  cursor: default
+}
+
+.mat-paginator-icon {
+  width: 25px;
+}
+.mat-button-wrapper{
+  color: #FFFFE4
+} */
+.cdk-overlay-dark-backdrop {
+  background: rgba(160, 192, 224, 0.288) !important;
+}
+ 
+  
+::ng-deep .mat-checkbox-frame {
+  border-width: 1px !important;
+}
+.mat-slide-toggle .mat-slide-toggle-bar {
+  background-color:#A7A7B4;
+}
+.mat-slide-toggle .mat-slide-toggle-thumb {
+  background-color: #64646E;
+}
+/* width */
+body::-webkit-scrollbar {
+  width: 7px;
+  /* height: 5px */
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+  background: #1D3D57;
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+  background: #1D3D57
+}

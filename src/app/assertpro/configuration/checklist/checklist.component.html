@@ -1,0 +1,90 @@
+<checklistsidebarcomponent #checklistsidebarcomponent (saveEmit)="loadCheckList()"></checklistsidebarcomponent>
+<div *ngIf="loader==true" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="row">
+  <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+  <div class="col-sm-10 col-md-9 col-lg-9 col-xl-9">
+    <div class="container-fluid" style="padding-bottom:1%;">
+      <div class="row" style="margin-top:4%;margin-bottom: 1.5%;">
+        <div class="col-6 col-sm-6 co-md-8 col-lg-9 col-xl-9 pl-0">
+          <span id="stockTab" class="head-label mr-5">CHECKLISTS OVERVIEW</span>
+        </div>
+        <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3 pr-0" style="text-align:right;">
+
+
+          <img id="delete-checklist" (click)="deleteChecklist()" style="cursor:pointer;" class="ml-2"
+            src="../../../assets/icon/delete-btn.png">
+          <img (click)="createChecklist(false,'')" style="cursor:pointer;" class="ml-2"
+            src="../../../assets/icon/add-btn.png">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pr-0 pl-0 mat-elevation-z8">
+          <div class="angular-table table-responsive">
+            <table class="table borderless" [dataSource]="dataSource" matSort mat-table>
+              <ng-container matColumnDef="select">
+                <th style="padding-top:1%;padding-left:24px;" mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <td style="padding-top:1%" mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Name">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Name</th>
+                <td (click)="createChecklist(true,element)" mat-cell *matCellDef="let element"
+                  style="color:#2EA6DC;cursor: pointer;"> {{element.Name}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Language">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Language</th>
+                <td mat-cell *matCellDef="let element"> {{element.Language}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="TotalQuestions">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Questions #</th>
+                <td mat-cell *matCellDef="let element"> {{element.TotalQuestions}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Description">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Checklist description</th>
+                <td mat-cell *matCellDef="let element">
+                 <span>{{element.Description}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="SystemName">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>System</th>
+                <td mat-cell *matCellDef="let element">
+                 <span>
+                    {{element.SystemName}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="AssetTypeName">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Assigned asset type</th>
+                <td mat-cell *matCellDef="let element">
+                 <span>{{element.AssetTypeName}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+          </div>
+          <mat-paginator [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1 col-lg-1 col-xl-1"></div>
+</div>

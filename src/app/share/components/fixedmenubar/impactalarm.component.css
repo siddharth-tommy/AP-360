@@ -1,0 +1,60 @@
+@import "../../../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+
+.label-style {
+  height: 15px;
+  width: 66px;
+  color: #A7A7B4;
+  font-family: robotoCondensedregular;
+  font-size: 11px;
+  letter-spacing: 0.73px;
+  line-height: 15px;
+}
+
+.label-value {
+    color: #4D4D61;
+    font-family: robotoCondensedregular;
+    font-size: 13px;
+    letter-spacing: .87px;
+    line-height: 18px;
+}
+/* .popup-color{
+    
+}  */
+
+.report-dr-down{
+    min-width: 100px;
+    border-radius: 20px;
+    background: #169BD7;
+    height: 30px
+}
+.report-dr-down-txt{
+    color:white;font-size:11px;
+    text-align: center !important
+}
+.report-dr-down-two{
+    min-width: 100px;
+    border-radius: 20px;
+    background: transparent;
+    height: 30px;
+    border: 1px solid #169BD7
+}
+.report-dr-down-two{
+    color:#169BD7;font-size:11px;
+    text-align: center !important
+}
+@media (max-width:575px) and (min-width:376px){
+    .mob-view-popup-align{
+    margin-left: 7%
+}
+.mob-view-popup-align-head{
+    margin-left: 5%
+}
+}
+@media (max-width:375px) and (min-width:0){
+    .mob-view-popup-align{
+    margin-left: 13%
+}
+.mob-view-popup-align-head{
+    margin-left: 7%
+}
+}

@@ -1,0 +1,229 @@
+<div #side class="side-bar">
+<div #myDiv class="additional-box" id="additional-box">
+  <div class="row mt-4 ml-1 pb-2">
+
+    <svg _ngcontent-c3="" xml:space="preserve" (click)="goBack()" class="side-bar-back-icon" xmlns:xlink="http://www.w3.org/1999/xlink"
+      height="20px" id="Capa_1" style="enable-background:new 0 0 31.494 31.494;" version="1.1" viewBox="0 0 31.494 31.494"
+      width="20px" x="0px" xmlns="http://www.w3.org/2000/svg" y="0px">
+      <path _ngcontent-c3="" d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+        fill="#169bd7"></path>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+    </svg>
+  </div>
+  <div class="row pt-1"> 
+    <div *ngIf="addMode" class="col-8 help-slide-h3">ADD WEB USER</div>
+    <div *ngIf="!addMode" class="col-8 help-slide-h3">EDIT WEB USER</div>
+    <div class="col-4">
+      <a (click)="cancelEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="cancel">
+        <span class="cancel-text"> Cancel </span></a>
+      <a class="ml-2" (click)="saveHome()"> <img src="../../../assets/icon/icons-apply-ic.png" alt="apply"> <span class="apply-text">
+          Apply </span></a>
+    </div>
+  </div>
+
+  <div class="row pt-5">
+
+    <div class="col-3 station-txt pt-2">Name</div>
+
+    <div class="col-4 pl-0" style="max-width: 240px !important">
+      <input type="text"  class="help-input input-box-size"  [(ngModel)]="model.name">
+    </div>
+
+  </div>
+
+  <div class="row pt-3">
+    <div class="col-3 station-txt pt-2">Role</div>
+
+    <!-- <div class="col-4 pad-0">
+      <input type="text" [disabled]="editMode" class="help-input input-box-size" [(ngModel)]="role">
+    </div> -->
+    <div class="btn-group col-4 pl-0" dropdown>
+        <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{role}}
+          <span style="position: absolute;right: 17%;">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="roleList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let data of roleList">
+            <div class="text-left help-site-name" (click)="roleChange(data)">{{data.Name}}</div>
+          </li>
+        </ul>
+      </div>
+    <div style="cursor: pointer;" class="col-2 pad-0">
+      <span (click)="advancebtn()" class="add-txt1">Advanced</span>
+    </div>
+  </div>
+
+  <!-- title-text -->
+  <div class="row pt-5">
+  </div>
+  <hr class="hr-line pb-4">
+  <div *ngIf="sidebarmenu=='asset'">
+    <div class="row pt-4">
+
+      <div class="col-3 station-txt pt-2">Phone Number</div>
+
+      <div class="col-4 pad-0 pl-0">
+        <input type="text" [disabled]="editMode" class="help-input input-box-size"  [(ngModel)]="model.phoneNo">
+      </div>
+      <div class="col-1 station-txt pt-2">Ext</div>
+      <div class="col-1 station-txt">
+          <input type="text" [disabled]="editMode" class="help-input input-box-size-sm"  [(ngModel)]="model.ext">
+      </div>
+      
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-3 station-txt pt-2">Mobile Number</div>
+      <div class="col-4 pad-0 pl-0">
+        <input type="text" [disabled]="editMode" class="help-input input-box-size"  [(ngModel)]="model.mobileNo">
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-3 station-txt pt-2">Mobile Provider</div>
+
+      <!-- <div class="col-4 pad-0">
+        <input type="text" [disabled]="editMode" class="help-input input-box-size"  [(ngModel)]="model.mobileProv">
+      </div>
+     -->
+     <div class="btn-group col-4 pl-0" dropdown>
+      <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+        {{provider}}
+        <span style="position: absolute;right: 17%;">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="mobileProviderList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of mobileProviderList">
+          <div class="text-left help-site-name" (click)="providerchange(data)">{{data.Value}}</div>
+        </li>
+      </ul>
+    </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-3 station-txt pt-2">Email</div>
+      <div class="col-4 pad-0 pl-0">
+        <input type="text" [(ngModel)]="model.email" email="true" [disabled]="editMode" class="help-input input-box-size" maxlength="128" [formControl]="email" name="email" required>
+      </div>
+      <!-- <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-info">
+          <div *ngIf="email.errors.required">
+              Email is required.
+          </div>  
+          <div *ngIf="email.errors.email">
+              Please enter a valid email.
+          </div>                                               
+       </div>  -->
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-3 station-txt pt-2">UserName</div>
+      <div class="col-4 pad-0 pl-0">
+        <input type="text" autocomplete="new-password" onpaste="return false" oncopy="return false" [disabled]="editMode" class="help-input input-box-size"  [(ngModel)]="model.username">
+      </div>
+    </div>
+    <div *ngIf="!addMode && changePassword_button" class="row pt-4">
+      <div class="col-3 add-txt1 pt-2" (click)="changePassword()">Change Password</div>
+    </div>
+    <div *ngIf="addMode || onlyforEditEnable" class="row pt-4">
+
+      <div class="col-3 station-txt pt-2">Password</div>
+
+      <div class="col-4 pad-0 pl-0">
+        <input type="password" autocomplete="new-password" onpaste="return false" oncopy="return false" [disabled]="editMode" class="help-input input-box-size"  [(ngModel)]="model.password">
+      </div>
+    </div>
+    <div *ngIf="addMode || onlyforEditEnable" class="row pt-4">
+
+      <div class="col-3 station-txt pt-2">Verify Password</div>
+      <div class="col-4 pad-0 pl-0">
+        <input type="password" autocomplete="new-password" onpaste="return false" oncopy="return false" [disabled]="editMode" class="help-input input-box-size"  [(ngModel)]="model.verifyPassword">
+      </div>
+    </div>
+    <div class="row pt-4"></div>
+    <div class="row pt-4"></div>
+    <div class="row pt-4"></div>
+    <div class="row pt-4"></div>
+  </div>
+
+  <!-- Device-info-data -->
+  <div *ngIf="sidebarmenu!='asset'">
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">ID</div>
+
+      <div class="col-5 tampa-txt">F0986564</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Unit type</div>
+
+      <div class="col-5 tampa-txt">Advanced</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Modem type</div>
+
+      <div class="col-5 tampa-txt">N/A</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Model</div>
+
+      <div class="col-5 tampa-txt">Cell</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">F/W version</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{fwVersion}}</div>
+      <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="fwVersion" />
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">ICCID number</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{icicdNo}}</div>
+      <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="icicdNo" />
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Serial number</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{serialNo}}</div>
+      <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="serialNo" />
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Install date/time</div>
+
+      <div class="col-5 pb-5 tampa-txt">05/12/2018 2:48 PM</div>
+
+    </div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <title>AssetPro</title>
+  <base href="/">
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+ 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+ 
+  <script type="text/javascript">
+
+  function setWindowSize(){
+
+    var screenCssPixelRatio = (window.outerWidth - 8) / window.innerWidth;
+    if(screenCssPixelRatio < 0.99)
+    {
+        var diff = (1- screenCssPixelRatio)*50;
+        document.getElementById('left-holder').setAttribute("style","width:"+diff+"%;height:80px;");
+        document.getElementById('right-holder').setAttribute("style","width:"+diff+"%");
+        document.getElementById('content-container').setAttribute("style","width:"+(100 - (2 *diff))+"%;float:left");
+        document.getElementById('menu-holder').setAttribute("style","width:"+(100 - (2 *diff))+"%");
+
+    }
+    else
+    {
+      if(document.getElementById('left-holder')!=null)
+      document.getElementById('left-holder').setAttribute("style","width:0px;height:0;");
+      if(document.getElementById('right-holder')!=null)
+      document.getElementById('right-holder').setAttribute("style","width:0px");
+      if(document.getElementById('content-container')!=null)
+      document.getElementById('content-container').setAttribute("style","width:100%;float:left;");
+      if(document.getElementById('menu-holder')!=null)
+      document.getElementById('menu-holder').setAttribute("style","width:100%");
+    }
+};
+window.onresize =   setWindowSize;
+setWindowSize();
+</script>
+  
+</head>
+
+<body style="background-color: #f8fdff;">
+  <app-root>
+
+ 
+  </app-root>
+</body>
+
+</html>

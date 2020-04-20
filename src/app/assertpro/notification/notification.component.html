@@ -1,0 +1,429 @@
+<!-- <app-fixedmenubar></app-fixedmenubar>
+<app-fixedsidebar></app-fixedsidebar> -->
+<app-delivery #deliveryComponent (valueChange)="openRole($event)"></app-delivery>
+<app-adddelivery #adddeliveryComponent (valueChange)="addedAdvance($event)"></app-adddelivery>
+<incidentbar-component #IncidentBarComponent (valueChange)="openIncidenHistory($event)"></incidentbar-component>
+<editoperatorname-component #incidentHistory></editoperatorname-component>
+<div *ngIf="loader" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="container-fluid" style="background-color:#f8fdff">
+  <div class="row">
+    <div class="col-lg-1 col-xl-1 d-md-block d-none" style="max-width:9%"></div>
+    <div class="col-lg-1 col-xl-1 col-md-1 bg-empty-div-one"></div>
+    <div class="col-lg-8 col-xl-8 col-md-8 bg-empty-div-one" style="margin-top: 35px;">
+      <div class="row">
+        <div class="msg-txt">{{siteName}} STATS MONITOR</div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 col-xl-6 col-md-12 col-sm-12 col-xs-12">
+          <div class="graph-box">
+            <div class="row" style="margin-left: 0 !important;padding-top: 4%;">
+              <div class="title-in-box title-align-responsive col-sm-12 col-md-12 col-lg-6 col-12 col-xl-7"><span
+                  style="color:#169bd7;">ALL </span>
+                ALERTS DYNAMIC OF
+                <!-- <span style="color:#169bd7;">WEEK</span> -->
+                <div id="alarts" class="btn-group" dropdown> <a id="button-basic" dropdownToggle
+                    aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7" matTooltip="{{alartsType}}">
+                    <!-- {{alartsType}} -->
+                    {{alartsType?.length>5?alartsType.substring(0,5)+'...':alartsType}}
+                  </a>
+                  <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                    class="dropdown-menu dropdown-menu-right week" style="border:0;left:1px">
+                    <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                    <div *ngFor="let type of filterTypeList;let i=index;">
+                      <div id="alartsType{{i}}" (click)="loadAlarts(type)" class="alarm-txt"
+                        style="height:30px;padding-left: 14px;padding-top: 6px;"
+                        [ngClass]="{'active-alarmmenu':type==alartsType}">{{type}}</div>
+                    </div>
+                    <!-- </div> -->
+                  </ul>
+                </div>
+              </div>
+              <div class="title-in-box col-md-12 col-sm-12 col-lg-6 col-12 col-xl-5 text-center">
+                <img src="assets/icon/arrow-left.png" class="batteries-arrow" (click)="alartArrow('left')">
+                <mat-form-field style="width:0;">
+                  <input matInput [matDatepicker]="picker1" (dateChange)="alartChoose($event)" [min]="minDate"
+                    [max]="maxDate" placeholder="Choose a date">
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <span class="date-txt" (click)="picker1.open()" style="cursor:pointer;">
+                  {{fromDateBatter}} — {{toDateBatter}}
+                </span>
+                <img src="assets/icon/arrow-right.png" class="batteries-arrow1" (click)="alartArrow('right')">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 pad-0 form-group">
+                <canvas id="lineChart1"></canvas>
+              </div>
+            </div>
+            <div *ngIf="alartsType=='PAST 2 WEEKS' || alartsType=='MONTH'" class="row">
+              <div class="chart-widget-bottom-date col-12 text-center">
+                <p class="batteries-date3">{{fromDateBatter}} - {{toDateBatter}}</p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xl-6 col-md-12 col-sm-12 col-xs-12">
+          <div class="graph-box1"> 
+            <div class="row" style="margin-left: 0 !important;padding-top: 4%;">
+              <div class="title-in-box-second title-align-responsive col-sm-12 col-md-12 col-lg-6 col-6 col-xl-7"><span
+                  style="color:#169bd7;">ALL </span> ALARMS DYNAMIC OF
+                <!-- <span style="color:#169bd7;">WEEK</span> -->
+                <div id="alarms" class="btn-group" dropdown> <a id="button-basic" dropdownToggle
+                    aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7" matTooltip="{{alarmsType}}">
+                    {{alarmsType?.length>5?alarmsType.substring(0,5)+'...':alarmsType}}
+                  </a>
+                  <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                    class="dropdown-menu dropdown-menu-right week" style="border:0;">
+                    <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                    <div *ngFor="let type of filterTypeList;let i=index;">
+                      <div id="alarmsType{{i}}" (click)="loadAlarms(type)" class="alarm-txt"
+                        style="height:30px;padding-left: 14px;padding-top: 6px;"
+                        [ngClass]="{'active-alarmmenu':type==alarmsType}">{{type}}</div>
+                    </div>
+                    <!-- </div> -->
+                  </ul>
+                </div>
+              </div>
+              <div class="title-in-box col-md-12 col-sm-12 col-lg-6 col-12 col-xl-5 text-center">
+                <img src="assets/icon/arrow-left.png" class="batteries-arrow" (click)="alartsArrow('left')">
+
+                <span class="date-txt" (click)="picker2.open()" style="cursor: pointer;">{{fromDateBatter2}} —
+                  {{toDateBatter2}}</span>
+                <img src="assets/icon/arrow-right.png" class="batteries-arrow1" (click)="alartsArrow('right')">
+                <mat-form-field style="width:0;">
+                  <input matInput [matDatepicker]="picker2" (dateChange)="alarmsChoose($event)" [min]="minDate"
+                    [max]="maxDate" placeholder="Choose a date">
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 pad-0 form-group">
+                <canvas id="lineChart2"></canvas>
+              </div>
+            </div>
+            <div *ngIf="alarmsType=='PAST 2 WEEKS' || alarmsType=='MONTH'" class="row">
+              <div class="chart-widget-bottom-date col-12 text-center">
+                <p class="batteries-date3">{{fromDateBatter2}} - {{toDateBatter2}}</p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div class="row row-mobileview-align" style="padding-top: 4%">
+        <div class="col-lg-3 col-xl-3 col-md-3 col-sm-4 col-4 mobile-view">
+          <div class="msg-txt-note-feed">NOTIFICATIONS FEED</div>
+        </div>
+        <div class="col-lg-3 col-xl-3 col-md-3 col-sm-3 col-4 mobile-view-two">
+          <mat-checkbox [(ngModel)]="showAlarm" (ngModelChange)="showalarmChange()">Show alarms only</mat-checkbox>
+        </div>
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-2 col-2">
+
+        </div>
+        <div class="col-1 text-right mobile-view"><span style="cursor:pointer;" (click)="opensideBar()"><img
+              src="../../../assets/icon/btn-settings-btn.png" /></span></div>
+      </div>
+
+    </div>
+
+
+
+
+    <div class="col-lg-2 col-xl-2 col-md-2 col-sm-1 col-1"></div>
+  </div>
+  <div class="row">
+
+
+    <div class="col-1"></div>
+    <div class="col-1"></div>
+    <div class="col-8">
+      <div class="row">
+        <div class="btm-box mt-3">
+          <div class="row">
+            <div class="col-md-7 col-xl-7 col-lg-7 col-sm-6 col-12  mt-2">
+              <div class="title-in-btmbox" style="cursor: pointer;" dropdown dropdownToggle>
+                {{selectedNotification}}<span class="p-l-15"><img src="../../../assets/icon/dropdown-teal-ic.png" />
+                  <div id="notificationList" class="btn-group"> <a id="button-basic" aria-controls="dropdown-basic"
+                      style="cursor:pointer;color:#169bd7">
+
+                    </a>
+                    <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                      class="dropdown-menu dropdown-menu-right"
+                      style="border:0;min-width: 13rem; margin-right:-55px;white-space: nowrap; overflow-x: hidden;margin-top: 20px;overflow-y: scroll;height: 150px">
+                      <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                      <div *ngFor="let type of notificationList;let i=index;">
+                        <div id="notificationListType{{i}}" (click)="notificationSelection(type)" class="alarm-txt p-1"
+                          style="height:30px" [ngClass]="{'active-alarmmenu':type==selectedNotification}">{{type}}</div>
+                      </div>
+                      <!-- </div> -->
+                    </ul>
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-5 col-xl-5 col-lg-5 col-sm-6 col-12 mt-2">
+              <form class="search-box-form-align" style="display: -webkit-inline-box;" action="" method=""
+                name="search">
+                <div class="search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21"
+                    height="18" alt="search icon" />
+                  <input [(ngModel)]="tableFilter" style="outline:none" class="remove-focus" autocomplete="off"
+                    name="seach" type="text" placeholder="Enter keyword to search" />
+                </div>
+              </form>
+
+            </div>
+          </div>
+          <mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabChange($event)" style="margin-bottom: 10%;">
+            <mat-tab label="RECENT">
+
+              <div *ngFor="let item of items|commonallsearchPipe:tableFilter;let i=index;"
+                style="background:white;margin-left: 2%">
+                <div>
+                  <div *ngIf="item.Type=='Alarm'" class="txt-box pb-3">{{item.Type}}
+                  </div>
+                  <div *ngIf="item.Type!='Alarm'" class="txt-box-two pb-3">{{item.Type}}
+                  </div>
+                  <div class="date-txt1 pb-2">{{item.Eventdate}}</div>
+                </div>
+                <div class="long-txt pb-2">You have <span style="color:#169bd7">{{item.TotalCount}}</span>
+                  {{item.EventName}}
+                </div>
+                <div class="siz-tbl">
+                  <div class="row">
+                    <div class="clr-grey pb-2 pr-4 col-2">Site Name</div>
+                    <div class="clr-blue pb-2 col-2">{{item.Name}}</div>
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-2"></div>
+                    <div *ngIf="item.type=='Reopen' && siteName!='All Sites'" class="report-dr-down-txt-two pt-1 mt-2"
+                      style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img
+                        src="../../../assets/icon/icons-cancel-ic.png" class="mr-1 ml-2" alt=""> Ignored</div>
+                    <div *ngIf="item.type!='Reopen' && item.reportType=='Report compliance' && siteName!='All Sites'"
+                      class="report-dr-down-txt-two pt-1 mt-2"
+                      style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img
+                        src="../../../assets/icon/icons-apply-ic.png" class="mr-1 ml-2" alt=""> Reported</div>
+                    <!-- <div *ngIf="item.type!='Reopen' && item.reportType=='Create Incident' && siteName!='All Sites'"
+                      class="report-dr-down-txt-two pt-1 mt-2"
+                      style="color:#65656F;font-size: 13px;font-family: robotoregular;">
+                      <img src="../../../assets/icon/icons-apply-ic.png" class="mr-1" alt=""> Incident Created
+                    </div> -->
+                    <div
+                      *ngIf="item.type!='Reopen' && item.reportType!='Report compliance' && item.reportType!='Create Incident' && siteName!='All Sites'"
+                      class="report-dr-down">
+                      <div style="cursor: pointer;" id="iv{{i}}" class="report-dr-down-txt pl-3 pt-1" dropdown
+                        dropdownToggle>Report <img style="color:green" src="../../../assets/icon/dropdown-light.png"
+                          alt="">
+                        <div class="btn-group">
+
+                          <i style="vertical-align: middle;" class="material-icons">
+
+                            <a id="button-basic" aria-controls="dropdown-basic"
+                              style="cursor:pointer;margin-left:5px;margin-right:5px;color:#169bd7">
+                            </a>
+                            <ul *dropdownMenu role="menu" aria-labelledby="button-basic"
+                              class="dropdown-menu dropdown-menu-right"
+                              style="border:0;margin-right:-65px;left:auto !important;">
+                              <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                              <div *ngFor="let type of reportList">
+                                <div (click)="reportSelected(type,i)" class="alarm-txt" style="height:30px"
+                                  [ngClass]="{'active-alarmmenu':type==reportType}">{{type}}</div>
+                              </div>
+                              <!-- </div> -->
+                            </ul>
+
+                          </i> </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="row">
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-grey pr-4 col-2">Operator Name</div>
+
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-blue pb-2 col-2">{{item.OperatorName}}</div>
+
+                    <div *ngIf="item.OperatorName==unactioned && siteId=='' " class="clr-grey pr-4 col-2">Site Admin
+                      Name</div>
+
+                    <div *ngIf="item.OperatorName==unactioned && siteId=='' " class="clr-blue pb-2 col-2">
+                      {{item.AdminName}}</div>
+
+                    <div *ngIf="item.OperatorName==unactioned && siteId!='' " class="clr-grey pr-4 col-2"></div>
+
+                    <div *ngIf="item.OperatorName==unactioned && siteId!='' " class="clr-blue pb-2 col-2"></div>
+
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-2"></div>
+                    <div *ngIf="item.type!='Reopen' && item.reportType=='Create Incident' &&  siteName!='All Sites'"
+                      class="report-dr-down-txt-two pt-1 mt-2 ml-4"
+                      style="color:blue;font-size: 13px;font-family: robotoregular;">View>></div>
+                    <div
+                      *ngIf="item.reportType!='Create Incident' &&  item.reportType!='Report compliance' &&  siteName!='All Sites'"
+                      (click)="ignoreReopen(i,item.type,item)" class="report-dr-down-two mt-2">
+                      <div class="report-dr-down-txt-two pt-1">{{item.type}}</div>
+                    </div>
+
+                  </div>
+                  <div class="row">
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-grey pb-2 pr-4 col-2">Asset Type</div>
+
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-blue pb-2 col-2">{{item.AssetTypeName}}</div>
+                    <div *ngIf="item.OperatorName==unactioned" class="clr-grey pb-2 pr-4 col-2"></div>
+
+                    <div *ngIf="item.OperatorName==unactioned" class="clr-blue pb-2 col-2"></div>
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-2"></div>
+                    <div
+                      *ngIf="!item.remind && item.type!='Reopen' &&  item.reportType!='Report compliance' &&  item.reportType!='Create Incident' && siteName!='All Sites'"
+                      class="report-dr-down-two mt-2">
+                      <div class="pt-1" dropdown dropdownToggle>Remind
+                        <img style="color:green" src="../../../assets/icon/dropdown-teal-ic.png" alt="">
+                        <div class="btn-group">
+
+
+                          <a id="button-basic" aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7">
+
+                          </a>
+                          <ul *dropdownMenu role="menu" aria-labelledby="button-basic"
+                            class="dropdown-menu report-dr-down-txt-two1 dropdown-menu-right"
+                            style="border:0;margin-top:-15px;margin-right:-80px;">
+                            <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                            <div *ngFor="let type of remindList">
+                              <div class="alarm-txt" style="height:30px" (click)="remind(type,item)">{{type}}</div>
+                            </div>
+                            <!-- </div> -->
+                          </ul>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      *ngIf="item.remind && item.type!='Reopen' && item.reportType!='Create Incident' &&  siteName!='All Sites'"
+                      class="report-dr-down-txt-two pt-1 mt-2"
+                      style="color:#A6A6AC;font-family: robotoCondensedregular;"><img
+                        src="../../../assets/icon/icons-clock.png" class="mr-1" alt=""> Repeat in 30:00</div>
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-apply-ic.png" class="mr-1" alt=""> Incident Created</div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2 ml-4" style="color:blue;font-size: 13px;font-family: robotoregular;">View>></div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-cancel-ic.png" class="mr-1 ml-2" alt=""> Ignored</div> -->
+
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-apply-ic.png" class="mr-1 ml-2" alt=""> Reported</div> -->
+
+                  </div>
+                  <div class="red-border-left red-border-align"></div>
+                  <div class="row">
+                    <div class="clr-grey pb-2 pr-4 col-2"></div>
+
+                    <div class="clr-blue pb-2 col-2"></div>
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-2"></div>
+                    <!-- <div class="report-dr-down-two mt-2"><div class="report-dr-down-txt-two pt-1">Remind</div></div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#A6A6AC;font-family: robotoCondensedregular;"><img src="../../../assets/icon/icons-clock.png" class="mr-1" alt=""> Repeat in 34:46</div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-apply-ic.png" class="mr-1" alt=""> Incident Created</div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2 ml-4" style="color:blue;font-size: 13px;font-family: robotoregular;">View>></div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-cancel-ic.png" class="mr-1 ml-2" alt=""> Ignored</div> -->
+
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-apply-ic.png" class="mr-1 ml-2" alt=""> Reported</div> -->
+                  </div>
+
+
+
+                  <!-- <div class="row">
+                          <div class="clr-grey pb-2 pr-4 col-2"></div>
+                          
+                          <div class="clr-blue pb-2 col-2"></div>
+                          <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 ol-xs-12"></div>
+                          <div class="report-dr-down-two mt-2"><div class="report-dr-down-txt-two pt-1">Reopen</div></div>
+          
+                        </div> -->
+
+                </div>
+
+                <div class="bdr-blue"></div>
+              </div>
+
+            </mat-tab>
+            <mat-tab label="ARCHIVED">
+
+
+
+
+
+              <div *ngFor="let item of items2|commonallsearchPipe:tableFilter;let i=index;"
+                style="background:white;margin-left: 2%">
+                <div>
+                  <div *ngIf="item.Type=='Alarm'" class="txt-box pb-3">{{item.Type}}
+                  </div>
+                  <div *ngIf="item.Type!='Alarm'" class="txt-box-two pb-3">{{item.Type}}
+                  </div>
+                  <div class="date-txt1 pb-2">{{item.Eventdate}}</div>
+                </div>
+                <div class="long-txt pb-2">You have <span style="color:#169bd7">{{item.TotalCount}}</span>
+                  {{item.EventName}}
+                </div>
+                <div class="siz-tbl">
+                  <div class="row">
+                    <div class="clr-grey pb-2 pr-4 col-2">Site Name</div>
+
+                    <div class="clr-blue pb-2 col-2">{{item.Name}}</div>
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-2"></div>
+                    <!-- <div class="report-dr-down"><div class="report-dr-down-txt pt-1">REPORT</div></div> -->
+
+                  </div>
+                  <div class="row">
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-grey pr-4 col-2">Operator Name</div>
+
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-blue pb-2 col-2">{{item.OperatorName}}</div>
+
+                    <div *ngIf="item.OperatorName==unactioned" class="clr-grey pr-4 col-2">Site Admin Name</div>
+
+                    <div *ngIf="item.OperatorName==unactioned" class="clr-blue pb-2 col-2">{{item.AdminName}}</div>
+
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-2"></div>
+                    <!-- <div class="report-dr-down-two mt-2"><div class="report-dr-down-txt-two pt-1">Ignore</div></div> -->
+
+                  </div>
+                  <div class="row">
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-grey pb-2 pr-4 col-2">Asset Type</div>
+
+                    <div *ngIf="item.OperatorName!=unactioned" class="clr-blue pb-2 col-2">{{item.AssetTypeName}}</div>
+                    <div *ngIf="item.OperatorName==unactioned" class="clr-grey pb-2 pr-4 col-2"></div>
+
+                    <div *ngIf="item.OperatorName==unactioned" class="clr-blue pb-2 col-2"></div>
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-2"></div>
+                    <!-- <div class="report-dr-down-two mt-2"><div class="report-dr-down-txt-two pt-1">Remihjyugnd</div></div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#A6A6AC;font-family: robotoCondensedregular;"><img src="../../../assets/icon/icons-clock.png" class="mr-1" alt=""> Repeat in 34:46</div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-apply-ic.png" class="mr-1" alt=""> Incident Created</div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2 ml-4" style="color:blue;font-size: 13px;font-family: robotoregular;">View>></div> -->
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-cancel-ic.png" class="mr-1 ml-2" alt=""> Ignored</div> -->
+
+                    <!-- <div class="report-dr-down-txt-two pt-1 mt-2" style="color:#65656F;font-size: 13px;font-family: robotoregular;"><img src="../../../assets/icon/icons-apply-ic.png" class="mr-1 ml-2" alt=""> Reported</div> -->
+                  </div>
+
+
+
+                  <!-- <div class="row">
+                          <div class="clr-grey pb-2 pr-4 col-2"></div>
+                          
+                          <div class="clr-blue pb-2 col-2"></div>
+                          <div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 ol-xs-12"></div>
+                          <div class="report-dr-down-two mt-2"><div class="report-dr-down-txt-two pt-1">Remind</div></div>
+                         
+                        </div> -->
+
+
+
+
+
+                </div>
+
+                <div class="bdr-blue"></div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-xl-2 col-md-2 col-sm-1 col-xs-1"></div>
+  </div>
+</div>

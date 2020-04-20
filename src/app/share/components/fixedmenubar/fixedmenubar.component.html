@@ -1,0 +1,347 @@
+<div *ngIf="loader" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div id="menu-holder" class="top-menu-bar container-fluid">
+  <div class="row asset-logo">
+  
+    <div class="col-md-1 col-lg-1 col-xl-1" style="padding-left:24px;">
+      <div class="text-left home-menu" [routerLink]="['/home/pagemap']">
+        <img src="assets/icon/logo-logo-corner.png">
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-7 col-xl-8 d-none d-md-block" style="padding-left:9%;">
+      <div id="assetDropdownMain" class="btn-group " dropdown [isDisabled]="disabled">
+        <div class="text-left">
+          <div style="width: 300px !important" class="selected-item dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+            <!-- {{selectdropdownitem.trim()}} -->
+            {{selectdropdownitem.trim()?.length>24?selectdropdownitem.trim().substring(0,24)+'...':selectdropdownitem.trim()}}
+            <span style="position: absolute;right:0;margin-right:20px">
+              <img src="assets/common/inputs-dropdown.png">
+            </span>
+          </div>
+          <ul id="selectDropDownMain" *dropdownMenu class="dropdown-menu dropdown-scroll" role="menu"
+            aria-labelledby="button-disabled-menu" style="margin-top:22px">
+            <li *ngFor="let sites of usersites;let i =index;">
+              <div id="selectDropDownMain{{i}}" class="text-left site-name" (click)="SelectSiteMenu(sites)">
+              {{sites.Name}}
+                
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <span *ngIf="assetPath" class="pl-5 ml-5 menu-warn-msg">Single Site is Mandatory</span>
+    </div>
+
+    <div class=" col-md-5 col-lg-4 col-xl-3 d-none d-md-block">
+      <div class="row">
+        <div class="col-md-4 text-center" *ngIf="href!='/home/pagemap'" style="margin-top:11px;cursor: pointer;"
+          (click)="openHelpcontainer()">
+          <img class="help-icon" src="assets/icon/icons-help.png">
+        </div>
+        <div class="col-md-4 mobile-dot-btn" style="margin-top:5px">
+          <span style="position:absolute;margin-top:2px;">
+            <img class="user-img-mobile-view" src="assets/icon/user.png" style="margin-left:-60px;">
+          </span>
+          <div style="display: inline-block;margin-left:5%;margin-top:-5px">
+            <div class="profile-name" style="width:100%;">{{userdetails.Name}}</div>
+            <div class="role-btn text-center">{{userdetails.Role}}</div>
+          </div>
+        </div>
+        <div class=" col-md-1 logout-btn">
+          <img id="logoutid" (click)="logoutToken()" style="cursor: pointer;"
+            src="assets/icon/icons-logout.png">
+        </div>
+
+      </div>
+    </div>
+    <div class="d-block col-xs-12 col-sm-12 d-md-none" style="padding-left:0px;padding-top:7px;position: fixed; text-align: -webkit-right;
+    text-align: right;">
+        <div class="btn-group " dropdown [isDisabled]="disabled" [autoClose]="false">
+          <div dropdownToggle aria-controls="dropdown-disabled-menu" style="cursor: pointer">
+            <img src="assets/icon/menu.png">
+          </div>
+          <ul id="dropdown-disabled-menu" *dropdownMenu class="lap-view-dropdown-one dropdown-menu dropdown-menu-container dropdown-menu-right"
+            role="menu" aria-labelledby="button-disabled-menu" style="margin-top:28px;">
+            <div class="text-left">
+                <div class="" style="margin-top:5px">
+                    <span style="position:absolute;margin-top:2px;">
+                      <img style="margin-left:-70px" src="assets/icon/user.png" class="user-img-mobile-view" >
+                    </span>
+                    <div class="profile-role-btn-align" style="display: inline-block;margin-left:5%;margin-top:-5px">
+                      <div class="profile-name" style="width:100%;">{{userdetails.Name}}</div>
+                      <div class="role-btn text-center">{{userdetails.Role}}</div>
+                    </div>
+                  </div>
+              <div class="btn-group " dropdown [isDisabled]="disabled">
+                <div class="selected-item dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+                  {{selectdropdownitem.trim()}}
+                  <span style="position: absolute;right:0;margin-right:20px">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="dropdown-disabled-menu" *dropdownMenu class="dropdown-menu lap-view-dropdown-two" role="menu"
+                  aria-labelledby="button-disabled-menu">
+                  <li *ngFor="let sites of usersites">
+                    <div class="text-left site-name" (click)="SelectSiteMenu(sites)">{{sites.Name}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div *ngIf="href!='/home/pagemap'" class="text-left" style="margin-top:20px;cursor: pointer;"
+              (click)="openHelpcontainer()">
+              <img src="assets/icon/icons-help.png"> <span style="margin-left:10px">Help</span>
+            </div>
+            <div class="logout-btn text-left" style="margin-top:20px" (click)="logoutToken()">
+              <img src="assets/icon/icons-logout.png"> Logout
+            </div>
+  
+            <div *ngIf="href!='/home/pagemap'"
+              style="border:1px solid #D4F2FF;margin-top:20px;margin-right:15px;padding-bottom:10px;border-radius:5px">
+              <div class="row ">
+                <!-- <div class="col-4" *ngIf="model.dashboard">
+                  <div id="container">
+                    <div class="text-center menu-icon" [routerLink]="['/home/dashboard']">
+                      <img class="d-xl-none" src="assets/icon/menu-dashboard.png">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4" *ngIf="model.asset">
+                  <div id="container" [routerLink]="['/home/asset']">
+                    <div class="text-center menu-icon">
+                      <img class="d-xl-none" src="assets/icon/menu-assets.png">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4" *ngIf="model.userDirectory">
+                  <div id="container" [routerLink]="['/home/userdirectory']">
+                    <div class="text-center menu-icon">
+                      <img class="d-xl-none" src="assets/icon/menu-user.png">
+                    </div>
+                  </div>
+                </div>-->
+              </div> 
+              <div *ngIf="href!='/home/pagemap'" class="row ">
+                <div class="col-4" >
+                  <div id="container" [routerLink]="['/home/tracker']">
+                    <div class="text-center menu-icon">
+                      <div class="text-center menu-icon">
+                        <img class="d-xl-none" src="assets/icon/menu-tracker.png">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="col-4" *ngIf="model.reports">
+                  <div id="container" [routerLink]="['/home/reports']">
+                    <div class="text-center menu-icon">
+                      <div class="text-center menu-icon">
+                        <img class="d-xl-none" src="assets/icon/menu-reports.png">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4" *ngIf="model.messaging">
+                  <div id="container" [routerLink]="['/home/messaging']">
+                    <div class="text-center menu-icon">
+                      <div class="text-center menu-icon">
+                        <img class="d-xl-none" src="assets/icon/menu-messaging.png">
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+              <!-- <div *ngIf="href!='/home/pagemap'" class="row ">
+                <div class="col-4" *ngIf="model.notification">
+                  <div id="container" [routerLink]="['/home/notification']">
+                    <div class="text-center menu-icon">
+                      <div class="text-center menu-icon">
+                        <img class="d-xl-none" src="assets/icon/menu-notifications.png">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4" *ngIf="model.configuration">
+                  <div id="container" [routerLink]="['/home/configuration']">
+                    <div class="text-center menu-icon">
+                      <div class="text-center menu-icon">
+                        <img class="d-xl-none" src="assets/icon/menu-configuration.png">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4" *ngIf="model.admin">
+                  <div id="container" [routerLink]="['/home/admin']">
+                    <div class="text-center menu-icon">
+                      <div class="text-center menu-icon">
+                        <img class="icon-display" src="assets/icon/menu-admin.png">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+  
+          </ul>
+        </div>
+      </div>
+
+  </div>
+</div>
+
+<div id="sideScreen" class="side-screen">
+<div id="help-container" class="help-container">
+  <div id="help-sub-container" class="help-sub-container">
+
+    <div (click)="closeHelpcontainer()" style="cursor: pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1"
+        x="0px" y="0px" viewBox="0 0 31.494 31.494" style="enable-background:new 0 0 31.494 31.494;"
+        xml:space="preserve" width="20px" height="20px">
+        <path
+          d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+          fill="#169bd7" />
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+        <g>
+        </g>
+      </svg>
+    </div>
+
+
+    <div class="help-slide-h3">
+      GET HELP
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Company Name
+      </div>
+      <div class="col-9 help-slide-h6">
+        Company name
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Site
+      </div>
+      <div class="col-9 pad-0">
+        <div class="btn-group " dropdown [isDisabled]="disabled">
+          <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+            {{selectdropdownitem.trim()}}
+            <span style="position: absolute;right:0;margin-right:20px">
+              <img src="assets/common/inputs-dropdown.png">
+            </span>
+          </div>
+          <ul id="dropdown-disabled-menu" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+            aria-labelledby="button-disabled-menu" style="margin-top:10px">
+            <li *ngFor="let sites of usersites">
+              <div class="text-left help-site-name" (click)="SelectSiteMenu(sites)">{{sites.Name}}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Username
+      </div>
+      <div class="col-9 help-slide-h6">
+        {{userdetails.UserName}}
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Email
+      </div>
+      <div class="col-9 help-slide-h6">
+        garett_kling@swaniawski.name
+      </div>
+    </div>
+
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Subject
+      </div>
+      <div class="col-9 pad-0">
+        <input type="text" class="help-input" placeholder="Subject of the ticket">
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Description
+      </div>
+      <div class="col-9 pad-0">
+        <textarea class="help-input" placeholder="Type issue description here" style="height:85px"></textarea>
+      </div>
+    </div>
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Asset(s)
+      </div>
+      <div class="col-9 pad-0">
+        <div class="help-selected-asset">3 selected &nbsp;&nbsp;<span>Select all</span></div>
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <div class="col-10">
+                <input type="text" class="help-asset-search-input" placeholder="Search for asset....">
+              </div>
+              <div class="col-2">
+                <div class="text-text">
+                  <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div><a><span class="help-asset-txt">Asset #1</span></a></div>
+            <div><a><span class="help-asset-txt">Asset #2</span></a></div>
+            <div><a><span class="help-asset-txt">Asset #3</span></a></div>
+            <div><a><span class="help-asset-txt">Asset #4</span></a></div>
+            <div><a><span class="help-asset-txt">Asset #5</span></a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:100px;margin-top:50px;">
+      <div class="col-6">
+        <div class="help-send-link">Add attachment</div>
+      </div>
+      <div class="col-6">
+        <div class="help-send-btn">send ticket</div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</div>
+</div>

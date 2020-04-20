@@ -1,0 +1,371 @@
+<div #side class="side-bar">
+<div #myDiv class="additional-box" id="additional-box">
+    <div *ngIf="loader==true" class="loading-indicator">
+        <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+      </div>
+  <div class="row">
+    <div class="col-6 col-sm-4 col-md-1 col-lg-1 col-xl-1">
+      <div (click)="goBack()" style="cursor: pointer" id="close">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1"
+          x="0px" y="0px" viewBox="0 0 31.494 31.494" style="enable-background:new 0 0 31.494 31.494;"
+          xml:space="preserve" width="20px" height="20px">
+          <path
+            d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+            fill="#169bd7" />
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="d-none d-sm-none d-md-block col-md-4 col-lg-5 col-xl-6"></div>
+    <div class="col-6 col-sm-8 col-md-7 col-lg-5 col-xl-5">
+      <a *ngIf="!type" style="cursor: pointer;" (click)="cancel()"> <img style="cursor: pointer;"
+          src="../../../assets/icon/icons-cancel-ic.png" alt="" id="cancel">
+        <span class="cancel-text"> Cancel </span></a>
+      <a *ngIf="!type" style="cursor: pointer" class="ml-2" (click)="save()"> <img style="cursor: pointer;"
+          src="../../../assets/icon/icons-apply-ic.png" alt="" id="apply"> <span class="apply-text"> Apply </span></a>
+    </div>
+  </div>
+  <div *ngIf="!type" class="side-slide-h3">
+    EDIT COMPANY
+  </div>
+  <div *ngIf="type" class="side-slide-h3">
+    COMPANY DETAILS
+  </div>
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Company name
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <input type="text" class="side-input" id="compnayname"  [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="companyname" maxlength="64" [disabled]="type">
+    </div>
+  </div>
+
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Admin
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <div class="btn-group" dropdown id="adminname" [isDisabled]="type" style="width:100%;height: 100%;">
+        <div class="help-selected-item help-dropdown-menu-item"   [ngClass]="{'cursor-point':type!=true}" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{adminname}}
+          <span style="position: absolute;right:0;padding-right: 2%;">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="adminlist" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px;max-height: 300px;overflow-y: scroll;">
+          <li *ngFor="let sites of adminList;let i=index;">
+            <div class="text-left help-site-name"  id="siteName{{i}}" (click)="adminname=sites.Name">{{sites.Name}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Phone
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <input type="text" class="side-input"  id="phone" [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="phone" maxlength="64" [disabled]="type">
+    </div>
+  </div>
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Email
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <input type="text" class="side-input"  id="email" [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="email" maxlength="64" [disabled]="type">
+    </div>
+  </div>
+  <hr class="hr-line">
+
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Address
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <input type="text" class="side-input" id="address" [(ngModel)]="address" maxlength="64" [disabled]="type">
+    </div>
+  </div>
+
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Country
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <!-- <input type="text" class="side-input"  id="country" [ngClass]="{'cursor-point':type!=true}"  [(ngModel)]="country" maxlength="64" [disabled]="type"> -->
+      <div class="btn-group" dropdown id="countryname" [isDisabled]="type" style="width:100%;height: 100%;">
+        <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}" dropdownToggle
+          aria-controls="dropdown-disabled-menu">
+          {{country}}
+          <span style="position: absolute;right:0;padding-right: 2%;">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="countryList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+          <li *ngFor="let data of countryList;let i=index;">
+            <div class="text-left help-site-name" id="countryList{{i}}" (click)="countryChange(data)">
+              {{data.Name}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      State
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <!-- <input type="text" class="side-input"  id="state"  [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="state" maxlength="64" [disabled]="type"> -->
+      <div class="btn-group" dropdown id="statesname" [isDisabled]="type" style="width:100%;height: 100%;">
+        <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}" dropdownToggle
+          aria-controls="dropdown-disabled-menu">
+          {{state}}
+          <span style="position: absolute;right:0;padding-right: 2%;">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="sytemUsedList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+          <li *ngFor="let data of statesList;let i=index;">
+            <div class="text-left help-site-name" id="statesList{{i}}" (click)="stateChange(data)">
+              {{data.Name}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      City
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <input type="text" class="side-input"  id="city"  [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="city" maxlength="64" [disabled]="type">
+    </div>
+  </div>
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      ZIP
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <input type="text" class="side-input" id="zipcode"  [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="zip" numbersOnly maxlength="64" [disabled]="type">
+    </div>
+  </div>
+  <!-- <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Time zone
+    </div>
+    <div class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <div class="btn-group" dropdown id="timezone" [isDisabled]="type" style="width:100%;height: 100%;">
+        <div class="help-selected-item help-dropdown-menu-item"   [ngClass]="{'cursor-point':type!=true}" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{timezone}}
+          <span style="position: absolute;right:0;padding-right: 2%;">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="timezone" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let sites of timeZone;let i=index;">
+            <div class="text-left help-site-name" id="timeZone{{i}}"  (click)="timezone=sites">{{sites}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div> -->
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Phone no
+    </div>
+    <div class="col-8 col-sm-3 col-md-3 col-lg-3 col-xl-4 pad-0">
+      <input type="text" class="side-input" id="phoneno"  [ngClass]="{'cursor-point':type!=true}"  [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="phoneNo" maxlength="64" [disabled]="type">
+    </div>
+    <div class="col-4 col-sm-1 col-md-1 col-lg-1 col-xl-1 side-slide-p pr-0 pl-0">
+      Ext
+    </div>
+    <div class="col-8 col-sm-2 col-md-1 col-lg-1 col-xl-1 pad-0 pl-0">
+      <input type="text" numbersOnly class="side-input"  id="ext" [ngClass]="{'cursor-point':type!=true}" [(ngModel)]="ext" maxlength="3" [disabled]="type">
+    </div>
+  </div>
+  <div class="row space">
+    <div class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Fax
+    </div>
+    <div class="col-8 col-sm-3 col-md-3 col-lg-3 col-xl-4 pad-0">
+      <input type="text" class="side-input" id="fax" [ngClass]="{'cursor-point':type!=true}"  [(ngModel)]="fax" maxlength="64" [disabled]="type">
+    </div>
+  </div>
+  <hr class="hr-line">
+  <div class="row space">
+    <div class="col-12 col-sm-12 col-md-10 col-lg-4 col-xl-4">
+      <div class="row space">
+        <span class="tab-side">SERVICES</span>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Track Assets
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle [disabled]="type" id="track" class="toggle" [(ngModel)]="trackAssets"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Analytics
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle [disabled]="type"  id="analytics" class="toggle" [(ngModel)]="analytics"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Load Settings
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle  [disabled]="type"  id="loadsettings" class="toggle" [(ngModel)]="loadsettings"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Idling Options
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle  [disabled]="type"  id="idlingtiming" class="toggle" [(ngModel)]="idlingOptions"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Logon Options
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle [disabled]="type"  id="logonoption"  class="toggle" [(ngModel)]="logonOptions"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Gateway
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle [disabled]="type"   id="gateway" class="toggle" [(ngModel)]="gateway"></mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-10 col-lg-4 col-xl-4">
+      <div class="row space"><span class="tab-side">PRODUCTS</span></div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Ultimate
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle  [disabled]="type"  id="ultimate" class="toggle" [(ngModel)]="ultimate"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Advanced
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle  [disabled]="type"  id="advance" class="toggle" [(ngModel)]="advanced"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Vital
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle [disabled]="type"   id="vital" class="toggle" [(ngModel)]="vital"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          CellTrac
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle [disabled]="type"  id="celltrac"  class="toggle" [(ngModel)]="celltrac"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Altus
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle  [disabled]="type" id="atlus"  class="toggle" [(ngModel)]="atlus"></mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row space2">
+        <div class="col-4 col-sm-3 col-md-3 col-lg-9 col-xl-6 side-slide-p pr-0">
+          Momentus
+        </div>
+        <div class="col-3 col-sm-1 col-md-3 col-lg-3 col-xl-5 pad-0">
+          <mat-slide-toggle  [disabled]="type"  id="momentus" class="toggle" [(ngModel)]="momentus"></mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row space">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <div class="row space">
+        <span class="tab-side" style="padding-left: 2%; padding-bottom: 0%;">INTEGRATION</span>
+      </div>
+      <div *ngIf="!gateway" class="row space">
+        <span style="padding-left: 2%; padding-bottom: 0%;">
+          <div class="col-10 col-sm-10 col-lg-10 col-md-12 col-xl-12">
+            **Please enable Gateway service to see this section
+            settings.
+          </div>
+        </span>
+      </div>
+    </div>
+    <div *ngIf="gateway" class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 side-slide-p pr-0">
+      Peplink OrgID
+    </div>
+    <div *ngIf="gateway" class="col-8 col-sm-6 col-md-5 col-lg-5 col-xl-6 pad-0">
+      <div class="btn-group" dropdown id="pepling"  [isDisabled]="type" style="width:100%;height: 100%;">
+        <div class="help-selected-item help-dropdown-menu-item"  [ngClass]="{'cursor-point':type!=true}"  dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{pepling}}
+          <span style="position: absolute;right:0;padding-right: 2%;">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="Peplink" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let sites of Peplink;let i=index;">
+            <div class="text-left help-site-name"  id="pepling{{i}}" (click)="pepling=sites">{{sites}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div style="margin-bottom:25%;"></div>
+</div>
+</div>

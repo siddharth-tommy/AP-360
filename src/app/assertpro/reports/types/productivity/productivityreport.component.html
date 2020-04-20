@@ -1,0 +1,345 @@
+<div *ngIf="loader==true" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div>
+  <div class="row">
+    <div class="col-xl-2"></div>
+    <div class="col-xl-8">
+      <div class="row">
+        <div class="col-sm-12 col-md-5 col-lg-4 col-xl-4 pl-0">
+          <singlesite-component #singlesitecomponent [header]="'PICK LOCATION'" (siteChangeEvent)="siteChange()">
+          </singlesite-component>
+        </div>
+        <div class="col-sm-12 col-md-5 col-lg-4 col-xl-4 pl-0">
+          <commondepartment #commondepartment [header]="'CHOOSE DEPARTMENT'" (selectionChange)="departmentChange()">
+          </commondepartment>
+        </div>
+        <div class="col-sm-12 col-md-5 col-lg-4 col-xl-4 pl-0">
+          <commonasset #commonasset [header]="'ASSET TYPE'" (assetChangeEvent)="assetChange()"></commonasset>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2">
+      <div class="row">
+        <div class="col-4 col-xl-12 col-lg-12 col-md-5 col-sm-4">
+          <div class="apply-btn" (click)="applyFilter()">
+            <div class="apply-text">APPLY</div>
+          </div>
+        </div>
+        <div class="col-4 col-xl-12 col-lg-12 col-md-5 col-sm-4">
+          <div class="cancel-btn" (click)="clearFilter()">
+            <div class="cancel-text">CLEAR</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+    <div class="col-xl-8">
+      <div class="row">
+        <div class="col-sm-12 col-md-5 col-lg-4 col-xl-4 pt-3" style="padding-left:0px ">
+          <!-- <div class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+                    <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}" dropdownToggle
+                      aria-controls="dropdown-disabled-menu">
+                      <span>{{sytemUsed}}</span>
+                      <span style="position: absolute;right:0;padding-right: 2%;">
+                        <img src="assets/common/inputs-dropdown.png">
+                      </span>
+                    </div>
+                    <ul id="sytemUsedList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                      aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                      <li *ngFor="let data of sytemUsedList;let i=index;">
+                        <div class="text-left help-site-name" id="sytemUsedList{{i}}" (click)="systemUsedChange(data)">
+                          {{data.Value}}</div>
+                      </li>
+                    </ul>
+                  </div> -->
+
+
+          <div class="container tree-box-container pl-0 pr-0">
+            <div class="tree-box">
+              <div id="style-5" class="search-btn">
+                <div class="row" *ngIf="selectedSystems">
+                  <div class="col-auto" style="padding-left:10px;padding-right:0px"
+                    *ngFor="let bubble of selectedSystems; let i = index">
+                    <div class="bubbles bubbles-txt">
+                      {{ bubble.Value }}
+                      <a (click)="RemoveProduct(i)" style="margin-left:10px;cursor: pointer;">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px"
+                          version="1.1" height="14px" viewBox="0 0 64 64" enable-background="new 0 0 64 64">
+                          <g>
+                            <path fill="#FFFFFF"
+                              d="M28.941,31.786L0.613,60.114c-0.787,0.787-0.787,2.062,0,2.849c0.393,0.394,0.909,0.59,1.424,0.59   c0.516,0,1.031-0.196,1.424-0.59l28.541-28.541l28.541,28.541c0.394,0.394,0.909,0.59,1.424,0.59c0.515,0,1.031-0.196,1.424-0.59   c0.787-0.787,0.787-2.062,0-2.849L35.064,31.786L63.41,3.438c0.787-0.787,0.787-2.062,0-2.849c-0.787-0.786-2.062-0.786-2.848,0   L32.003,29.15L3.441,0.59c-0.787-0.786-2.061-0.786-2.848,0c-0.787,0.787-0.787,2.062,0,2.849L28.941,31.786z" />
+                          </g>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-10 pr-0">
+                    <input type="text" style="width:100%;border:none;outline: none;margin-top:2px"
+                      placeholder="Enter the name product...." [(ngModel)]="searchText" />
+                  </div>
+                  <div class="col-2">
+                    <div class="text-text">
+                      <img src="assets/icon/icon-search.png" style="height:15px;margin-top:5px" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="style-5" class="asset-container">
+                <div *ngFor="
+                      let data of sytemUsedList | commonsearchPipe: 'Value':searchText;
+                      let i = index
+                    ">
+                  <a style="cursor:pointer">
+                    <span class="assettype-txt" (click)="systemUsedChange(data)">{{
+                        data.Value
+                      }}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2 pt-3 left-side-text">Date range</div>
+        <div class="col-sm-1 col-md-2 col-lg-3 col-xl-3 pt-3">
+          <div class="pt-11 row">
+            <input id="my_id" [(ngModel)]="fromDate" class="date-picker" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
+              placeholder="From Date" (dateTimeChange)="ChangeFromDate()" [min]="minStartDate" [max]="currentDate">
+            <i [owlDateTimeTrigger]="dt1" class="material-icons" style="cursor: pointer;    vertical-align: text-top">
+              date_range
+            </i>
+            <owl-date-time #dt1></owl-date-time>
+          </div>
+        </div>
+        <div class="col-sm-1 col-md-2 col-lg-3 col-xl-3 pt-3">
+          <div class="pt-11 row">
+            <input id="my_id2" [(ngModel)]="toDate" [min]="fromDate" [max]="currentDate" class="date-picker"
+              [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" placeholder="To Date">
+            <i [owlDateTimeTrigger]="dt2" class="material-icons" style="cursor: pointer;    vertical-align: text-top">
+              date_range
+            </i>
+            <owl-date-time #dt2></owl-date-time>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row next-row" *ngIf="isReportGenerated">
+    <div class="col-xl-2"></div>
+    <div class="col-xl-7 header-text">Productivity Usage</div>
+    <div class="col-xl-2">
+      <div class="csv-report-btn" (click)="redirectToPdfPage()">
+        <div class="csv-report-text">Get PDF Report</div>
+      </div>
+    </div>
+  </div>
+  <div class="row next-row" id="productivityReportDiv" [hidden]="!isReportGenerated">
+    <div class="col-xl-2"></div>
+    <div class="col-xl-10">
+      <div class="row">
+        <div class="col-3">
+          <div class="row pt-3">
+            <h4 class="col-12 left-side-text chart-info">
+              Available / Usage Hours
+            </h4>
+          </div>
+          <div class="row">
+            <h3 class="col-3 text-center left-side-text chart-info chart-value">
+              {{availableHours}}
+            </h3>
+            <h3 class="col-3 left-side-text chart-info chart-value">
+              {{usageHours}}
+            </h3>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="row pt-3">
+            <h4 class="col-12 left-side-text chart-info">
+              Productive Time / Idle Time
+            </h4>
+          </div>
+          <div class="row">
+            <h3 class="col-6 left-side-text chart-info chart-value text-center">
+              {{productiveTime}} / {{idleTime}}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <div class="row pt-3">
+            <h4 class="col-12 left-side-text chart-info">
+              Expected / Actual Usage
+            </h4>
+          </div>
+          <div class="row">
+            <h3 class="col-5 text-center left-side-text chart-info chart-value">
+              {{expectedUsage}} / <span style="color:red">{{actualUsage}}
+              </span>
+            </h3>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="row pt-3">
+            <h4 class="col-12 left-side-text chart-info">
+              Used
+            </h4>
+          </div>
+          <div class="row">
+            <h3 class="col-12 left-side-text chart-info chart-value">
+              {{usedCount}}
+            </h3>
+          </div>
+        </div>
+        <div class="col-xl-2">
+          <div class="row pt-3">
+            <h4 class="col-12 left-side-text chart-info">
+              Not Used
+            </h4>
+          </div>
+          <div class="row">
+            <h3 class="col-12 left-side-text chart-info chart-value">
+              {{notUsedCount}}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2"></div>
+    <div class="col-xl-6 header-text" style="padding-bottom:3%">
+      <chart-component #chartcomponent [chartType]="'BARCHART'"></chart-component>
+    </div>
+    <div class="col-xl-4" style="position: relative;top:100px">
+      <canvas id="doughnutChartEqualization"></canvas>
+    </div>
+  </div>
+  <div *ngIf="isReportGenerated" style="padding-bottom:5%">
+    <div class="row">
+      <div class="col-xl-2"></div>
+      <div class="col-xl-8">
+        <table *ngIf="chartType==1" class="reports-table">
+          <thead>
+            <tr>
+              <th>Asset Type Name</th>
+              <th>Available Hours</th>
+              <th>Login Hours</th>
+              <th>Key Hours</th>
+              <th>Productivity Hours</th>
+              <th>Unoccupied Hours</th>
+              <th>Idle Hours</th>
+              <th>Other Hours</th>
+              <th>Maint. Hours</th>
+              <th>Bypass Hours</th>
+              <th>Expected Usage(%)</th>
+              <th>Actual Usage(%)</th>
+              <th>Input Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="assetTypeRows" *ngFor="let assetType of reportAssetTypeData" (click)="shoDetailView(assetType)">
+              <td>{{assetType.AssetTypeName}}</td>
+              <td>{{assetType.overallAvailableHours}}</td>
+              <td>{{assetType.overallLoginHours}}</td>
+              <td>{{assetType.overallKeyHours}}</td>
+              <td>{{assetType.overallProductivityHours}}</td>
+              <td>{{assetType.overallUnoccupiedHours}}</td>
+              <td>{{assetType.overallIdleHours}}</td>
+              <td>{{assetType.overallOtherHours}}</td>
+              <td>{{assetType.overallMaintHours}}</td>
+              <td>{{assetType.overallByPassHours}}</td>
+              <td>{{assetType.overallExpectedUsage}}</td>
+              <td [ngClass]="{'alert-red': assetType.overallActualUsage < assetType.overallExpectedUsage}">
+                {{assetType.overallActualUsage}}</td>
+              <td>+</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="apply-btn back-btn" *ngIf="isDetailedViewOpened" (click)="goToPreviousChart()">
+          <div class="apply-text">Back</div>
+        </div>
+        <table *ngIf="chartType==2" class="reports-table">
+          <thead>
+            <tr>
+              <th>Asset Name</th>
+              <th>Available Hours</th>
+              <th>Login Hours</th>
+              <th>Key Hours</th>
+              <th>Productivity Hours</th>
+              <th>Unoccupied Hours</th>
+              <th>Idle Hours</th>
+              <th>Other Hours</th>
+              <th>Maint. Hours</th>
+              <th>Bypass Hours</th>
+              <th>Expected Usage(%)</th>
+              <th>Actual Usage(%)</th>
+              <th>Input Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="assetRows" *ngFor="let asset of reportAssetData">
+              <td>{{asset.AssetName}}</td>
+              <td>{{asset.AvailableHours}}</td>
+              <td>{{asset.LoginHours}}</td>
+              <td>{{asset.KeyHours}}</td>
+              <td>{{asset.ProductivityHours}}</td>
+              <td>{{asset.UnoccupiedHours}}</td>
+              <td>{{asset.IdleHours}}</td>
+              <td>{{asset.OtherHours}}</td>
+              <td>{{asset.MaintHours}}</td>
+              <td>{{asset.ByPassHours}}</td>
+              <td>{{asset.ExpectedUsage}}</td>
+              <td [ngClass]="{'alert-red': asset.ActualUsage < asset.ExpectedUsage}">{{asset.ActualUsage}}</td>
+              <td>{{asset.InputNotes}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <table *ngIf="isBatteryDataSelected" class="reports-table mt-6">
+          <thead>
+            <tr>
+              <th rowspan="2">Battery Name</th>
+              <th rowspan="2">RatedVolt</th>
+              <th rowspan="2">Rated Capacity</th>
+              <th rowspan="2">True Capacity</th>
+              <th rowspan="2">Years since Install</th>
+              <th colspan="3" class="text-center">Discharged</th>
+              <th colspan="3" class="text-center">Charged</th>
+              <th colspan="2" class="text-center">Idle (Threshold: {{threshold}}%)</th>
+            </tr>
+            <tr id="second-header">
+              <th>AH</th>
+              <th>KWh</th>
+              <th>Time<br>HH:MM:SS</th>
+              <th>AH</th>
+              <th>KWh</th>
+              <th>Time<br>HH:MM:SS</th>
+              <th>Time<br>HH:MM:SS</th>
+              <th>Daily Avg.<br>HH:MM:SS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="batteryRows" *ngFor="let asset of reportBatteryData">
+              <td>{{asset.BatteryName}}</td>
+              <td>{{asset.RatedVolt}}</td>
+              <td>{{asset.RatedCapacity}}</td>
+              <td>{{asset.TrueCapacity}}</td>
+              <td>{{asset.Installed}}</td>
+              <td>{{asset.Discharged_AH}}</td>
+              <td>{{asset.Discharged_KWh}}</td>
+              <td>{{asset.Discharged_Time}}</td>
+              <td>{{asset.Charged_AH}}</td>
+              <td>{{asset.Charged_KWh}}</td>
+              <td>{{asset.Charged_Time}}</td>
+              <td>{{asset.IdleTotalTime}}</td>
+              <td>{{asset.IdleAvgTime}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <pdfreportcomponent #pdfreportcomponent></pdfreportcomponent> -->

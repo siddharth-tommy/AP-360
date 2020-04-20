@@ -1,0 +1,261 @@
+<div #side class="side-bar">
+<div id="addoperator" class="help-container">
+  <div id="help-sub-container" class="help-sub-container">
+
+    <div class="row">
+      <div class="col-1">
+        <div (click)="confirmBack()" style="cursor: pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1"
+            x="0px" y="0px" viewBox="0 0 31.494 31.494" style="enable-background:new 0 0 31.494 31.494;"
+            xml:space="preserve" width="20px" height="20px">
+            <path
+              d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+              fill="#169bd7" />
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+            <g>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="col-4"></div>
+      <div class="col-4">
+
+        <!-- <div *ngIf="!editHomeEnabled" (click)="editHome()" class="additional-box-edit-text" style="cursor: pointer;">
+          <img style="cursor: pointer" src="../../../../assets/icon/icons-edit-ic.png" alt=""> Edit
+        </div> -->
+        <a class="ml-2" (click)="resetEdit()"> <img class="edit-img-two"
+            src="../../../../assets/icon/icons-reset-ic.png" alt="">
+          <span class="reset-text mr-2"> Reset </span></a>
+        <a (click)="cancelHomeEdit()"> <img style="cursor: pointer;"
+            src="../../../assets/icon/icons-cancel-ic.png" alt="">
+          <span class="cancel-text"> Cancel </span></a>
+        <a style="cursor: pointer" class="ml-2" (click)="saveHome()"> <img style="cursor: pointer;"
+            src="../../../assets/icon/icons-apply-ic.png" alt=""> <span class="apply-text"> Apply </span></a>
+      </div>
+    </div>
+
+
+
+    <div *ngIf="editMode" class="help-slide-h3">
+      EDIT OPERATOR
+    </div>
+    <div *ngIf="!editMode" class="help-slide-h3">
+      ADD OPERATOR
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Badge Number
+      </div>
+      <div class="col-9 pad-0">
+        <!-- <input type="text" class="help-input" placeholder="Enter the Name"> -->
+        <input maxlength="8" [(ngModel)]='model.input_batch' type="text" class="help-input" placeholder="Enter the Badge Number"
+          numbersOnly>
+      </div>
+    </div>
+
+    <div class="row mar-b-20">  
+      <div class="col-3 help-slide-p">
+        Operator Name
+      </div>
+      <div class="col-9 pad-0">
+       <div class="row">
+         <div class="col-4 col-md-4 col-lg-4 col-xl-4 col-sm-4"><input [(ngModel)]='model.input_firstNmae' type="text" class="help-input-name" placeholder="First Name"></div>
+         
+         <div class="col-4 col-md-4 col-lg-4 col-xl-4 col-sm-4"><input [(ngModel)]='model.input_lastName' type="text" class="help-input-name-two last-name-text-box" placeholder="Last Name"></div>
+       </div>
+      </div>
+    </div>
+   
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p pt-2">
+        Nick Name
+      </div>
+      <div class="col-2 pad-0">
+        <input [(ngModel)]='model.input_nickName' type="text" class="help-input-two" placeholder="Nick Name">
+      </div>
+      <div class="col-4 mt-2">
+        <mat-checkbox [(ngModel)]='model.input_matCheckbox' class="help-slide-p">Send to Devices</mat-checkbox>
+      </div>
+
+    </div>
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Mobile Phone
+      </div>
+      <div class="col-9 pad-0">
+        <input [(ngModel)]='model.input_mobile' type="text" class="help-input" placeholder="Mobile Phone" numbersOnly
+          maxlength="10">
+      </div>
+    </div>
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Email
+      </div>
+      <div class="col-9 pad-0">
+        <input [(ngModel)]='model.input_email' email="true" type="text" class="help-input" placeholder="Email" maxlength="128" [formControl]="email" name="email" required>
+      </div>
+    </div>
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Usage Th. (%)
+      </div>
+      <div class="col-9 pad-0">
+        <input [(ngModel)]='model.input_usageTh' type="text" class="help-input" placeholder="Enter Usage Th." numbersOnly
+          maxlength="100">
+      </div>
+    </div>
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Suspend
+      </div>
+      <div class="col-9 pad-0">
+          <mat-slide-toggle  [(ngModel)]='model.input_suspend' [disabled]="false" id="" class="toggle">
+        </mat-slide-toggle>
+         
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Monthly Incident Th.(%)
+      </div>
+      <div class="col-9 pad-0">
+        <input [(ngModel)]='model.input_monthlyIncident' type="text" class="help-input"
+          placeholder="Enter Monthly Incident Th." numbersOnly alphanumericspace>
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Burden Rate/Hour
+      </div>
+      <div class="col-9 pad-0">
+        <input [(ngModel)]='model.input_burdenRate' type="text" class="help-input" placeholder="Enter the Burden Rate"
+          numbersOnly maxlength="100">
+      </div>
+    </div>
+
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Access Level
+      </div>
+      <!-- <div class="col-9 pad-0">
+        <input [(ngModel)] = 'input_accessLevel' type="text" class="help-input" placeholder="Select Access Level">
+      </div> -->
+      <div class="btn-group" dropdown [isDisabled]="false">
+        <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{model.accessLevelName}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="input_stationList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let data of accesLevelList">
+            <div class="text-left help-site-name" (click)="model.accessLevelName=data">{{data}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Site
+      </div>
+      <!-- <div class="col-9 pad-0">
+        <input [(ngModel)] = 'input_station'  type="text" class="help-input" placeholder="Select the Site">
+      </div> -->
+      <div class="btn-group" dropdown [isDisabled]="false">
+        <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{model.siteName}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="input_stationList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:5px;overflow-y: auto;height: 175px">
+          <li *ngFor="let data of usersites">
+            <div class="text-left help-site-name" (click)="siteChange(data)">{{data.Name}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Departments
+      </div>
+      <!-- <div class="col-9 pad-0">
+        <input [(ngModel)] = 'input_department' type="text" class="help-input" placeholder="Select the Department">
+      </div> -->
+      <div class="btn-group " dropdown [isDisabled]="false">
+        <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{model.input_department}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="deparment" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let data of departmentList">
+            <div class="text-left help-site-name" (click)="model.input_department=data.NAME">{{data.NAME}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Monthly alarms Th.
+      </div>
+      <div class="col-9 pad-0">
+        <input [(ngModel)]='model.input_monthlyAlarms' type="text" class="help-input" placeholder="Enter Monthly alarms Th."
+          alphanumericspace>
+      </div>
+    </div>
+    <div class="row mar-b-20">
+      <div class="col-3 help-slide-p">
+        Compliance Th. (%)
+      </div>
+      <div class="col-9 pad-0">
+        <input numbersOnly [(ngModel)]='model.input_complianceTh' type="text" class="help-input" placeholder="Enter Compliance Th."
+          maxlength="100">
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:100px;margin-top:50px;">
+      <div class="col-6">
+        <div class="help-send-link"></div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</div>
+</div>

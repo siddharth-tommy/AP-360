@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Confirmation! </h1>
+<div mat-dialog-content>
+  <p>Are you sure you want to send the {{data.name}} Command to selected asset(s)?</p>
+</div>
+<div mat-dialog-actions  align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Send</button>
+</div>

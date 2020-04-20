@@ -1,0 +1,53 @@
+<!-- <app-fixedmenubar></app-fixedmenubar>
+<app-fixedsidebar></app-fixedsidebar> -->
+<div class="dash-body" *ngIf="siteName!='All Sites'">
+  <div class="container-fluid">
+    <div class="row" style="border-bottom: 1px solid rgba(167, 167, 180, 0.22);">
+      <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+      <div class="col-sm-10 col-md-9 col-lg-8 col-xl-8">
+        <div class="row">
+          <div class="col-md-8 col-sm-10 col-md-10 col-xl-12">
+            <div class="row">
+              <div class="col-md-3 col-sm-3 col-xl-3 col-xs-12 text-center">
+                <div id="USAGE" class="ud-menu" [ngClass]="{ 'active-ud': reportmenu == 'USAGE' }"
+                  (click)="tabChange('USAGE')">
+                  USAGE
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xl-3 col-xs-12 text-center">
+                <div id="SAFETYCOMPLIANCE" class="ud-menu"
+                  [ngClass]="{ 'active-ud': reportmenu == 'SAFETY COMPLIANCE' }"
+                  (click)="tabChange('SAFETY COMPLIANCE')">
+                  SAFETY COMPLIANCE
+                </div>
+              </div>
+              <div class="col-md-2 col-sm-3 col-xl-2 col-xs-12 text-center">
+                <div id="ALARMS" class="ud-menu" [ngClass]="{ 'active-ud': reportmenu == 'ALARMS' }"
+                  (click)="tabChange('ALARMS')">
+                  ALARMS
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xl-2 col-xs-12 text-center">
+                <div id="OPERATORS" class="ud-menu" [ngClass]="{ 'active-ud': reportmenu == 'OPERATORS' }"
+                  (click)="tabChange('OPERATORS')">
+                  OPERATORS
+                </div>
+              </div>
+              <div class="col-md-2 col-sm-3 col-xl-2 col-xs-12 text-center">
+                <div id="ASSETS" class="ud-menu" [ngClass]="{ 'active-ud': reportmenu == 'ASSETS' }"
+                  (click)="tabChange('ASSETS')">
+                  ASSETS
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xl-2"></div>
+        </div>
+      </div>
+      <div class="col-md-1 col-lg-2 col-xl-4"></div>
+    </div>
+    <div style="margin-top:1%">
+      <productivityreport-component *ngIf="reportmenu=='USAGE'"></productivityreport-component>
+    </div>
+  </div>
+</div>

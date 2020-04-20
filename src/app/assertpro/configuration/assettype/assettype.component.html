@@ -1,0 +1,3330 @@
+<div *ngIf="loader || loader2||loader3 || loader4" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="row" style="margin-top: 1%;">
+  <div class="col-md-2 col-lg-2 col-xl-2"></div>
+  <div class="col-sm-12 col-md-5 col-lg-4 col-xl-3 pl-0">
+    <commondepartment #commondepartment [header]="'SEARCH FOR DEPARTMENT'" (selectionChange)="departmentChange()">
+    </commondepartment>
+  </div>
+  <div class="col-sm-12 col-md-5 col-lg-4 col-xl-3 pl-0">
+    <commonasset #commonasset [selectAllAssets]="true" [header]="'SEARCH FOR ASSET/ASSET TYPE'" [heightAdj]="heightAdj"
+      (assetChangeEvent)="showTabs=false" [config]="true"></commonasset>
+  </div>
+  <div class="col-sm-12 col-md-12 col-lg-2 col-xl-1" style="margin-top:1%;">
+    <div class="row">
+      <div class="col-xl-12 col-lg-8 d-none d-sm-none d-md-none d-lg-block">
+        <div class="text-right add-asset" (click)="createAssetType()">
+          Add an Asset Type
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-12 col-lg-8 d-none d-sm-none d-md-none d-lg-block">
+        <div class="apply-btn" (click)="applyFunction()">
+          <div class="apply-text pt-2">APPLY</div>
+        </div>
+      </div>
+      <div class="pt-2 col-xl-12 col-lg-8 d-none d-sm-none d-md-none d-lg-block">
+        <div class="cancel-btn-top" (click)="clear()">
+          <div class="cancel-text pt-2">CLEAR</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row pb-4">
+      <div class="col-md-2 col-sm-2"></div>
+      <div class="d-block d-lg-none d-xl-none col-4 col-sm-2 col-md-2 sm-screen-add-asset">
+        <div class="add-asset" (click)="createAssetType()">
+          Add an Asset Type
+        </div>
+      </div>
+      <div class="d-block d-lg-none d-xl-none col-4 col-sm-2 col-md-2">
+        <div class="apply-btn" (click)="applyFunction()">
+          <div class="apply-text">APPLY</div>
+        </div>
+      </div>
+      <div class="d-block d-lg-none d-xl-none col-4 col-sm-2 col-md-2">
+        <div class="cancel-btn" (click)="clear()">
+          <div class="cancel-text">CLEAR</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div *ngIf="showTabs" class="row">
+  <div class="col-md-2 col-lg-2 col-xl-2"></div>
+  <div class="col-sm-12 col-md-10 col-lg-10 col-xl-9" style="background:white;border: 1px solid #d4f2ff;">
+    <div class="row">
+      <!-- <div class="col-md-1 col-lg-1"></div> -->
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 pl-0 pr-0">
+        <mat-horizontal-stepper [linear]="isLinear" [labelPosition]="'bottom'"
+          (selectionChange)="selectionChange($event)" #stepper>
+          <!-- <ng-template matStepperIcon="number">
+            <a><img src="assets/icon/paginate-off.png"></a>
+          </ng-template>
+          <ng-template matStepperIcon="edit">
+            <a><img src="assets/icon/paginate-off.png"></a>
+          </ng-template>
+          <ng-template matStepperIcon="done">
+            <a><img src="assets/icon/paginate-on.png"></a>
+          </ng-template> -->
+          <ng-template matStepperIcon="number" let-index="index">
+            <a><img src="assets/icon/paginate-off.png"></a>
+          </ng-template>
+          <ng-template matStepperIcon="edit">
+            <a><img src="assets/icon/paginate-on.png"></a>
+          </ng-template>
+
+          <ng-template matStepperIcon="done">
+            <a><img src="assets/icon/paginate-off.png"></a>
+          </ng-template>
+
+          <!-- Custom icon with a context variable. -->
+          <mat-step *ngIf="enableBasicInfo" label="BASIC INFO" matTooltip="BASIC INFO">
+
+          </mat-step>
+          <mat-step *ngIf="usageEnable" label="USAGE" matTooltip="USAGE">
+
+          </mat-step>
+
+          <mat-step *ngIf="generalEnable" label="GENERAL" matTooltip="GENERAL">
+
+          </mat-step>
+
+
+          <mat-step *ngIf="oprationalEnable" label="OPERATIONAL" matTooltip="OPERATIONAL">
+
+          </mat-step>
+          <mat-step *ngIf="sesorEnable" label="SENSORS" matTooltip="SENSORS">
+
+          </mat-step>
+
+
+
+
+          <mat-step
+            *ngIf="integrationEnable  && ((hmrEnable && model.System=='4') || model.System=='1' || model.System=='2' || model.System=='3' ) &&  acgAdminShow && type!='singleAsset' && type!='moreAssets'"
+            label="INTEGRATIONS" matTooltip="INTEGRATIONS">
+
+          </mat-step>
+
+
+
+          <mat-step *ngIf="alarmsEnable" label="ALARMS" matTooltip="ALARMS">
+
+          </mat-step>
+
+          <mat-step *ngIf="chargeProfileEnable" label="CHARGING PROFILE" matTooltip="CHARGING PROFILE">
+
+          </mat-step>
+          <mat-step *ngIf="billingRates && type=='assetType'" label="BILLING RATES" matTooltip="BILLING RATES">
+
+          </mat-step>
+          <mat-step *ngIf="intenalSettings && acgAdminShow" label="INTERNAL SETTINGS" matTooltip="INTERNAL SETTINGS">
+
+          </mat-step>
+          <mat-step *ngIf="internelConfiguration && acgAdminShow && model.System!='4'" label="INTERNAL CONFIGURATIONS"
+            matTooltip="INTERNAL CONFIGURATIONS">
+
+          </mat-step>
+        </mat-horizontal-stepper>
+      </div>
+    </div>
+    <hr style="margin-top:0%;margin: 0 -1.6%;">
+    <!-- <basicinfocomponent #basicinfocomponent (systemTypeChange)="getSystemType($event)" (closeCreateMode)="createModeFun()" [data]="parentDetails" [createMode]="createMode"
+    (hmrChange)="hmrChange($event)" (powerChange)="powerChange($event)" (classification)="classification($event)"
+    ></basicinfocomponent> -->
+    <div *ngIf="selectedTab=='BASIC INFO' && enableBasicInfo">
+      <div class="row pt-5 pb-3">
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+
+          <div class="row pt-3">
+            <div class="col-4 left-side-text">System Used</div>
+
+            <div *ngIf="!createMode" class="col-3 right-side-text">
+              {{sytemUsed}}
+            </div>
+            <div *ngIf="createMode" class="col-6">
+              <div class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+                <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                  dropdownToggle aria-controls="dropdown-disabled-menu">
+                  {{sytemUsed}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="sytemUsedList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                  <li *ngFor="let data of sytemUsedList;let i=index;">
+                    <div class="text-left help-site-name" id="sytemUsedList{{i}}" (click)="systemUsedChange(data)">
+                      {{data.Value}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="row pt-3">
+            <div class="col-4 left-side-text">Classification</div>
+
+            <div class="col-6">
+              <div class="btn-group" dropdown id="classificationList" style="width:100%;height: 100%;">
+                <div class="help-selected-item help-dropdown-menu-item" dropdownToggle
+                  aria-controls="dropdown-disabled-menu">
+                  {{classificationUsed}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="classificationUsed" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                  <li *ngFor="let data of classificationList;let i=index;">
+                    <div class="text-left help-site-name" id="powerdBy{{i}}" (click)="classificationChange(data)">
+                      {{data.Value}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <div class="row pt-3">
+            <div class="col-4 left-side-text">Type name</div>
+
+            <div class="col-6">
+              <div style="padding: 0;">
+                <input type="text" [(ngModel)]="model.Name" class="help-input" placeholder="Enter the Typename">
+              </div>
+
+            </div>
+
+          </div>
+          <div class="row pt-2"></div>
+          <div class="row pt-4">
+            <div class="col-4 left-side-text">Site</div>
+          </div>
+          <div class="row pt-1">
+            <div class="col-10">
+              <commonsite #commonsite [selectedSites]="selectedSites"></commonsite>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+          <div *ngIf="model.System!='5' && model.System!='6' && model.System!='7'" class="row pt-3">
+            <div class="col-4 left-side-text">Powered by</div>
+
+            <div class="col-6">
+              <div class="btn-group" dropdown id="powerdBy" style="width:100%;height: 100%;">
+                <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                  dropdownToggle aria-controls="dropdown-disabled-menu">
+                  {{powerdBy}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="powerdBy" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                  <li *ngFor="let data of powerdByList;let i=index;">
+                    <div class="text-left help-site-name" id="powerdBy{{i}}" (click)="poweredByChange(data)">
+                      {{data.Value}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <div *ngIf="model.System=='1' || model.System=='2' || model.System=='3'" class="row pt-3">
+            <div class="col-4 left-side-text">Fuel cost (USD)</div>
+
+            <div class="col-6">
+              <div style="padding: 0;">
+                <input type="text" numbersOnly [(ngModel)]="model.FuelCost" placeholder="USD" class="help-input">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row pt-3">
+            <div class="col-4 left-side-text">Usage threshold</div>
+            <div class="col-6">
+              <div style="padding: 0;">
+                <input type="text" [(ngModel)]="model.UsageThreshold" numbersOnly class="help-input">
+              </div>
+            </div>
+
+          </div>
+          <div class="row pt-3">
+            <div class="col-4 left-side-text">Communication threshold (hrs)</div>
+
+            <div class="col-6">
+              <div style="padding: 0;">
+                <input type="text" [(ngModel)]="model.ComThreshold" numbersOnly class="help-input">
+              </div>
+            </div>
+
+          </div>
+          <div class="row pt-3">
+            <div class="col-4 left-side-text">Communication type</div>
+
+            <div class="col-6">
+              <div class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+                <div class="help-selected-item help-dropdown-menu-item" dropdownToggle
+                  aria-controls="dropdown-disabled-menu">
+                  {{comType}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="comTypeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                  <li *ngFor="let data of comTypeList;let i=index;">
+                    <div class="text-left help-site-name" id="comTypeList{{i}}" (click)="comTypeChange(data)">
+                      {{data.Value}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row pt-3">
+            <div class="col-4 left-side-text">Comments</div>
+
+            <div class="col-6">
+              <textarea rows="4" class="left-side-text" cols="40" [(ngModel)]="model.Comments"
+                style="border: 1px solid #b3e7ff99;background-color:aliceblue; width: 100%"
+                placeholder="Type your comments here">
+              </textarea>
+            </div>
+
+          </div>
+          <div *ngIf="model.System=='4'" class="row pt-3">
+            <div class="col-4 left-side-text">HMR Enable</div>
+
+            <div class="col-6">
+
+              <mat-slide-toggle id="" [(ngModel)]="hmrEnable" class="toggle" (ngModelChange)="hmrChanged()">
+              </mat-slide-toggle>
+            </div>
+
+          </div>
+          <div
+            *ngIf="model.System=='4' && hmrEnable && (powerdBy?.trim()=='Diesel' || powerdBy?.trim()=='Gas' || powerdBy?.trim()=='Propane')"
+            class="row pt-3">
+            <div class="col-4 left-side-text">Eq Classification</div>
+
+            <div class="col-6">
+              <div class="btn-group" dropdown id="classificationList" style="width:100%;height: 100%;">
+                <div class="help-selected-item help-dropdown-menu-item" dropdownToggle
+                  aria-controls="dropdown-disabled-menu">
+                  {{eqclassificationUsed}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="eqclassificationUsed" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                  <li *ngFor="let data of eqclassificationList;let i=index;">
+                    <div class="text-left help-site-name" id="eq{{i}}" (click)="eqclassificationChange(data)">
+                      {{data.Value}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <div *ngIf="model.System=='4' && hmrEnable" class="row pt-3">
+            <div class="col-4 left-side-text">Discharge Threshold</div>
+            <div class="col-6">
+              <div style="padding: 0;">
+                <input type="text" class="help-input" [(ngModel)]="model.discThres" numbersOnly>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="model.System=='4' && hmrEnable" class="row pt-3">
+            <div class="col-4 left-side-text">Input Name</div>
+            <div class="col-6">
+              <div style="padding: 0;">
+                <input [(ngModel)]="model.hmrInputName" type="text" class="help-input">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- <usagecomponent *ngIf="selectedTab=='USAGE'" [systemType]="systemTypeValue" [type]="type"
+    [createMode]="createMode"></usagecomponent> -->
+    <div *ngIf="selectedTab=='USAGE'" class="container-fluid">
+      <div class="row pt-4">
+        <div class="inputs-txt col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">INPUTS</div>
+        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-4 d-md-block d-none d-sm-none mbile-view-padding"></div>
+        <div *ngIf="type!='moreAssets'"
+          class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding">HMR</div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">Alarms</div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">Productivity</div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">Enable</div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">Visible</div>
+      </div>
+      <div class="row pt-5">
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type!='assetType'"
+          matTooltip="Assigns a name to each input">{{model.key}}
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.key" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.key_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType' && type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR1">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType' && type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id="" [(ngModel)]="model.keyInput"
+            class="toggle">
+          </mat-slide-toggle>
+          <!-- <input [(ngModel)]="model.keyInput" type="text" matTooltip="Determines which inputs will have a timer for used hours"
+            class="help-input"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id="" [(ngModel)]="model.keyalarmTogglerButton"
+              class="toggle"></mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2 mbile-view-padding">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be used to calculate productivity" id=""
+              [(ngModel)]="model.keyproductivityTogglerButton" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [(ngModel)]="model.keyCheckbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will be shown on the device" [(ngModel)]="model.visible1">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+
+      <div class="row pt-1">
+        <div matTooltip="Assigns a name to each input" *ngIf="type!='assetType'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          {{model.occupancy}} </div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.occupancy" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-3 mbile-view-padding d-md-block d-none col-sm-3 col-4" id="occupancy">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.occupancy_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType'&& type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR2">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType'&& type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id=""
+            [(ngModel)]="model.occupancyInput" class="toggle">
+          </mat-slide-toggle>
+          <!-- <input type="text" [(ngModel)]="model.occupancyInput" class="help-input"
+            matTooltip="Determines which inputs will have a timer for used hours"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id="" [(ngModel)]="model.occupancyalarmTogglerButton"
+              class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode" id=""
+              [(ngModel)]="model.occupancyproductivityTogglerButton"
+              matTooltip="Determines which inputs will be used to calculate productivity" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [(ngModel)]="model.occupancyCheckbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox matTooltip="Determines which inputs will be shown on the device"
+            [disabled]="type!='assetType' && !createMode" [(ngModel)]="model.visible2">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+      <div class="row pt-1">
+        <div matTooltip="Assigns a name to each input" *ngIf="type!='assetType'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          {{model.travel}}</div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.travel" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-3 mbile-view-padding d-md-block d-none col-sm-3 col-4" id="travel">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.travel_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType'&& type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR3">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType'&& type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id="" [(ngModel)]="model.travelInput"
+            class="toggle">
+          </mat-slide-toggle>
+          <!-- <input type="text" [(ngModel)]="model.travelInput" class="help-input"
+            matTooltip="Determines which inputs will have a timer for used hours"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id="" [(ngModel)]="model.travelalarmTogglerButton"
+              class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode" id=""
+              [(ngModel)]="model.travelproductivityTogglerButton"
+              matTooltip="Determines which inputs will be used to calculate productivity" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [(ngModel)]="model.travelCheckbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox matTooltip="Determines which inputs will be shown on the device"
+            [disabled]="type!='assetType' && !createMode" [(ngModel)]="model.visible3">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+      <div class="row pt-1">
+        <div matTooltip="Assigns a name to each input" *ngIf="type!='assetType'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          {{model.lowFule}}</div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.lowFule" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 mbile-view-padding col-md-3 d-md-block d-none col-sm-3 col-4" id="low-fuel">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.low_fuel_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType'&& type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR4">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType'&& type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id=""
+            [(ngModel)]="model.lowFuel_Input" class="toggle">
+          </mat-slide-toggle>
+          <!-- <input [(ngModel)]="model.lowFuel_Input" type="text" class="help-input"
+          matTooltip="Determines which inputs will have a timer for used hours"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id="" [(ngModel)]="model.lowfuelalarmTogglerButton"
+              class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode" id=""
+              [(ngModel)]="model.lowfuelproductivityTogglerButton"
+              matTooltip="Determines which inputs will be used to calculate productivity" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [(ngModel)]="model.lowfuelCheckbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox matTooltip="Determines which inputs will be shown on the device"
+            [disabled]="type!='assetType' && !createMode" [(ngModel)]="model.visible4">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+      <div class="row pt-1">
+        <div matTooltip="Assigns a name to each input" *ngIf="type!='assetType'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          {{model.seatBelt}}</div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.seatBelt" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 mbile-view-padding col-md-3 d-md-block d-none col-sm-3 col-4" id="seat-belt">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.seat_belt_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType'&& type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType'&& type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id=""
+            [(ngModel)]="model.seatbeltInput" class="toggle">
+          </mat-slide-toggle>
+          <!-- <input type="text" [(ngModel)]="model.seatbeltInput" class="help-input"
+            matTooltip="Determines which inputs will have a timer for used hours"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id="" [(ngModel)]="model.seatbeltalarmTogglerButton"
+              class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode" id=""
+              [(ngModel)]="model.seatbeltproductivityTogglerButton"
+              matTooltip="Determines which inputs will be used to calculate productivity" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [(ngModel)]="model.seatbeltCheckbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox matTooltip="Determines which inputs will be shown on the device"
+            [disabled]="type!='assetType' && !createMode" [(ngModel)]="model.visible5">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+      <div class="row pt-1">
+        <div matTooltip="Assigns a name to each input" *ngIf="type!='assetType'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          {{model.input1}}</div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.input1" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-3 mbile-view-padding d-md-block d-none col-sm-3 col-4" id="input-one">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.input_one_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType'&& type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType'&& type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id=""
+            [(ngModel)]="model.input_oneInput" class="toggle">
+          </mat-slide-toggle>
+          <!-- <input type="text" [(ngModel)]="model.input_oneInput" class="help-input"
+          matTooltip="Determines which inputs will have a timer for used hours"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id="" [(ngModel)]="model.input_one_alarmTogglerButton"
+              class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode" id=""
+              [(ngModel)]="model.input_one_productivityTogglerButton"
+              matTooltip="Determines which inputs will be used to calculate productivity" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [(ngModel)]="model.input_one_Checkbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox matTooltip="Determines which inputs will be shown on the device"
+            [disabled]="type!='assetType' && !createMode" [(ngModel)]="model.visible6">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+      <div class="row pt-1">
+        <div matTooltip="Assigns a name to each input" *ngIf="type!='assetType'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3"> {{model.input2}}</div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.input2" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-3 mbile-view-padding d-md-block d-none col-sm-3 col-4" id="input-two">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.input_two_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType'&& type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType'&& type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id=""
+            [(ngModel)]="model.input_twoInput" class="toggle">
+          </mat-slide-toggle>
+          <!-- <input type="text" [(ngModel)]="model.input_twoInput" class="help-input"
+          matTooltip="Determines which inputs will have a timer for used hours"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id="" [(ngModel)]="model.input_two_alarmTogglerButton"
+              class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode" id=""
+              [(ngModel)]="model.input_two_productivityTogglerButton"
+              matTooltip="Determines which inputs will be used to calculate productivity" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox [(ngModel)]="model.input_two_Checkbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox matTooltip="Determines which inputs will be shown on the device"
+            [disabled]="type!='assetType' && !createMode" [(ngModel)]="model.visible7">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+      <div class="row pt-1">
+        <div matTooltip="Assigns a name to each input" *ngIf="type!='assetType'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+          {{model.input3}}</div>
+        <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+          <input type="text" [(ngModel)]="model.input3" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-3 mbile-view-padding d-md-block d-none col-sm-3 col-4" id="input-three">
+          <mat-button-toggle-group
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not."
+            [(ngModel)]="model.input_three_toggler" appearance="legacy" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+          *ngIf="type!='assetType'&& type!='moreAssets'">
+          <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+            matTooltip="Assigns a name to each input">
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding"
+          *ngIf="type=='assetType'&& type!='moreAssets'">
+          <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+            matTooltip="Determines which inputs will have a timer for used hours" id=""
+            [(ngModel)]="model.input_threeInput" class="toggle">
+          </mat-slide-toggle>
+          <!-- <input type="text" [(ngModel)]="model.input_threeInput" class="help-input"
+            matTooltip="Determines which inputs will have a timer for used hours"> -->
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3" id="input-three-alarmTogglerButton">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode"
+              matTooltip="Determines which inputs will be Alarms" id=""
+              [(ngModel)]="model.input_three_alarmTogglerButton" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding"
+          id="input-three-productivityTogglerButton"
+          matTooltip="Determines which inputs will be used to calculate productivity">
+          <div>
+            <mat-slide-toggle [disabled]="type!='assetType' && !createMode" id=""
+              [(ngModel)]="model.input_three_productivityTogglerButton" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding"
+          id="input-three-Checkbox">
+          <mat-checkbox [(ngModel)]="model.input_three_Checkbox" matTooltip="Enables the inputs that will be used">
+          </mat-checkbox>
+        </div>
+        <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+          <mat-checkbox matTooltip="Determines which inputs will be shown on the device"
+            [disabled]="type!='assetType' && !createMode" [(ngModel)]="model.visible8">
+          </mat-checkbox>
+        </div>
+      </div>
+      <hr>
+      <div class="row pt-1" style="margin-bottom:1%">
+        <div class="inputs-txt-black col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Unoccupied</div>
+        <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+          <mat-button-toggle-group matTooltip="It will logout the operator if the Inputs 2 (Seat) is not sense"
+            appearance="legacy" [(ngModel)]="model.IdlingAsset" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        <div *ngIf="model.IdlingAsset=='Y'" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Asset
+          Timer (Sec)
+        </div>
+        <div *ngIf="model.IdlingAsset=='Y'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+          <input type="text" class="help-input" matTooltip="It will end the session if the input seat is not sense"
+            numbersOnly placeholder="Asset time" [(ngModel)]="model.AssetTimer"> </div>
+
+
+      </div>
+      <hr class="d-md-block d-none">
+      <div class="row pt-1" style="margin-bottom:1%">
+        <div class="inputs-txt-black col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Idling</div>
+        <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+          <mat-button-toggle-group matTooltip="It will logout the operator if the productive inputs are not sense"
+            appearance="legacy" [(ngModel)]="model.IdlingOperator" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        <div *ngIf="model.IdlingOperator=='Y'" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Operator
+          Timer
+          (Sec)
+        </div>
+        <div *ngIf="model.IdlingOperator=='Y'"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+          <input type="text" class="help-input" placeholder="Operator time" numbersOnly
+            [(ngModel)]="model.OperatorTimer"></div>
+      </div>
+    </div>
+    <!-- <operationalcomponent *ngIf="selectedTab=='OPERATIONAL'" ></operationalcomponent> -->
+    <div *ngIf="selectedTab=='OPERATIONAL'">
+      <div *ngIf="model.System=='1' || model.System=='2'" class="row pt-3">
+
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">PM</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.PM" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.PM && (model.System=='1' || model.System=='2')" class="top-scroll-view">
+        <div class="row pt-4">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">Type</div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-3 inputs-txt-two">Frequency (Hrs)</div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-3 inputs-txt-two">Under PM (Hrs)</div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 inputs-txt-two">Over PM (Hrs)</div>
+          <div *ngIf="typevalue=='Smart'" class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">Input</div>
+        </div>
+        <div class="row pt-4 pb-4">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+            <div class="btn-group" dropdown id="adminname" style="width:100%;">
+              <div
+                matTooltip="Regular will trigger the Alarm by Input 2 (Seat) while Smart allows to configure which input to track for Preventive Maintenance"
+                class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{typevalue}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="typeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;height: auto">
+                <li *ngFor="let data of typeList;let i=index;">
+                  <div class="text-left help-site-name" id="typeList{{i}}" (click)="typevalue=data">
+                    {{data}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 "><input placeholder="Frequency"
+              matTooltip="Alerts when a Preventive Maintenance needs to be done" numbersOnly type="text"
+              class="help-input" [(ngModel)]="model.Frequency">
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+            <input placeholder="Under PM" numbersOnly type="text"
+              matTooltip="Alerts when a Preventive Maintenance has done faster than expected" class="help-input"
+              [(ngModel)]="model.UnderPM">
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2"><input placeholder="Over PM"
+              matTooltip="Alerts when a Preventive Maintenance has taken longer than expected" numbersOnly type="text"
+              class="help-input" [(ngModel)]="model.OverPM"></div>
+          <div class="col-xl-3 col-lg-3 col-md-2 col-sm-2 col-2">
+            <!-- <div *ngIf="typevalue=='Smart'" class="btn-group" dropdown id="adminname" [isDisabled]="type"
+                  style="width:100%;height: 100%;">
+                  <div matTooltip="Select the inputs that will determine when the asset required Preventive Maintenance"
+                    class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}" dropdownToggle
+                    aria-controls="dropdown-disabled-menu">
+                    {{inputHrm}}
+                    <span style="position: absolute;right:0;padding-right: 2%;">
+                      <img src="assets/common/inputs-dropdown.png">
+                    </span>
+                  </div>
+                  <ul id="inputHrmList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                    aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                    <li *ngFor="let data of inputHrmList;let i=index;">
+                      <div class="text-left help-site-name" id="inputHrmList{{i}}" (click)="inputHrm=data">
+                        {{data}}</div>
+                    </li>
+                  </ul>
+                </div> -->
+            <select *ngIf="typevalue=='Smart'"
+              matTooltip="Select the inputs that will determine when the asset required Preventive Maintenance"
+              class="m-wrap span12  help-dropdown-menu" style="padding-left: 1px;margin-top: 0px;"
+              name="EnabledAlarmHex" acg-target="EnabledAlarm" acg-type="hex" multiple="">
+              <option style="margin-top: 6px;" class="help-site-name" value="1000">Travel and lift</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="model.System=='1' || model.System=='2'">
+      <div class="row pt-3">
+        <!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-5">
+        <div class="checklist-text">
+          <b>CHECKLIST</b>
+        </div>
+      </div> -->
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">CHECKLIST</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.CheckListEnable" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.checkList" class="top-scroll-view">
+        <div class="row pt-4">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">Checklist Name</div>
+          <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-3 inputs-txt-two d-md-block d-none">Max time (sec)</div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-4 inputs-txt-two">Frequency</div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 inputs-txt-two d-md-block d-none">Timer (hrs)</div>
+          <div *ngIf="freqency=='Per Operator'" class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">
+            Non-Consecutive</div>
+        </div>
+        <div class="row pt-4 pb-4">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+            <div class="btn-group" dropdown id="adminname" style="width:100%;">
+              <div matTooltip="Select the checklist" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+                aria-controls="dropdown-disabled-menu">
+                {{checkList}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="comTypeList" *dropdownMenu class="dropdown-menu help-dropdown-menu safety-checklist-overflow"
+                role="menu" aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                <li *ngFor="let data of saftyCheckList;let i=index;">
+                  <div class="text-left help-site-name" id="comTypeList{{i}}" (click)="checklistName(data)">
+                    {{data.Name}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-md-block d-none"><input placeholder="Inspection Max"
+              matTooltip="Time the operators will have before considering the Checklist skipped" numbersOnly
+              [(ngModel)]="model.InspectionMaxTime" type="text" class="help-input"></div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-4">
+            <div class="btn-group" dropdown id="adminname" style="width:100%;">
+              <div matTooltip="Determines if the checklist will be presented to the operators once during a shift or once per each operator
+            " class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}" dropdownToggle
+                aria-controls="dropdown-disabled-menu">
+                {{freqency}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="comTypeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;height: auto">
+                <li *ngFor="let data of frequencyList;let i=index;">
+                  <div class="text-left help-site-name" id="comTypeList{{i}}" (click)="freqency=data.value">
+                    {{data.value}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-md-block d-none"><input placeholder="Timer"
+              matTooltip="Determines the frequency to prompt the checklist." numbersOnly type="text" class="help-input"
+              [(ngModel)]="model.InspectionFrequency"></div>
+          <div *ngIf="freqency=='Per Operator'" class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+            <div matTooltip="Non-consecutive" class="btn-group" dropdown id="adminname" [isDisabled]="type"
+              style="width:100%">
+              <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{consecutive}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="comTypeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;height: auto">
+                <li *ngFor="let data of consecutiveList;let i=index;">
+                  <div class="text-left help-site-name" id="comTypeList{{i}}" (click)="consecutive=data">
+                    {{data}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="model.checkList && acgAdminShow" class="row">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt-two">Maintenance Mode</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.maintenance_modeToggler" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.checkList" class="row pt-4">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt-two">Sense inputs</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle matTooltip="Inputs that should be sense during the checklist" id=""
+            [(ngModel)]="model.SenseInputsAlertEnabled" class="toggle">
+          </mat-slide-toggle>
+        </div>
+
+        <div class="col-xl-1 col-lg-1 col-md-4 col-6 col-sm-6  inputs-txt-two" *ngIf="model.SenseInputsAlertEnabled">
+          Input
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6" *ngIf="model.SenseInputsAlertEnabled">
+          <select class="m-wrap span12  help-dropdown-menu" style="padding-left: 1px;margin-top: 0px;height: auto"
+            name="EnabledAlarmHex" acg-target="EnabledAlarm" acg-type="hex" multiple="">
+            <option style="margin-top: 6px;" class="help-site-name" value="1000">Travel and lift</option>
+          </select>
+        </div>
+
+        <hr>
+      </div>
+      <div *ngIf="model.checkList" class="row pt-4">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt-two">Short checklist</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.MinDurationAlertEnabled" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.checkList && model.MinDurationAlertEnabled" class="row pt-4">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt-two">Min. Time (Sec)</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <input numbersOnly type="text" class="help-input" placeholder="Min.Time"
+            [(ngModel)]="model.InspectionMinTime">
+        </div>
+      </div>
+
+      <div *ngIf="model.checkList" class="row pt-4 pb-4">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt-two"
+          matTooltip="Sequence of the questions every time it prompts on the device">Present Randomly</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle matTooltip="Sequence of the questions every time it prompts on the device" id=""
+            class="toggle" [(ngModel)]="model.CheckListRandomlyEnabled">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <hr>
+
+      <div class="row">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">SPEED</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.SpeedEnabled" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">KEYPAD</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.NumericBadgeEntry" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">LOW VOLTAGE</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.LowVoltageEnabled" class="toggle">
+          </mat-slide-toggle>
+        </div>
+
+        <div *ngIf="model.LowVoltageEnabled" class="col-xl-3 col-lg-4 col-md-3 col-4 col-sm-4 inputs-txt-two">LOW
+          VOLTAGE
+          Threshold(V)
+        </div>
+        <div *ngIf="model.LowVoltageEnabled"
+          class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+          <input placeholder="low voltage Th." type="text" class="help-input" numbersOnly
+            [(ngModel)]="model.LowVoltageThreshold"></div>
+      </div>
+      <hr>
+    </div>
+
+
+
+
+    <!-- <sensorscomponent *ngIf="selectedTab=='SENSORS'"></sensorscomponent> -->
+
+    <div *ngIf="selectedTab=='SENSORS'">
+      <div class="row pt-4">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-5">
+          <div class="inputs-txt-two">
+            <b>GTrac</b>
+          </div>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.SensorEnabled" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+
+      <div *ngIf="model.SensorEnabled" class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+        <div class="row pb-2">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6">
+
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                X
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                Y
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                Z
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-4">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6 inputs-txt">
+            Impact Alert Threshold
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 inputs-txt">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.ImpactAlertThresholdX" placeholder="X" type="text" class="help-input">
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.ImpactAlertThresholdY" placeholder="Y" type="text" class="help-input">
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.ImpactAlertThresholdZ" placeholder="Z" type="text" class="help-input">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-2">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6">
+
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                X
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                Y
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                Z
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-4">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6 inputs-txt">
+            Impact Alarm Threshold
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.ImpactAlarmThresholdX" placeholder="X" type="text" class="help-input">
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.ImpactAlarmThresholdY" placeholder="Y" type="text" class="help-input">
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.ImpactAlarmThresholdZ" placeholder="Z" type="text" class="help-input">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-2">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6">
+
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                X
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                Y
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 inputs-txt">
+                Z
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-4">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6 inputs-txt">
+            Sampling (ms)
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.SamplingX" placeholder="X" type="text" class="help-input" numbersOnly>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.SamplingY" placeholder="Y" type="text" class="help-input" numbersOnly>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                <input [(ngModel)]="model.SamplingZ" placeholder="Z" type="text" class="help-input" numbersOnly>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-2">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6">
+
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 inputs-txt">
+                High Severity (g)
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 inputs-txt">
+                Medium Severity (g)
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="row pb-4">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6 inputs-txt">
+            Impact Severity (g)
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                <input [(ngModel)]="model.HighSeverity" placeholder="High Severity" type="text" class="help-input">
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                <input [(ngModel)]="model.MediumSeverity" placeholder="Medium Severity" type="text" class="help-input"
+                  numbersOnly>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-2">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6">
+
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 inputs-txt">
+                Threshold (dps)
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 inputs-txt">
+                Duration (ms)
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-4 col-lg-5 col-md-6 col-sm-6 col-6 inputs-txt">
+            Sharp Turning
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                <input [(ngModel)]="model.AggressiveThreshold" placeholder="Aggressive Th." type="text"
+                  class="help-input" numbersOnly>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                <input [(ngModel)]="model.AggressiveDuration" placeholder="Aggressive Duration" type="text"
+                  class="help-input" numbersOnly>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pb-4 pl-0 pr-0">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <hr>
+        </div>
+      </div>
+
+      <div class="row pb-4">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-5">
+          <div class="inputs-txt-two">
+            <b>LoadTrac</b>
+          </div>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.LoadSensorEnabled" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.loadTrck" class="top-scroll-view">
+        <div class="row">
+
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            Weight Th. (Pounds)
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            Pressure Change (Bars)
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            Overweight Time Th. (Sec)
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            Debounce (ms)
+          </div>
+        </div>
+        <div class="row pt-2 pb-3">
+
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            <input [(ngModel)]="model.LoadSensorWeightThreshold" placeholder="Load Sensor Weight Threshold" type="text"
+              class="help-input">
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            <input [(ngModel)]="model.LoadSensorPressureChange" placeholder="Load Sensor Pressure Change" type="text"
+              class="help-input" numbersOnly>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            <input [(ngModel)]="model.LoadSensorOverWeightTimeThreshold" placeholder="Load Sensor Over Wt. Time Th."
+              type="text" class="help-input">
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            <input [(ngModel)]="model.LoadSensorDebounceTimer" placeholder="Load Sensor Debounce Timer" type="text"
+              class="help-input">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- <generalcomponent *ngIf="selectedTab=='GENERAL'" [systemType]="systemTypeValue" [hmr]="hmr" [power]="power"
+      [classifications]="classifications"></generalcomponent> -->
+    <div *ngIf="selectedTab=='GENERAL'">
+
+      <div *ngIf="(model.System=='6' || model.System=='7' || model.System=='5') && type!='assetType'">
+        <div class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Operator Enable</div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.operatorEnable"
+              matTooltip="Frequency to save the report on the server">
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="model.System=='6' || model.System=='7' || model.System=='5'">
+        <div class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Power Usage Report
+          </div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.powerusage"
+              matTooltip="Frequency to save the report on the server">
+            </mat-slide-toggle>
+          </div>
+
+          <div *ngIf="model.powerusage" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Frequency
+            (Sec.)
+          </div>
+          <div *ngIf="model.powerusage"
+            class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+            <input type="text" class="help-input" matTooltip="It will end the session if the input seat is not sense"
+              placeholder="Frequency" numbersOnly [(ngModel)]="model.Charger_PowerUsageReporting_Frequency"> </div>
+
+
+        </div>
+        <div *ngIf="model.System=='7'" class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Operators</div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.operators"
+              matTooltip=" Enables the access control on the charger">
+            </mat-slide-toggle>
+          </div>
+
+        </div>
+      </div>
+      <div class="container-fluid" *ngIf="model.System=='3'">
+        <div class="row pt-4">
+          <div class="inputs-txt col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">INPUTS</div>
+          <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-4 d-md-block d-none d-sm-none mbile-view-padding"></div>
+          <div *ngIf="type!='moreAssets'"
+            class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding">HMR</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">Alarms</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">Productivity</div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">Enable</div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">Visible</div>
+        </div>
+        <div class="row pt-5">
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type!='assetType'"
+            matTooltip="Assigns a name to each input">{{model.key}}
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+            <input type="text" [(ngModel)]="model.key" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input">
+          </div>
+
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key"
+            matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not.">
+            <mat-button-toggle-group [(ngModel)]="model.key_toggler" appearance="legacy" name="fontStyle"
+              aria-label="Font Style">
+              <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+            *ngIf="type!='assetType' && type!='moreAssets'">
+            <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR1">
+          </div>
+          <div *ngIf="type=='assetType' && type!='moreAssets'"
+            class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding">
+            <mat-slide-toggle id="" [(ngModel)]="model.HMR1" class="toggle"
+              matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not.">
+            </mat-slide-toggle>
+            <!-- <input [(ngModel)]="keyInput" type="text" class="help-input"
+                matTooltip="An input set as High will be sense 
+                when there is a signal present while a Low one
+                will be sense when it is not."> -->
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.keyalarmTogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be Alarms">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2 mbile-view-padding">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.keyproductivityTogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be used to calculate productivity">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [(ngModel)]="model.keyCheckbox" matTooltip="Enables the inputs that will be used">
+            </mat-checkbox>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [disabled]="type!='assetType'" [(ngModel)]="model.visible1"
+              matTooltip="Determines which inputs will be shown on the device"></mat-checkbox>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row pt-1">
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type!='assetType'"
+            matTooltip="Assigns a name to each input">{{model.seatBelt}}
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+            <input type="text" [(ngModel)]="model.seatBelt" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input">
+          </div>
+          <div class="col-xl-2 col-lg-3 col-md-3 mbile-view-padding d-md-block d-none col-sm-3 col-4" id="occupancy">
+            <mat-button-toggle-group [(ngModel)]="model.occupancy_toggler" appearance="legacy" name="fontStyle"
+              aria-label="Font Style"
+              matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not.">
+              <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+            *ngIf="type!='assetType'&& type!='moreAssets'">
+            <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR2">
+          </div>
+          <div *ngIf="type=='assetType' && type!='moreAssets'"
+            class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding">
+            <mat-slide-toggle id="" [(ngModel)]="model.HMR2" class="toggle"
+              matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not.">
+            </mat-slide-toggle>
+            <!-- <input [(ngModel)]="keyInput" type="text" class="help-input"
+                matTooltip="An input set as High will be sense when there 
+                is a signal present while a Low one will be sense when it is not."> -->
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.seatAlarmTogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be Alarms">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.seatProd_TogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be used to calculate productivity">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [(ngModel)]="model.seatCheckbox" matTooltip="Enables the inputs that will be used">
+            </mat-checkbox>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [disabled]="type!='assetType'" [(ngModel)]="model.visible2"
+              matTooltip="Determines which inputs will be shown on the device"></mat-checkbox>
+          </div>
+        </div>
+        <hr>
+        <div class="row pt-1">
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type!='assetType'"
+            matTooltip="Assigns a name to each input">{{model.travel}}
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+            <input type="text" [(ngModel)]="model.travel" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input">
+          </div>
+          <div class="col-xl-2 col-lg-3 col-md-3 mbile-view-padding d-md-block d-none col-sm-3 col-4" id="travel">
+            <mat-button-toggle-group [(ngModel)]="model.travel_toggler" appearance="legacy" name="fontStyle"
+              aria-label="Font Style"
+              matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not.">
+              <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+            *ngIf="type!='assetType'&& type!='moreAssets'">
+            <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR3">
+          </div>
+          <div *ngIf="type=='assetType' && type!='moreAssets'"
+            class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding">
+            <mat-slide-toggle id="" [(ngModel)]="model.HMR3" class="toggle" matTooltip="An input set as High will be sense when there is a signal present 
+                while a Low one will be sense when it is not.">
+            </mat-slide-toggle>
+            <!-- <input type="text" [(ngModel)]="travelInput" class="help-input"
+                matTooltip="Determines which inputs will have a timer for used hours"> -->
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.travelalarmTogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be Alarms">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.travelProd_TogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be used to calculate productivity">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [(ngModel)]="model.travelCheckbox" matTooltip="Enables the inputs that will be used">
+            </mat-checkbox>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [disabled]="type!='assetType'" [(ngModel)]="model.visible3"
+              matTooltip="Determines which inputs will be shown on the device"></mat-checkbox>
+          </div>
+        </div>
+        <hr>
+        <div class="row pt-1">
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type!='assetType'"
+            matTooltip="Assigns a name to each input">{{model.lowFule}}
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-md-2 col-sm-2 col-3 col-lg-2" *ngIf="type=='assetType'">
+            <input type="text" [(ngModel)]="model.lowFule" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input">
+          </div>
+          <div class="col-xl-2 col-lg-3 mbile-view-padding col-md-3 d-md-block d-none col-sm-3 col-4" id="low-fuel">
+            <mat-button-toggle-group [(ngModel)]="model.low_fuel_toggler" appearance="legacy" name="fontStyle"
+              aria-label="Font Style"
+              matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not.">
+              <mat-button-toggle value="Y" ngDefaultControl>HIGH</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>LOW</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-md-2 col-sm-2 col-1 col-lg-2 pl-0 pr-0"
+            *ngIf="type!='assetType'&& type!='moreAssets'">
+            <input type="text" [disabled]="type=='moreAssets'" class="help-input" placeholder=""
+              matTooltip="Assigns a name to each input" [(ngModel)]="model.HMR4">
+          </div>
+          <div *ngIf="type=='assetType' && type!='moreAssets'"
+            class="inputs-txt-two col-xl-1 col-lg-2 col-md-2 col-sm-2 col-1 mbile-view-padding">
+            <mat-slide-toggle id="" [(ngModel)]="model.HMR4" class="toggle"
+              matTooltip="An input set as High will be sense when there is a signal present while a Low one will be sense when it is not.">
+            </mat-slide-toggle>
+            <!-- <input [(ngModel)]="lowFuel_Input" type="text" class="help-input"
+              matTooltip="Determines which inputs will have a timer for used hours"> -->
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.lowfuelalarmTogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be Alarms">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+            <div>
+              <mat-slide-toggle id="" [disabled]="type!='assetType'" [(ngModel)]="model.lowfuelalarmTogglerButton"
+                class="toggle" matTooltip="Determines which inputs will be used to calculate productivity">
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [(ngModel)]="model.lowfuelproductivityTogglerButton"
+              matTooltip="Enables the inputs that will be used">
+            </mat-checkbox>
+          </div>
+          <div class="inputs-txt-two col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 mbile-view-padding">
+            <mat-checkbox [disabled]="type!='assetType'" [(ngModel)]="model.visible4"
+              matTooltip="Determines which inputs will be shown on the device"></mat-checkbox>
+          </div>
+        </div>
+        <hr>
+        <div class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Unoccupied</div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.IdlingAsset" name="fontStyle"
+              aria-label="Font Style" matTooltip="It will end the session if the input seat is not sense">
+              <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div *ngIf="model.IdlingAsset=='Y'" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Asset
+            Timer (Sec)
+          </div>
+          <div *ngIf="model.IdlingAsset=='Y'"
+            class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+            <input type="text" class="help-input" numbersOnly> </div>
+
+
+        </div>
+        <hr>
+        <!-- <br> -->
+      </div>
+
+      <!-- <div *ngIf="model.System=='3' || model.System=='4'" class="row pt-3">
+
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">PM</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" [(ngModel)]="model.g_PM" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div> -->
+      <!-- <div *ngIf="(model.System=='3' || model.System=='4') && model.g_PM" class="top-scroll-view">
+        <div class="row pt-4">
+          <div *ngIf="model.System!='4'" class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">Type</div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 inputs-txt-two">Frequency (Hrs)
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-3 inputs-txt-two">Under PM (Hrs)</div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 inputs-txt-two">Over PM (Hrs)</div>
+          <div *ngIf="typevalue=='Smart'" class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">Input</div>
+        </div>
+        <div class="row pt-4 pb-4">
+          <div *ngIf="model.System!='4'" class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+            <div class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+              <div matTooltip=" Regular will trigger the Alarm by Input 2 (Seat) while Smart allows to configure 
+                  which input to track for Preventive Maintenance" class="help-selected-item help-dropdown-menu-item"
+                [ngClass]="{'cursor-point':type!=true}" dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{typevalue}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="typeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;height: 65px;overflow-y: auto">
+                <li *ngFor="let data of typeList;let i=index;">
+                  <div class="text-left help-site-name" id="typeList{{i}}" (click)="typevalue=data">
+                    {{data}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2"><input numbersOnly type="text" class="help-input"
+              matTooltip="Alerts when a Preventive Maintenance needs to be done" [(ngModel)]="model.g_frequencyHr">
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-4">
+            <input numbersOnly type="text" class="help-input"
+              matTooltip=" Alerts when a Preventive Maintenance has taken longer than expected"
+              [(ngModel)]="model.g_underPm">
+          </div>
+          <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2"><input numbersOnly type="text" class="help-input"
+              matTooltip="Alerts when a Preventive Maintenance has done faster than expected"
+              [(ngModel)]="model.g_overPm"></div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+            <div *ngIf="typevalue=='Smart'" class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;"
+              matTooltip="Select the inputs that will determine when the asset required Preventive Maintenance">
+              <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{inputHrm}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="inputHrmList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                <li *ngFor="let data of inputHrmList;let i=index;">
+                  <div class="text-left help-site-name" id="inputHrmList{{i}}" (click)="inputHrm=data">
+                    {{data}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-3"></div>
+      </div> -->
+      <div *ngIf="model.System!='3' && model.System!='6' && model.System!='7' && model.System!='5'">
+        <div class="row">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-5">
+            <div class="checklist-text">
+              <!-- <b>PARAMETERS</b> -->
+            </div>
+          </div>
+        </div>
+        <div class="top-scroll-view">
+
+
+          <div class="row" style="padding-top:2%" *ngIf="model.PoweredBy=='4'">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">Voltage</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <div *ngIf="type=='assetType'" class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+                <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                  dropdownToggle aria-controls="dropdown-disabled-menu">
+                  {{voltage}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="voltageList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                  <li *ngFor="let data of voltageList;let i=index;">
+                    <div class="text-left help-site-name" id="voltageList{{i}}" (click)="voltageChange(data)">
+                      {{data.value}}</div>
+                  </li>
+                </ul>
+              </div>
+              <input *ngIf="type!='assetType'" type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.chargetoOpen" numbersOnly>
+            </div>
+          </div>
+          <hr *ngIf="model.System=='4' && model.PoweredBy=='4'">
+          <div *ngIf="model.System=='4' && model.PoweredBy=='4'" class="row">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">Charge to Open (Sec.)</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_ChargeToOpen" numbersOnly>
+            </div>
+          </div>
+          <hr *ngIf="model.PoweredBy=='4'">
+          <div class="row" *ngIf="model.PoweredBy=='4'">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">EQ Rate (%)</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_EQStartRate" numbersOnly placeholder="Eq Rate">
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">AH Capacity</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_AHCapacity" numbersOnly placeholder="AH Capacity">
+            </div>
+            <div *ngIf="model.PoweredBy=='4'" class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">EQ Frequency
+              (Days)
+            </div>
+            <div *ngIf="model.PoweredBy=='4'" class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_EQFrequency" numbersOnly placeholder="Eq Frequency">
+            </div>
+          </div>
+
+          <hr *ngIf="model.System=='4' && model.PoweredBy=='4'">
+          <div *ngIf="model.System=='4' && model.PoweredBy=='4'" class="row">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">Discharge to Open (Sec.)</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_DischargeToOpen" numbersOnly placeholder="Discharge">
+            </div>
+
+          </div>
+
+          <hr *ngIf="model.Classification=='6'">
+          <div class="row" *ngIf="model.Classification=='6'">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">Pick Acceleration (X Threshold)</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_PickAcceleration_ThresholdX" placeholder="X Threshold" numbersOnly>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">Pick Acceleration (Y Threshold)</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_PickAcceleration_ThresholdY" placeholder="Y Threshold" numbersOnly>
+            </div>
+            <div *ngIf="model.Classification=='6'" class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">Pick
+              Acceleration (Z Threshold)</div>
+            <div *ngIf="model.Classification=='6'" class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_PickAcceleration_ThresholdZ" placeholder="Z Threshold" numbersOnly>
+            </div>
+          </div>
+
+          <hr *ngIf="model.Classification=='6'">
+          <div class="row" *ngIf="model.Classification=='6'">
+
+            <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">Cooling Temp.
+              (F)</div>
+            <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+              <input type="text" class="help-input inputs-txt-two  mbile-view-padding"
+                [(ngModel)]="model.Battery_CoolingTemperature" numbersOnly placeholder="Cooling Temp">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div *ngIf="model.System!='6' && model.System!='7' && model.System!='5'">
+        <div *ngIf="hmrEnable || model.System=='3'" class="row pt-3">
+
+          <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">PM</div>
+          <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+            <mat-slide-toggle id="" [(ngModel)]="model.PM" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div *ngIf="model.PM && (hmrEnable || model.System=='3')" class="top-scroll-view">
+          <div class="row pt-4">
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">Type</div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-4 inputs-txt-two">Frequency (Hrs)</div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 inputs-txt-two">Under PM (Hrs)</div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 inputs-txt-two d-md-block d-none">Over PM (Hrs)
+            </div>
+
+          </div>
+          <div class="row pt-4 pb-4">
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+              <div class="btn-group" dropdown id="adminname" style="width:100%;">
+                <div
+                  matTooltip="Regular will trigger the Alarm by Input 2 (Seat) while Smart allows to configure which input to track for Preventive Maintenance"
+                  class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                  dropdownToggle aria-controls="dropdown-disabled-menu">
+                  {{typevalue}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="typeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;height: auto">
+                  <li *ngFor="let data of typeList;let i=index;">
+                    <div class="text-left help-site-name" id="typeList{{i}}" (click)="typevalue=data">
+                      {{data}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-md-block d-none"><input numbersOnly type="text"
+                class="help-input" [(ngModel)]="model.Frequency"></div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-4">
+              <input numbersOnly type="text" class="help-input" [(ngModel)]="model.UnderPM">
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-md-block d-none"><input numbersOnly type="text"
+                class="help-input" [(ngModel)]="model.OverPM"></div>
+
+          </div>
+        </div>
+
+        <hr *ngIf="model.PM && (hmrEnable || model.System=='3')">
+      </div>
+      <br>
+    </div>
+
+
+    <!-- <integrationscomponent *ngIf="selectedTab=='INTEGRATIONS'"></integrationscomponent> -->
+    <!-- <alarmcomponent *ngIf="selectedTab=='ALARMS'" [classifications]="classifications" [systemType]="systemTypeValue"></alarmcomponent> -->
+    <div *ngIf="selectedTab=='ALARMS'">
+
+      <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-5">
+          <div class="checklist-text">
+            <!-- <b>CHECKLIST</b> -->
+          </div>
+        </div>
+      </div>
+      <div *ngIf="false">
+        <div class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Power Usage Report
+          </div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.powerusage"
+              matTooltip="Frequency to save the report on the server">
+            </mat-slide-toggle>
+          </div>
+
+          <div *ngIf="model.powerusage" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Frequency
+          </div>
+          <div *ngIf="model.powerusage"
+            class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+            <input type="text" class="help-input" matTooltip="It will end the session if the input seat is not sense"
+              numbersOnly [(ngModel)]="model.Charger_PowerUsageReporting_Frequency"> </div>
+
+
+        </div>
+        <div class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Operators</div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-slide-toggle id="" class="toggle" [(ngModel)]="operators"
+              matTooltip=" Enables the access control on the charger">
+            </mat-slide-toggle>
+          </div>
+
+        </div>
+      </div>
+      <div>
+        <div class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Debounce Timer (sec)*
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+            <input type="text" [(ngModel)]="model.Battery_Debounce" placeholder="Enter the Debounce Timer"
+              class="help-input" numbersOnly>
+          </div>
+
+        </div>
+        <hr *ngIf="model.System=='4' && (powerdBy!='Diesel' && powerdBy!='Gas' && powerdBy!='Propane')">
+        <div *ngIf="model.System=='4' && (powerdBy!='Diesel' && powerdBy!='Gas' && powerdBy!='Propane')"
+          class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Low Water</div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_LowWater" name="fontStyle"
+              aria-label="Font Style">
+              <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div
+            *ngIf="model.System=='4' && (powerdBy!='Diesel' && powerdBy!='Gas' && powerdBy!='Propane') && model.Battery_LowWater=='Y'"
+            class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Low Water
+            Threshold (In Days) </div>
+          <div
+            *ngIf="model.System=='4' && (powerdBy!='Diesel' && powerdBy!='Gas' && powerdBy!='Propane') && model.Battery_LowWater=='Y'"
+            class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding"> <input type="text"
+              class="help-input" numbersOnly [(ngModel)]="model.Battery_LowWaterDays"> </div>
+        </div>
+
+        <hr>
+        <div class="row pt-1" style="margin-bottom:1%">
+          <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Low Voltage </div>
+          <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+            <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_LowVoltageAlarm" name="fontStyle"
+              aria-label="Font Style">
+              <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div *ngIf="model.Battery_LowVoltageAlarm=='Y'"
+            class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Low
+            Voltage
+            Threshold </div>
+          <div *ngIf="model.Battery_LowVoltageAlarm=='Y'"
+            class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding"> <input type="text"
+              class="help-input" numbersOnly [(ngModel)]="model.Battery_LowVoltage_Threshold"> </div>
+        </div>
+        <div *ngIf="model.System=='4' && (powerdBy!='Diesel' && powerdBy!='Gas' && powerdBy!='Propane') ">
+          <hr>
+          <div class="row pt-1" style="margin-bottom:1%">
+            <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Over Voltage </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+              <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_OverVoltageAlarm" name="fontStyle"
+                aria-label="Font Style">
+                <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+                <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+
+            <div *ngIf="model.Battery_OverVoltageAlarm=='Y'"
+              class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Over
+              Voltage
+              Threshold </div>
+            <div *ngIf="model.Battery_OverVoltageAlarm=='Y'"
+              class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding"> <input type="text"
+                class="help-input" numbersOnly [(ngModel)]="model.Battery_OverVoltage_Threshold"> </div>
+          </div>
+          <hr>
+          <div class="row pt-1" style="margin-bottom:1%">
+            <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Over Current </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+              <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_OverCurrentAlarm" name="fontStyle"
+                aria-label="Font Style">
+                <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+                <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+
+            <div *ngIf="model.Battery_OverCurrentAlarm=='Y'"
+              class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Over
+              Current
+              Threshold </div>
+            <div *ngIf="model.Battery_OverCurrentAlarm=='Y'"
+              class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding"> <input type="text"
+                class="help-input" numbersOnly [(ngModel)]="model.Battery_OverCurrent_Threshold"> </div>
+          </div>
+          <hr>
+          <div class="row pt-1" style="margin-bottom:1%">
+            <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">High Temperature
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+              <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_OverTeperatureAlarm"
+                name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+                <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+
+            <div *ngIf="model.Battery_OverTeperatureAlarm=='Y'"
+              class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Over
+              Temp
+              Threshold (F) </div>
+            <div *ngIf="model.Battery_OverTeperatureAlarm=='Y'"
+              class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding"> <input type="text"
+                class="help-input" numbersOnly [(ngModel)]="model.Battery_OverTeperature_Threshold"> </div>
+          </div>
+          <hr>
+          <div class="row pt-1" style="margin-bottom:1%">
+            <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Cable Temp </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+              <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_CableTempSensor" name="fontStyle"
+                aria-label="Font Style">
+                <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+                <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+
+            <div *ngIf="model.Battery_CableTempSensor=='Y'"
+              class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Cable
+              Temp
+              Threshold (F) </div>
+            <div *ngIf="model.Battery_CableTempSensor=='Y'"
+              class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding"> <input type="text"
+                class="help-input" numbersOnly [(ngModel)]="model.Battery_CableTempAlarm_Threshold"> </div>
+          </div>
+          <hr>
+          <div class="row pt-1" style="margin-bottom:1%">
+            <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Low SoC </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+              <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_LowSoc" name="fontStyle"
+                aria-label="Font Style">
+                <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+                <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+
+            <div *ngIf="model.Battery_LowSoc=='Y'" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Low
+              SoC
+              Alert
+              Threshold </div>
+            <div *ngIf="model.Battery_LowSoc=='Y'"
+              class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+              <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_LowSoCAlertThreshold"> </div>
+            <div *ngIf="model.Battery_LowSoc=='Y'" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">Low
+              SoC
+              Alarm
+              Threshold </div>
+            <div *ngIf="model.Battery_LowSoc=='Y'"
+              class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+              <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_LowSoCAlarmThreshold"> </div>
+          </div>
+          <hr>
+
+          <div class="row pt-1" style="margin-bottom:1%">
+            <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Soc cutOff
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+              <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_SoCCutoff" name="fontStyle"
+                aria-label="Font Style">
+                <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+                <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          </div>
+          <hr>
+          <div *ngIf="model.Classification=='6'" class="row pt-1" style="margin-bottom:1%">
+            <div class="inputs-txt-two col-xl-2 col-md-2  d-md-block d-none col-sm-2 col-3 col-lg-2">Mispick</div>
+            <div class="col-xl-2 col-lg-3 col-md-3 d-md-block d-none mbile-view-padding col-sm-3 col-4" id="key">
+              <mat-button-toggle-group appearance="legacy" [(ngModel)]="model.Battery_MisPick" name="fontStyle"
+                aria-label="Font Style">
+                <mat-button-toggle value="Y" ngDefaultControl>ON</mat-button-toggle>
+                <mat-button-toggle value="N" ngDefaultControl>OFF</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+
+            <div *ngIf="model.Battery_MisPick=='Y'" class="col-xl-2 col-lg-3 col-md-3 col-4 col-sm-4 inputs-txt-two">
+              Mispick
+              Buzzer
+              Duration(s)</div>
+            <div *ngIf="model.Battery_MisPick=='Y'"
+              class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-4 mbile-view-padding">
+              <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_MisPickBuzzerDuration">
+            </div>
+          </div>
+          <hr *ngIf="model.Classification=='6'">
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="(hmrEnable && model.System=='4' && selectedTab=='INTEGRATIONS') || (selectedTab=='INTEGRATIONS' && ( model.System=='1' ||  model.System=='2' ||  model.System=='3'))">
+      <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-5">
+          <div class="checklist-text">
+            <!-- <b>PARAMETERS</b> -->
+          </div>
+        </div>
+      </div>
+      <div class="top-scroll-view">
+        <div class="row pt-4">
+          <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">EBis</div>
+          <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+            <mat-button-toggle-group appearance="legacy" [(ngModel)]="ebis" name="fontStyle" aria-label="Font Style">
+              <mat-button-toggle value="Y" ngDefaultControl>On</mat-button-toggle>
+              <mat-button-toggle value="N" ngDefaultControl>Off</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+        </div>
+        <div style="margin-top:1%;margin-left:1%" *ngIf="ebis=='Y'">
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-gl-4 col-xl-4" style="margin-bottom: 1%;">
+              <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-5 col-6 col-sm-6 inputs-txt-two">HMR1</div>
+                <div class="col-xl-7 col-lg-7 col-md-7 col-6 col-sm-6">
+                  <div class="btn-group" dropdown id="adminname" [isDisabled]="type1" style="width:100%;height: 100%;">
+                    <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                      dropdownToggle aria-controls="dropdown-disabled-menu">
+                      {{hrm1}}
+                      <span style="position: absolute;right:0;padding-right: 2%;">
+                        <img src="assets/common/inputs-dropdown.png">
+                      </span>
+                    </div>
+                    <ul id="hrmList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                      aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                      <li *ngFor="let data of hrmList;let i=index;">
+                        <div class="text-left help-site-name" id="hrmList{{i}}" (click)="hmrChange1(data)">
+                          {{data.value}}</div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-gl-4 col-xl-4" style="margin-bottom: 1%;">
+              <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-5 col-6 col-sm-6 inputs-txt-two">HMR2</div>
+                <div class="col-xl-7 col-lg-7 col-md-7 col-6 col-sm-6">
+                  <div class="btn-group" dropdown id="hmrChange2" [isDisabled]="type1" style="width:100%;height: 100%;">
+                    <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                      dropdownToggle aria-controls="dropdown-disabled-menu">
+                      {{hrm2}}
+                      <span style="position: absolute;right:0;padding-right: 2%;">
+                        <img src="assets/common/inputs-dropdown.png">
+                      </span>
+                    </div>
+                    <ul id="hmrChange2" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                      aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                      <li *ngFor="let data of hrmList;let i=index;">
+                        <div class="text-left help-site-name" id="hmrChange2{{i}}" (click)="hmrChange2(data)">
+                          {{data.value}}</div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-gl-4 col-xl-4" style="margin-bottom: 1%;">
+              <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-5 col-6 col-sm-6 inputs-txt-two">HMR3</div>
+                <div class="col-xl-7 col-lg-7 col-md-7 col-6 col-sm-6">
+                  <div class="btn-group" dropdown id="hrmList" [isDisabled]="type1" style="width:100%;height: 100%;">
+                    <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                      dropdownToggle aria-controls="dropdown-disabled-menu">
+                      {{hrm3}}
+                      <span style="position: absolute;right:0;padding-right: 2%;">
+                        <img src="assets/common/inputs-dropdown.png">
+                      </span>
+                    </div>
+                    <ul id="hmrChange3" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                      aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                      <li *ngFor="let data of hrmList;let i=index;">
+                        <div class="text-left help-site-name" id="hmrChange3{{i}}" (click)="hmrChange3(data)">
+                          {{data.value}}</div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-gl-4 col-xl-4" style="margin-bottom: 1%;">
+              <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-5 col-6 col-sm-6 inputs-txt-two">HMR4</div>
+                <div class="col-xl-7 col-lg-7 col-md-7 col-6 col-sm-6">
+                  <div class="btn-group" dropdown id="hrmList" [isDisabled]="type1" style="width:100%;height: 100%;">
+                    <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                      dropdownToggle aria-controls="dropdown-disabled-menu">
+                      {{hrm4}}
+                      <span style="position: absolute;right:0;padding-right: 2%;">
+                        <img src="assets/common/inputs-dropdown.png">
+                      </span>
+                    </div>
+                    <ul id="hmrChange4" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                      aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                      <li *ngFor="let data of hrmList;let i=index;">
+                        <div class="text-left help-site-name" id="hmrChange4{{i}}" (click)="hmrChange4(data)">
+                          {{data.value}}</div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-gl-4 col-xl-4" style="margin-bottom: 1%;">
+              <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-5 col-6 col-sm-6 inputs-txt-two">Frequency</div>
+                <div class="col-xl-7 col-lg-7 col-md-7 col-6 col-sm-6">
+                  <div class="btn-group" dropdown id="frequencyList" [isDisabled]="type1"
+                    style="width:100%;height: 100%;">
+                    <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                      dropdownToggle aria-controls="dropdown-disabled-menu">
+                      {{frequency}}
+                      <span style="position: absolute;right:0;padding-right: 2%;">
+                        <img src="assets/common/inputs-dropdown.png">
+                      </span>
+                    </div>
+                    <ul id="hrmList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                      aria-frequencyList="button-disabled-menu" style="margin-top:10px;">
+                      <li *ngFor="let data of frequencyList2;let i=index;">
+                        <div class="text-left help-site-name" id="frequencyList{{i}}" (click)="frequencyChange(data)">
+                          {{data.value}}</div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-gl-4 col-xl-4" style="margin-bottom: 1%;">
+              <div class="row">
+                <div class="col-xl-4 col-lg-5 col-md-5 col-6 col-sm-6 inputs-txt-two">At</div>
+                <div class="col-xl-7 col-lg-7 col-md-7 col-6 col-sm-6">
+                  <input id="at" (keypress)="$event.preventDefault()" (keydown)="$event.preventDefault()"
+                    class="side-input" [(ngModel)]="model.EBisTime" [owlDateTimeTrigger]="at" [owlDateTime]="at">
+                  <owl-date-time [pickerType]="'timer'" #at></owl-date-time>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">TMA</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-button-toggle-group appearance="legacy" [(ngModel)]="tma" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="Y" ngDefaultControl>On</mat-button-toggle>
+            <mat-button-toggle value="N" ngDefaultControl>Off</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div *ngIf="selectedTab=='INTERNAL SETTINGS'">
+      <br>
+      <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">GPS FUNCTION</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">HMRs Frequency</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.gpsFunction">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.gpsFunction" class="top-scroll-view">
+        <div class="row">
+
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3  inputs-txt-two">
+            Frequency
+          </div>
+
+        </div>
+        <div class="row pt-2 pb-3">
+
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt">
+            <input [(ngModel)]="model.fre" placeholder="Frequency" type="text" class="help-input">
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <!-- <interalconfiguration *ngIf="selectedTab=='INTERNAL CONFIGURATIONS'"></interalconfiguration> -->
+    <div *ngIf="selectedTab=='INTERNAL CONFIGURATIONS'">
+
+      <div class="row pt-4">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-5">
+          <div class="checklist-text">
+            <b>GPS VARIABLES</b>
+          </div>
+        </div>
+      </div>
+      <div class="top-scroll-view">
+        <div class="row pt-4">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4 inputs-txt-two">Time Frequency</div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 inputs-txt-two d-md-block d-none">Distance
+            Threshold(Meters)
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 col-4 inputs-txt-two">Direction Threshold</div>
+        </div>
+        <div class="row pt-3 pb-4">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-4">
+            <input type="text" class="help-input" numbersOnly placeholder="Time Frequency"
+              [(ngModel)]="model.TimeFrequency">
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-2 col-sm-2 col-2 d-md-block d-none"><input numbersOnly
+              [(ngModel)]="model.DistanceThreshold" type="text" class="help-input" numbersOnly placeholder="Meters">
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 col-4">
+            <input type="text" class="help-input" numbersOnly placeholder="Direction Threshold"
+              [(ngModel)]="model.DirectionThreshold">
+          </div>
+        </div>
+      </div>
+
+      <hr>
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">DOP VALUE</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <input type="text" class="help-input" numbersOnly placeholder="DOP VALUE" [(ngModel)]="model.DOPValue">
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt">BY-PASS CODE</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <input type="text" class="help-input" placeholder="BY-PASS CODE" [(ngModel)]="model.Code">
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3' " class="row">
+        <div class="col-xl-3 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt">ALARM LOGOUT</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.alarmlogout">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.System!='3' && model.alarmlogout" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Alarms</div>
+        <div class="col-auto btn-s/pace">
+          <div class="btn2" (click)="model.alarmLogImpact=!model.alarmLogImpact"
+            [ngClass]="{'btn2-color':model.alarmLogImpact==true}">
+            <div class="btn2-text">Impact</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmLogSkip=!model.alarmLogSkip"
+            [ngClass]="{'btn2-color':model.alarmLogSkip==true}">
+            <div class="btn2-text">Skipped checklist</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmLogWrong=!model.alarmLogWrong"
+            [ngClass]="{'btn2-color':model.alarmLogWrong==true}">
+            <div class="btn2-text">Unexpected checklist</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmLogGeof=!model.alarmLogGeof"
+            [ngClass]="{'btn2-color':model.alarmLogGeof==true}">
+            <div class="btn2-text">Geofence</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmLogInput=!model.alarmLogInput"
+            [ngClass]="{'btn2-color':model.alarmLogInput==true}">
+            <div class="btn2-text">Input Based</div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="model.System!='3' && model.alarmlogout" class="row pt-3">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-6 inputs-txt-two">Logout type</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <div class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+            <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+              dropdownToggle aria-controls="dropdown-disabled-menu">
+              {{model.logoutTypeName}}
+              <span style="position: absolute;right:0;padding-right: 2%;">
+                <img src="assets/common/inputs-dropdown.png">
+              </span>
+            </div>
+            <ul id="logoutTypeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+              aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+              <li *ngFor="let data of logoutTypeList;let i=index;">
+                <div class="text-left help-site-name" id="logoutTypeList{{i}}" (click)="logoutChange(data)">
+                  {{data.value}}</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-2 col-md-4 col-6 col-sm-6 inputs-txt">WELCOME MESSAGE</div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-6 col-sm-6">
+          <input type="text" class="help-input" placeholder="Enter message text here" [(ngModel)]="model.Message">
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt">INPUT DEDICATED FUNCTION</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.inputDedicated">
+          </mat-slide-toggle>
+        </div>
+
+      </div>
+      <div *ngIf="model.System!='3' && model.inputDedicated" class="top-scroll-view pl-3">
+        <div class="row pt-4">
+          <div class="col-xl-4 col-lg-4 col-md-3 col-sm-4 col-4 inputs-txt-two">Seat Belt</div>
+          <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-3 inputs-txt-two d-md-block d-none">Fuel</div>
+          <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 col-4 inputs-txt-two">Fluid</div>
+        </div>
+        <div class="row pt-3 pb-4">
+          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+            <div class="btn-group" dropdown id="inputList" style="width:100%;">
+              <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{model.seatValue}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="inputList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;height: auto">
+                <li *ngFor="let data of listofInputs;let i=index;">
+                  <div class="text-left help-site-name" id="inputList{{i}}" (click)="seatChange(data)">
+                    {{data.value}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 d-md-block d-none">
+            <div class="btn-group" dropdown id="inputList" style="width:100%;">
+              <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{model.fuelValue}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="inputList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;height: auto">
+                <li *ngFor="let data of inputList;let i=index;">
+                  <div class="text-left help-site-name" id="inputList{{i}}" (click)="fuelChange(data)">
+                    {{data.value}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+            <div class="btn-group" dropdown id="inputList" style="width:100%;">
+              <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{model.fluidValue}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="inputList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;height: auto">
+                <li *ngFor="let data of inputList;let i=index;">
+                  <div class="text-left help-site-name" id="inputList{{i}}" (click)="fluidChange(data)">
+                    {{data.value}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div class="row">
+        <div class="col-xl-3 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt">PM APPROCHING</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.pmApproching">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="(model.System=='1' || model.System=='2' || model.System=='3') && model.pmApproching"
+        class="top-scroll-view pl-3">
+        <div class="row pt-4">
+          <div class="col-xl-4 col-lg-4 col-md-3 col-sm-4 col-4 inputs-txt-two">Hours Before Alert</div>
+
+        </div>
+        <div class="row pt-3 pb-4">
+          <div class="col-xl-4 col-lg-4 col-md-3 col-sm-4 col-4">
+            <input type="text" class="help-input" numbersOnly placeholder="Hours"
+              [(ngModel)]="model.HoursBeforeForAlert">
+          </div>
+
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">GPS FUNCTION</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.gpsFunction">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <hr>
+
+      <div *ngIf="model.System=='3'" class="row ">
+        <div class="col-xl-3 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt">Relay</div>
+
+      </div>
+      <div *ngIf="model.System=='3'" class="top-scroll-view pl-3">
+        <div class="row pt-4">
+          <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt-two">Relay Status Change </div>
+          <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+            <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.relay">
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+
+      <hr *ngIf="model.System=='3'">
+      <div *ngIf="model.System=='3'" class="row ">
+        <div class="col-xl-3 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt">Vital Menu</div>
+
+      </div>
+      <div *ngIf="model.System=='3'" class="top-scroll-view pl-3">
+        <div class="row pt-4">
+          <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt-two">Access Control</div>
+          <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+            <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.AccessControl">
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="model.System=='3'">
+
+      <div *ngIf="model.System=='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">Rental Timer Input</div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.InputSelected">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.System=='3' && model.InputSelected" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Input Selected</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input1option=!model.input1option"
+            [ngClass]="{'btn2-color':model.input1option==true}">
+            <div class="btn2-text">Input1</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input2option=!model.input2option"
+            [ngClass]="{'btn2-color':model.input2option==true}">
+            <div class="btn2-text">Input2</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input3option=!model.input3option"
+            [ngClass]="{'btn2-color':model.input3option==true}">
+            <div class="btn2-text">input3</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input4option=!model.input4option"
+            [ngClass]="{'btn2-color':model.input4option==true}">
+            <div class="btn2-text">input4</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input5option=!model.input5option"
+            [ngClass]="{'btn2-color':model.input5option==true}">
+            <div class="btn2-text">input5</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input6option=!model.input6option"
+            [ngClass]="{'btn2-color':model.input6option==true}">
+            <div class="btn2-text">input6</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input7option=!model.input7option"
+            [ngClass]="{'btn2-color':model.input7option==true}">
+            <div class="btn2-text">input7</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.input8option=!model.input8option"
+            [ngClass]="{'btn2-color':model.input8option==true}">
+            <div class="btn2-text">input8</div>
+          </div>
+        </div>
+      </div>
+      <!-- <hr *ngIf="model.System!='3'"> -->
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">TIMERS SENDING FREQUENCY</div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-6 col-sm-6">
+          <input type="text" class="help-input" numbersOnly placeholder="Enter the Timers"
+            [(ngModel)]="model.TimeInMinutes">
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">MODE ACCESS</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.modeAccess">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <!-- <hr *ngIf="model.System!='3'"> -->
+      <div *ngIf="model.System!='3' && model.modeAccess" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Maintenance Lockout</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeMainAcg=!model.modeMainAcg"
+            [ngClass]="{'btn2-color':model.modeMainAcg==true}">
+            <div class="btn2-text">Acg Admin</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeMainMaintenance=!model.modeMainMaintenance"
+            [ngClass]="{'btn2-color':model.modeMainMaintenance==true}">
+            <div class="btn2-text">Maintenance</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeMainSuper=!model.modeMainSuper"
+            [ngClass]="{'btn2-color':model.modeMainSuper==true}">
+            <div class="btn2-text">Supervisor</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeMainAdmin=!model.modeMainAdmin"
+            [ngClass]="{'btn2-color':model.modeMainAdmin==true}">
+            <div class="btn2-text">Admin</div>
+          </div>
+        </div>
+
+      </div>
+      <div *ngIf="model.System!='3' && model.modeAccess" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">By-Pass</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeByAcg=!model.modeByAcg" [ngClass]="{'btn2-color':model.modeByAcg==true}">
+            <div class="btn2-text">Acg Admin</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeByMain=!model.modeByMain"
+            [ngClass]="{'btn2-color':model.modeByMain==true}">
+            <div class="btn2-text">Maintenance</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeBySuper=!model.modeBySuper"
+            [ngClass]="{'btn2-color':model.modeBySuper==true}">
+            <div class="btn2-text">Supervisor</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.modeByAdmin=!model.modeByAdmin"
+            [ngClass]="{'btn2-color':model.modeByAdmin==true}">
+            <div class="btn2-text">Admin</div>
+          </div>
+        </div>
+
+      </div>
+      <hr *ngIf="model.System!='3'">
+
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">ALARM TO LOGOUT</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.alarmTo">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.System!='3' && model.alarmTo" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Type of alarm</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput=!model.alarmToInput"
+            [ngClass]="{'btn2-color':model.alarmToInput==true}">
+            <div class="btn2-text">Input triggered</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToImpact=!model.alarmToImpact"
+            [ngClass]="{'btn2-color':model.alarmToImpact==true}">
+            <div class="btn2-text">Impact</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToPM=!model.alarmToPM" [ngClass]="{'btn2-color':model.alarmToPM==true}">
+            <div class="btn2-text">PM due</div>
+          </div>
+        </div>
+
+
+      </div>
+      <div *ngIf="model.System!='3' && model.alarmTo && model.alarmToInput" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Input type</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput1=!model.alarmToInput1"
+            [ngClass]="{'btn2-color':model.alarmToInput1==true}">
+            <div class="btn2-text">Input 1</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput2=!model.alarmToInput2"
+            [ngClass]="{'btn2-color':model.alarmToInput2==true}">
+            <div class="btn2-text">Input 2</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput3=!model.alarmToInput3"
+            [ngClass]="{'btn2-color':model.alarmToInput3==true}">
+            <div class="btn2-text">Input 3</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput4=!model.alarmToInput3"
+            [ngClass]="{'btn2-color':model.alarmToInput4==true}">
+            <div class="btn2-text">Input 4</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput5=!model.alarmToInput5"
+            [ngClass]="{'btn2-color':model.alarmToInput5==true}">
+            <div class="btn2-text">Input 5</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput6=!model.alarmToInput6"
+            [ngClass]="{'btn2-color':model.alarmToInput6==true}">
+            <div class="btn2-text">Input 6</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput7=!model.alarmToInput7"
+            [ngClass]="{'btn2-color':model.alarmToInput7==true}">
+            <div class="btn2-text">Input 7</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.alarmToInput8=!model.alarmToInput8"
+            [ngClass]="{'btn2-color':model.alarmToInput8==true}">
+            <div class="btn2-text">Input 8</div>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">TEMPERATURE OVERRIDE</div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.temperatureEnabled">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">CONFIGURATION MENU</div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.configurationmenu">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div *ngIf="model.System!='3' && model.configurationmenu" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Maintenance</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainInput=!model.confMainInput"
+            [ngClass]="{'btn2-color':model.confMainInput==true}">
+            <div class="btn2-text">Inputs</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainCheck=!model.confMainCheck"
+            [ngClass]="{'btn2-color':model.confMainCheck==true}">
+            <div class="btn2-text">Checklist</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainPm=!model.confMainPm"
+            [ngClass]="{'btn2-color':model.confMainPm==true}">
+            <div class="btn2-text">PM</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainIsensor=!model.confMainIsensor"
+            [ngClass]="{'btn2-color':model.confMainIsensor==true}">
+            <div class="btn2-text">iSensor settings</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainMode=!model.confMainMode"
+            [ngClass]="{'btn2-color':model.confMainMode==true}">
+            <div class="btn2-text">Mode</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainMisc=!model.confMainMisc"
+            [ngClass]="{'btn2-color':model.confMainMisc==true}">
+            <div class="btn2-text">Misc.</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainNetwork=!model.confMainNetwork"
+            [ngClass]="{'btn2-color':model.confMainNetwork==true}">
+            <div class="btn2-text">Network</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confMainLoadSensor=!model.confMainLoadSensor"
+            [ngClass]="{'btn2-color':model.confMainLoadSensor==true}">
+            <div class="btn2-text">Load Sensor</div>
+          </div>
+        </div>
+
+      </div>
+      <div *ngIf="model.System!='3' && model.configurationmenu" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Supervisor</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupInput=!model.confSupInput"
+            [ngClass]="{'btn2-color':model.confSupInput==true}">
+            <div class="btn2-text">Inputs</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupCheck=!model.confSupCheck"
+            [ngClass]="{'btn2-color':model.confSupCheck==true}">
+            <div class="btn2-text">Checklist</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupPm=!model.confSupPm" [ngClass]="{'btn2-color':model.confSupPm==true}">
+            <div class="btn2-text">PM</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupIsensor=!model.confSupIsensor"
+            [ngClass]="{'btn2-color':model.confSupIsensor==true}">
+            <div class="btn2-text">iSensor settings</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupMode=!model.confSupMode"
+            [ngClass]="{'btn2-color':model.confSupMode==true}">
+            <div class="btn2-text">Mode</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupMisc=!model.confSupMisc"
+            [ngClass]="{'btn2-color':model.confSupMisc==true}">
+            <div class="btn2-text">Misc.</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupNetwork=!model.confSupNetwork"
+            [ngClass]="{'btn2-color':model.confSupNetwork==true}">
+            <div class="btn2-text">Network</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSupLoadSensor=!model.confSupLoadSensor"
+            [ngClass]="{'btn2-color':model.confSupLoadSensor==true}">
+            <div class="btn2-text">Load Sensor</div>
+          </div>
+        </div>
+
+      </div>
+      <div *ngIf="model.System!='3' && model.configurationmenu" class="row pt-3">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt-two">Admin</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2Input=!model.confSup2Input"
+            [ngClass]="{'btn2-color':model.confSup2Input==true}">
+            <div class="btn2-text">Inputs</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2Check=!model.confSup2Check"
+            [ngClass]="{'btn2-color':model.confSup2Check==true}">
+            <div class="btn2-text">Checklist</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2Pm=!model.confSup2Pm"
+            [ngClass]="{'btn2-color':model.confSup2Pm==true}">
+            <div class="btn2-text">PM</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2Isensor=!model.confSup2Isensor"
+            [ngClass]="{'btn2-color':model.confSup2Isensor==true}">
+            <div class="btn2-text">iSensor settings</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2Mode=!model.confSup2Mode"
+            [ngClass]="{'btn2-color':model.confSup2Mode==true}">
+            <div class="btn2-text">Mode</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2Misc=!model.confSup2Misc"
+            [ngClass]="{'btn2-color':model.confSup2Misc==true}">
+            <div class="btn2-text">Misc.</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2Network=!model.confSup2Network"
+            [ngClass]="{'btn2-color':model.confSup2Network==true}">
+            <div class="btn2-text">Network</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.confSup2LoadSensor=!model.confSup2LoadSensor"
+            [ngClass]="{'btn2-color':model.confSup2LoadSensor==true}">
+            <div class="btn2-text">Load Sensor</div>
+          </div>
+        </div>
+
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-6 col-sm-6 inputs-txt">DETAILED EVENT REPORTING</div>
+        <div class="col-xl-2 col-lg-2 col-md-3 col-6 col-sm-6">
+          <mat-slide-toggle id="" class="toggle" [(ngModel)]="model.detailed">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt pr-0">COMMUNICATING DEVICE</div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.commuUltimate=!model.commuUltimate"
+            [ngClass]="{'btn2-color':model.commuUltimate==true}">
+            <div class="btn2-text">Ultimate</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.commuAdv=!model.commuAdv" [ngClass]="{'btn2-color':model.commuAdv==true}">
+            <div class="btn2-text">Advanced</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.commuCell=!model.commuCell" [ngClass]="{'btn2-color':model.commuCell==true}">
+            <div class="btn2-text">CellTrac</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.commuChar=!model.commuChar" [ngClass]="{'btn2-color':model.commuChar==true}">
+            <div class="btn2-text">Charger (RSMC)</div>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+      <div *ngIf="model.System!='3'" class="row">
+        <div class="col-xl-3 col-lg-2 col-md-12 col-2 col-sm-2 inputs-txt">Flashing Light</div>
+
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.checklist=!model.checklist" [ngClass]="{'btn2-color':model.checklist==true}">
+            <div class="btn2-text">Checklist</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.impact=!model.impact" [ngClass]="{'btn2-color':model.impact==true}">
+            <div class="btn2-text">Impact</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.lowfule=!model.lowfule" [ngClass]="{'btn2-color':model.lowfule==true}">
+            <div class="btn2-text">Low Fuel</div>
+          </div>
+        </div>
+        <div class="col-auto btn-space">
+          <div class="btn2" (click)="model.pmdue=!model.pmdue" [ngClass]="{'btn2-color':model.pmdue==true}">
+            <div class="btn2-text">PM Due</div>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="model.System!='3'">
+
+
+      <br><br><br><br>
+    </div>
+    <!-- <chrargingprofilecomponent *ngIf="selectedTab=='CHARGING PROFILE'"></chrargingprofilecomponent> -->
+    <div *ngIf="selectedTab=='CHARGING PROFILE'">
+
+      <div class="row" style="padding-top: 1.7%">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Reference Voltage per Cell
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_ReferenceVoltage_PerCell"
+            placeholder="Reference Voltage">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Min. Charge Voltage per Cell
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_MinCharge_Voltage_PerCell"
+            placeholder="Charge Voltage">
+        </div>
+      </div>
+      <hr>
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Max. Charge Voltage per Cell
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_MaxCharge_Voltage_PerCell"
+            placeholder="Charge Voltage">
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Min. Start Voltage per Cell
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_MinStart_Voltage_PerCell"
+            placeholder="Start Voltage">
+        </div>
+      </div>
+      <hr>
+
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Max. Start Voltage per Cell
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_MaxStart_Voltage_PerCell"
+            placeholder="Start Voltage">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Max. Start Rate
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Max_StartRate"
+            placeholder="Start Rate">
+        </div>
+      </div>
+      <hr>
+
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Finish Current
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Finish_Current"
+            placeholder="Finish Current">
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Min. Equalization Time
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Min_EqualizationTime"
+            placeholder="Equalization Time">
+        </div>
+      </div>
+      <hr>
+
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Max. Resistance
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Max_Resistance"
+            placeholder="Resistance">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Min. Battery Temp. (F)
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Min_Temperature"
+            placeholder="Battery Temp">
+        </div>
+      </div>
+      <hr>
+
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Max. Battery Temp. (F)
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Max_Temperature"
+            placeholder="Battery Temp">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Batery Warning Temp. (F)
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Warn_Temperature"
+            placeholder="Warning Temp">
+        </div>
+      </div>
+      <hr>
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Max. Current Above Warning
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Max_Current_AboveWarn"
+            placeholder="Warning">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">AH to Full Charge
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" [(ngModel)]="model.Battery_AH_FullCharge"
+            placeholder="AH to Full Charge">
+        </div>
+      </div>
+      <hr>
+
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">AH to Equalization
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" placeholder="AH to Equalization" class="help-input"
+            [(ngModel)]="model.Battery_AH_Equalization">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Hrs. to Full Charge
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Hrs_FullCharge"
+            placeholder="Hrs">
+        </div>
+      </div>
+      <hr>
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Hrs. to Equalization
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_Hrs_Equalization"
+            placeholder="Hrs">
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Charge Cycles to Full Charge
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_ChargeCycles_FullCharge"
+            placeholder="Charge Cycles">
+        </div>
+      </div>
+      <hr>
+
+      <div class="row ">
+        <div class="col-xl-3 col-lg-4 col-md-5 col-5 col-sm-5 inputs-txt">Charge Cycles to Equalization
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-4 col-sm-4">
+          <input type="text" class="help-input" numbersOnly [(ngModel)]="model.Battery_ChargeCycles_Equalization"
+            placeholder="Charge Cycles">
+        </div>
+      </div>
+      <hr>
+
+
+    </div>
+    <!-- <billingratescomponent *ngIf="selectedTab=='BILLING RATES'" [systemType]="systemTypeValue"></billingratescomponent> -->
+    <div *ngIf="selectedTab=='BILLING RATES'">
+
+      <div *ngIf="model.System=='5' || model.System=='6' || model.System=='7'">
+        <div class="row pt-4">
+          <div class="inputs-txt-two col-xl-3 col-md-2 col-sm-4 col-3 col-lg-2">Start Date</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+            <!-- <input id="my_id" [(ngModel)]="startDate" class="date-picker" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
+              placeholder="From Date" [owlDateTimeTrigger]="dt1">
+
+            <owl-date-time #dt1></owl-date-time> -->
+
+            <input [(ngModel)]="model.startDate" type="text" class="help-input" [owlDateTime]="dt1"
+              [owlDateTimeTrigger]="dt1" [owlDateTimeTrigger]="dt1" readonly>
+            <owl-date-time #dt1></owl-date-time>
+          </div>
+          <div class="inputs-txt-two col-xl-3 col-md-2 col-sm-4 col-3 col-lg-2">Occupancy Cost per Hr</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding"> <input
+              [(ngModel)]="model.occupancyCost_per_hour" type="text" numbersOnly class="help-input"
+              placeholder="Cost per Hr"></div>
+        </div>
+        <div class="row pt-4">
+          <div class="inputs-txt-two col-xl-3 col-md-2 col-sm-4 col-3 col-lg-2">Cost per kWh</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding"> <input
+              [(ngModel)]="model.costPer_kwh" type="text" class="help-input" numbersOnly placeholder="Cost per kWh">
+          </div>
+
+          <div class="inputs-txt-two col-xl-3 col-md-2 col-sm-4 col-3 col-lg-2">Admin %</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding"> <input
+              [(ngModel)]="model.adminPercentage" type="text" numbersOnly class="help-input"
+              placeholder="Enter the Admin"></div>
+        </div>
+        <div class="row pt-4">
+          <div class="inputs-txt-two col-xl-3 col-md-2 col-sm-4 col-3 col-lg-2">Billing Type</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+            <!-- <input
+              [(ngModel)]="billingType" placeholder="AC" type="text" class="help-input"> -->
+            <div class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+              <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{billingType}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="billingTypeList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                <li *ngFor="let data of billingTypeList;let i=index;">
+                  <div class="text-left help-site-name" id="billingTypeList{{i}}" (click)="billingType=data">
+                    {{data}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="inputs-txt-two col-xl-3 col-md-2 col-sm-4 col-3 col-lg-2">Include Charge time in Occupancy</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+            <!-- <input
+              [(ngModel)]="includeCharge_time" type="text" class="help-input"> -->
+            <mat-slide-toggle id="" [(ngModel)]="model.includeCharge_time" class="toggle">
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="row pt-4 pb-5">
+          <div class="inputs-txt-two col-xl-3 col-md-2 col-sm-4 col-3 col-lg-2">Currency</div>
+          <div class="inputs-txt-two col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 mbile-view-padding">
+            <!-- <input [(ngModel)]="currenCy" type="text" class="help-input"> -->
+            <div class="btn-group" dropdown id="adminname" style="width:100%;height: 100%;">
+              <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+                dropdownToggle aria-controls="dropdown-disabled-menu">
+                {{currency}}
+                <span style="position: absolute;right:0;padding-right: 2%;">
+                  <img src="assets/common/inputs-dropdown.png">
+                </span>
+              </div>
+              <ul id="currenCy" *dropdownMenu class="dropdown-menu help-dropdown-menu currency-overflow" role="menu"
+                aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+                <li *ngFor="let data of currencyList;let i=index;">
+                  <div class="text-left help-site-name" id="currenCy{{i}}" (click)="currency=data.Value">
+                    {{data.Value}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2%;text-align:center"
+        *ngIf="model.System=='1' || model.System=='2' || model.System=='3' || model.System=='4'">Coming Soon !</div>
+    </div>
+    <div *ngIf="showTabs" class="row bottom-div pb-3" style="bottom: 0px">
+      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6">
+
+        <div class="btn-group" dropdown id="profilesList" style="width:100%;height: 100%;">
+          <div class="help-selected-item bottom-div-drop-down" dropdownToggle aria-controls="dropdown-disabled-menu">
+            {{ProfileNameselected}}
+            <span style="position: absolute;right:0;padding-right: 2%;">
+              <img src="assets/common/inputs-dropdown.png">
+            </span>
+          </div>
+          <ul id="classificationUsed" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+            aria-labelledby="button-disabled-menu" style="margin-top:-65%;height:110px;overflow-y: auto">
+            <li *ngFor="let data of profileList;let i=index;">
+              <div class="text-left help-site-name" id="profileList{{i}}" (click)="profileName(data)">
+                {{data.ProfileName}}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 col-6 save-changes-text ">
+        <u (click)="saveProfile()">Save changes to profile</u>
+      </div>
+
+      <div class="col-xl-3 col-lg-2 col-md-1">
+
+      </div>
+
+      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
+        <div class="row">
+          <div class="col-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+            <div class="cancel-btn2" (click)="createModeFun()">
+              <div class="cancel-text2">CANCEL</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+            <div class="apply-btn2" (click)="applyEdit()">
+              <div class="apply-text2">APPLY</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-1 col-lg-1 col-xl-2"></div>
+  </div>
+</div>

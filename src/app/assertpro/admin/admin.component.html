@@ -1,0 +1,40 @@
+<!-- <app-fixedmenubar></app-fixedmenubar>
+<app-fixedsidebar></app-fixedsidebar> -->
+<div *ngIf="showPage" class="dash-body">
+  <div class="container-fluid">
+    <div *ngIf="siteId!=''" class="row" style="border-bottom: 1px solid rgba(167, 167, 180, 0.22);">
+      <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+      <div class="col-sm-10 col-md-9 col-lg-8 col-xl-6">
+        <div class="row">
+          <div class="col-md-8 col-sm-10 col-md-10 col-xl-8">
+
+            <div class="row">
+              <div *ngIf="companyEnable" class="col-md-3 col-sm-4 col-xl-3 col-xs-12 text-center">
+                <div id="companytab" class="ud-menu" [ngClass]="{'active-ud': udmenu=='COMPANY'}"
+                  (click)="tabChange('COMPANY')">
+                  COMPANY</div>
+              </div>
+              <div  *ngIf="vendorEnable" class="col-md-3 col-sm-4 col-xl-3 col-xs-12 text-center">
+                <div id="vendortab" class="ud-menu" [ngClass]="{'active-ud': udmenu=='VENDORS'}"
+                  (click)="tabChange('VENDORS')">
+                  VENDORS</div>
+              </div>
+              <div  *ngIf="stockEnable" class="col-md-3 col-sm-4 col-xl-3 col-xs-12 text-center">
+                <div id="stockpagetab" class="ud-menu" [ngClass]="{'active-ud': udmenu=='STOCK PAGE'}"
+                  (click)="tabChange('STOCK PAGE')">
+                  STOCK PAGE</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-2 col-sm-2 col-xl-4"></div>
+        </div>
+      </div>
+      <div class="col-md-1 col-lg-2 col-xl-4"></div>
+    </div>
+    <company *ngIf="siteId!='' && udmenu=='COMPANY'"></company>
+    <vendors *ngIf="siteId!='' && udmenu=='VENDORS'"></vendors>
+    <stock *ngIf="siteId!='' && udmenu=='STOCK PAGE'"></stock>
+  </div>
+</div>

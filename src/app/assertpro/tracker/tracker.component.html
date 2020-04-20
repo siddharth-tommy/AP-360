@@ -1,0 +1,141 @@
+<!-- <app-fixedmenubar *ngIf="!Isshowfullscreen"></app-fixedmenubar>
+<app-fixedsidebar *ngIf="!Isshowfullscreen"></app-fixedsidebar> -->
+<app-map (mouseenter)="IsShowfullimge=false"></app-map>
+<div class="tracker-container " [ngClass]="[Isshowfullscreen ? 'full-screen' : '']">
+
+  <div class="row justify-content-center ">
+    <div class="d-block d-lg-none "
+      style="background-color:rgba(29,61,87,0.8);height:50px;position: fixed;z-index:9;width:100px;top:0;margin-top:80px;text-align:center;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding-top:10px">
+      <a style="cursor:pointer" (click)="lgModal.show()">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1"
+          x="0px" y="0px" width="20px" height="20px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;"
+          xml:space="preserve">
+          <g>
+            <g id="menu">
+              <path d="M0,382.5h459v-51H0V382.5z M0,255h459v-51H0V255z M0,76.5v51h459v-51H0z" fill="#fff" />
+            </g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <div [ngStyle]="{'display':(showfullrckingmanu && Isshowdashboard) ? 'block' : 'none'}">
+    <div class="tracker-menu-box  d-none d-lg-block " [ngClass]="[Isshowfullscreen ? 'full-menu-screen' : '']">
+      <div class="container-fluid">
+        <div class="row tracker-menu" (mouseover)="IsShowfullimge=true">
+          <div class="col-4" (click)="menuactivemanger('location')">
+            <div class="text-center menu-item" [ngClass]="{'active-menu': activemenu=='location'}">
+              LOCATION
+            </div>
+
+          </div>
+          <div class="col-4" (click)="menuactivemanger('history')">
+            <div class="text-center menu-item" [ngClass]="{'active-menu': activemenu=='history'}">
+              HISTORY
+            </div>
+          </div>
+          <div class="col-4" (click)="menuactivemanger('geofence')">
+            <div class="text-center menu-item" [ngClass]="{'active-menu': activemenu=='geofence'}">
+              GEOFENCE
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div [hidden]="!IsShowfullimge">
+        <div *ngIf="activemenu=='location'">
+          <app-location></app-location>
+        </div>
+        <div *ngIf="activemenu=='history'">
+          <app-history></app-history>
+        </div>
+        <div *ngIf="activemenu=='geofence'">
+          <app-geofence></app-geofence>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" [style.display]="Isshowdashboard ? 'block' : 'none'">
+    <div class="modal-content" style="margin-top:150px">
+      <div class="modal-header">
+
+        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row tracker-menu">
+            <div class="col-4" (click)="menuactivemanger('location')">
+              <div class="text-center menu-item" [ngClass]="{'active-menu': activemenu=='location'}">
+                LOCATION
+              </div>
+
+            </div>
+            <div class="col-4" (click)="menuactivemanger('history')">
+              <div class="text-center menu-item" [ngClass]="{'active-menu': activemenu=='history'}">
+                HISTORY
+              </div>
+            </div>
+            <div class="col-4" (click)="menuactivemanger('geofence')">
+              <div class="text-center menu-item" [ngClass]="{'active-menu': activemenu=='geofence'}">
+                GEOFENCE
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div *ngIf="activemenu=='location'">
+            <app-location></app-location>
+          </div>
+          <div *ngIf="activemenu=='history'">
+            <app-history></app-history>
+          </div>
+          <div *ngIf="activemenu=='geofence'">
+            <app-geofence></app-geofence>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

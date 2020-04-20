@@ -1,0 +1,71 @@
+<div *ngIf="false" class="modal-header" style="border-bottom:none !important">
+  <h5 class="modal-title">MAP VIEW </h5>
+  <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<style>
+  #map {
+    top: 0px;
+    bottom: 0;
+    width: 100%;
+    height: 70vh;
+
+  }
+
+  .calculation-box {
+    height: 75px;
+    width: 150px;
+    position: absolute;
+    bottom: 40px;
+    left: 10px;
+    background-color: rgba(255, 255, 255, .9);
+    padding: 15px;
+    text-align: center;
+  }
+
+  p {
+    font-family: 'Open Sans';
+    margin: 0;
+    font-size: 13px;
+  }
+
+</style>
+
+<div class="container pl-0 pr-0">
+  <div class="map" id="map"></div>
+</div>
+
+<div class="map-tool-bar">
+  <div class="row">
+    <div class="col-2">
+      <div class="navigation-control" (click)="ZoomOut()">
+        <img src="assets/icon/zoom-out.png" onmouseover="this.src='assets/icon/zoom-out-active.png'"
+          onmouseout="this.src='assets/icon/zoom-out.png'">
+      </div>
+
+    </div>
+    <div class="col-2">
+      <div class="navigation-control" (click)="ZoomIn()">
+        <img src="assets/icon/zoom-in.png" onmouseover="this.src='assets/icon/zoom-in-active.png'"
+          onmouseout="this.src='assets/icon/zoom-in.png'">
+      </div>
+
+    </div>
+    <div class="col-2" *ngIf="false">
+      <div (click)="DrawToolAction()">
+        <img *ngIf="!Isdrawtoolactive" src="assets/icon/edit-btn.png"
+          onmouseover="this.src='assets/icon/edit-btn-active.png'" onmouseout="this.src='assets/icon/edit-btn.png'">
+        <img *ngIf="Isdrawtoolactive" src="assets/icon/edit-btn-active.png">
+
+      </div>
+    </div>
+    <div class="col-2" style="cursor: pointer">
+      <div (click)="setSatelliteView()">
+        <img *ngIf="!satellitetype" src="assets/icon/satellite.png"
+          onmouseover="this.src='assets/icon/satelliteactive.png'" onmouseout="this.src='assets/icon/satellite.png'">
+        <img *ngIf="satellitetype" src="assets/icon/satelliteactive.png">
+      </div>
+    </div>
+  </div>
+</div>

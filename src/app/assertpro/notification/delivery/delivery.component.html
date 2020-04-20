@@ -1,0 +1,82 @@
+<div #side class="side-bar"><div #myDiv class="additional-box" id="additional-box">
+  <div class="arrow-left"><i (click)="goBack()" class="material-icons">
+      arrow_back
+    </i></div>
+  <div class="nt-txt">
+    NOTIFICATIONS DELIVERIES
+  </div>
+  <div class="p-t-15" style="padding-bottom: 13%;position: fixed;width: 60%">
+    <mat-tab-group (selectedTabChange)="sidebarActive($event.index)"  [(selectedIndex)]="tabIndex">
+      <mat-tab label="EQUIPMENT">
+        <br />
+        <div><span style="cursor: pointer;" class="add-txt"><i style="vertical-align: bottom;" class="material-icons material-zoom-align">
+              add
+            </i></span><span style="cursor: pointer;" (click)="addBtn(undefined)" class="add-txt1">Add</span></div>
+        <table style="margin-top:0;">
+          <tr *ngFor="let item of items">
+            <td class="slide-txt">{{item.Name}}</td>
+            <td class="tgl-space1">
+              <mat-slide-toggle [(ngModel)]="item.type"></mat-slide-toggle>
+            </td>
+            <td (click)="addBtn(item)" class="edit-txt">Edit</td>
+          </tr>
+          <!-- <tr>
+            <td class="slide-txt">Out of geofence</td>
+            <td class="tgl-space1">
+              <mat-slide-toggle [(ngModel)]="v2"></mat-slide-toggle>
+            </td>
+            <td (click)="addBtn('Out of geofence')"  class="edit-txt">Edit</td>
+          </tr>
+          <tr>
+            <td class="slide-txt">Checklist lockout</td>
+            <td class="tgl-space1">
+              <mat-slide-toggle [(ngModel)]="v3"></mat-slide-toggle>
+            </td>
+            <td (click)="addBtn('Checklist lockout')"  class="edit-txt">Edit</td>
+          </tr>
+          <tr>
+            <td class="slide-txt">Low fuel</td>
+            <td class="tgl-space1">
+              <mat-slide-toggle [(ngModel)]="v4"> </mat-slide-toggle>
+            </td>
+            <td (click)="addBtn('Low fuel')"  class="edit-txt">Edit</td>
+          </tr> -->
+        </table>
+      </mat-tab>
+      <mat-tab label="BATTERIES">
+        <br />
+        <div style="cursor: pointer;"><span class="add-txt"><i style="vertical-align: bottom;" class="material-icons">
+              add
+            </i></span><span (click)="addBtn(undefined)" class="add-txt1">Add</span></div>
+        <table style="margin-top:0;">
+          <tr *ngFor="let item of items2">
+            <td class="slide-txt">{{item.value}}</td>
+            <td class="tgl-space1">
+              <mat-slide-toggle [(ngModel)]="item.type"></mat-slide-toggle>
+            </td>
+            <td (click)="addBtn(item.value)" class="edit-txt">Edit</td>
+          </tr>
+        </table>
+
+      </mat-tab>
+      <mat-tab label="CHARGERS">
+        <br />
+        <div style="cursor: pointer;"><span class="add-txt"><i style="vertical-align: bottom;" class="material-icons">
+              add
+            </i></span><span (click)="addBtn(undefined)" class="add-txt1">Add</span></div>
+            <table style="margin-top:0;">
+              <tr *ngFor="let item of items3">
+                <td class="slide-txt">{{item.value}}</td>
+                <td class="tgl-space1">
+                  <mat-slide-toggle [(ngModel)]="item.type"></mat-slide-toggle>
+                </td>
+                <td (click)="addBtn(item.value)" class="edit-txt">Edit</td>
+              </tr>
+            </table>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+
+</div>
+</div>

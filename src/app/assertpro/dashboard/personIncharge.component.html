@@ -1,0 +1,106 @@
+<style>
+  /* @import "../../../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css"; */
+
+.report-dr-down{
+    min-width: 100px;
+    border-radius: 20px;
+    background: #169BD7;
+    height: 30px
+}
+.report-dr-down-txt{
+    color:white;font-size:13px;
+    text-align: center !important
+}
+.report-dr-down-two{
+    min-width: 100px;
+    border-radius: 20px;
+    background: transparent;
+    height: 30px;
+    border: 1px solid #169BD7
+}
+.report-dr-down-two{
+    color:#169BD7;font-size:13px;
+    text-align: center !important
+}
+.example-full-width {
+    width: 100%;
+  }
+  ::ng-deep .mat-input-underline {
+    display: inherit;
+}
+.border-class{
+    border:1px solid #169BD7;
+}
+  input{
+    width: inherit;
+  }
+  button:focus{
+    outline: none;
+  }
+  
+.loading-indicator {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+/* Transparent Overlay */ 
+.loading-indicator:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+</style>
+<!-- <div class="text-center">Updated soon !</div> -->
+<div *ngIf="loader" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+
+
+
+  <div>
+    <!-- <span class="ml-3" style="    font-size: 16px;color: #EA4256;" mat-button color="accent"><b>HIGH IMPACT ALARM</b></span> -->
+    <div class="container body-content">
+      <div class="container">
+        <div class="row justify-content-start" style="padding-top:10px;">
+          <b><label>Send a mail</label></b>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <br>
+        <div class="row">
+          <div class="col-12 label-value">
+  
+            <mat-form-field class="example-full-width">
+              <input cdkFocusInitial [(ngModel)]="subject" matInput placeholder="Subject">
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-12 label-value">
+            <mat-form-field class="example-full-width">
+              <textarea [(ngModel)]="messages" matInput placeholder="Message"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" (click)="sendMail()">Send</button>
+  </div>
+

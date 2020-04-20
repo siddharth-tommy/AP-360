@@ -1,0 +1,202 @@
+<div *ngIf="loader==true" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="row" style="margin-top: 1%;">
+  <div class="col-md-2 col-lg-2 col-xl-2"></div>
+
+  <div class="col-sm-10 col-md-4 col-lg-3 col-xl-3 pl-0 ">
+    <commonasset #commonasset [header]="'FILTER BY ASSETS'" [deapartment]="false"></commonasset>
+  </div>
+
+  <div class="col-sm-2 col-md-2 col-lg-2 col-xl-1" style="margin-top:2%;">
+
+    <div class="row">
+      <div class="col-4 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="apply-btn" (click)="applyFunction()">
+          <div class="apply-text">APPLY</div>
+        </div>
+      </div>
+      <div class="col-4 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="cancel-btn" (click)="clear()">
+          <div class="cancel-text">CLEAR</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-sm-10 col-md-4 col-lg-4 col-xl-4 pl-0 ">
+    <div class="conections">
+      <div class="lbl-class">CONNECTIONS STATES NOW</div>
+      <div class="row pt-4">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 connection-stats-num"> {{connectionValues?.ConnectedClients}} </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 connection-stats-num"> {{connectionValues?.Processed}} </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 connection-stats-num"> {{connectionValues?.Read}} </div>
+      </div>
+      <div class="row pt-4 pb-2">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 connection-stats-text">CLIENTS CONECTED</div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 connection-stats-text">PROCESSED (MB)</div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 connection-stats-text">READS (MB)</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="row">
+  <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+  <div class="col-sm-10 col-md-9 col-lg-9 col-xl-9 pl-0">
+    <div class="container-fluid" style="padding-bottom:1%;">
+      <div class="row" style="margin-bottom: 1.5%;">
+        <div class="col-12 col-sm-12 co-md-5 col-lg-5 col-xl-5 pl-0">
+          <span class="head-label"><b>CONNECTED CLIENTS</b></span>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-1"></div>
+        <div class="col-xl-5 col-lg-5 col-md-12 col-12 col-sm-12">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pr-0 pl-0 mat-elevation-z8">
+          <div class="angular-table table-responsive">
+            <table class="table borderless" [dataSource]="dataSource" matSort mat-table>
+              <ng-container matColumnDef="select">
+                <th style="padding-top:1%;padding-left:24px;" mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <td style="padding-top:1%" mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="UnitID">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Unit ID</th>
+                <td mat-cell *matCellDef="let element" style="color:#2EA6DC;cursor: pointer;"> {{element.UnitID}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="IP">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>IP</th>
+                <td mat-cell *matCellDef="let element"> {{element.IP}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="LastComm">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Last comm.</th>
+                <td mat-cell *matCellDef="let element"> {{element.LastComm}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="CMDs">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>CMDs</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span>{{element.CMDs}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Events">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Events</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span>{{element.Events}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Data">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Data</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span>{{element.Data}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+          </div>
+          <mat-paginator [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1 col-lg-1 col-xl-1"></div>
+</div>
+<div class="row" style="margin-top:1%;">
+  <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+  <div class="col-sm-10 col-md-9 col-lg-9 col-xl-9 pl-0">
+    <div class="container-fluid" style="padding-bottom:1%;">
+      <div class="row" style="margin-bottom: 1.5%;">
+        <div class="col-12 col-sm-12 co-md-5 col-lg-5 col-xl-5 pl-0">
+          <span class="head-label"><b>MESSAGE THREADS</b></span>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-1"></div>
+        <div class="col-xl-5 col-lg-5 col-md-12 col-12 col-sm-12">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pr-0 pl-0 mat-elevation-z8">
+          <div class="angular-table table-responsive">
+            <table class="table borderless" [dataSource]="dataSource2" matSort mat-table>
+              
+              <ng-container matColumnDef="ID">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef style="padding-left:2%;">ID</th>
+                <td mat-cell *matCellDef="let element" style="color:#2EA6DC;cursor: pointer;"> {{element.ID}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Destination">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Destination</th>
+                <td mat-cell *matCellDef="let element"> {{element.ip}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Source">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Source</th>
+                <td mat-cell *matCellDef="let element"> {{element.Source}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Operator">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Operator</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span >{{element.Operator}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Date">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span>{{element.Date}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Event">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Event</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span>{{element.Event}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="GPS">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>GPS</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span>{{element.GPS}}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Data">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Data</th>
+                <td mat-cell *matCellDef="let element">
+                  <span></span><span>{{element.Data}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns2;">
+              </tr>
+            </table>
+          </div>
+          <mat-paginator [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1 col-lg-1 col-xl-1"></div>
+</div>

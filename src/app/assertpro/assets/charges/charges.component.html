@@ -1,0 +1,680 @@
+<charges-sidebar-component #chargesSidebarComponent (saveEmit)="loadTable()"></charges-sidebar-component>
+<div *ngIf="loader || loader2" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="col-sm-12 col-md-12 col-xs-12 col-xl-12 mt-3 pl-0">
+  <div style="padding-left: 3%" class="row">
+    <table cellpadding="0" cellspacing="0" class="communication-table  col-sm-12 col-md-8 col-xs-5 col-xl-5">
+      <tr>
+        <td>
+          <h4>{{overAllList?.OverAll}}</h4>
+          <p>TOTAL</p>
+        </td>
+        <td>
+          <h4 style="color: green">{{overAllList?.Online}}</h4>
+          <p style="color: green">ONLINE</p>
+        </td>
+        <td>
+          <h4 style="color: grey">{{overAllList?.Offline}}</h4>
+          <p style="color: grey">OFFLINE</p>
+        </td>
+        <td>
+          <h4 style="color:purple;width:60%;">{{overAllList?.OutOfRange}}</h4>
+          <p style="color:purple;width:60%;">OUT OF RANGE</p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-lg-4 col-xl-4 pl-0">
+      <div class="Rectangle-21-Copy-2">
+        <div class="prodictive-title">
+          <span
+            matTooltip="HOURS/AMP-HOURS/KWH DELIVERED OF">{{maxScreen==false?'HOURS/AMP-HOURS...':'HOURS/AMP-HOURS/KWH DELIVERED OF'}}</span>
+
+          <div id="pluginsOf" class="btn-group" dropdown> <a id="button-basic" dropdownToggle
+              aria-controls="dropdown-basic"
+              style="cursor:pointer;margin-left:1px;margin-right:5px;margin-top: -2px;color:#169bd7">
+              {{pluginsOfType}}
+            </a>
+            <ul id="pluginsOfType" *dropdownMenu role="menu" aria-labelledby="button-basic"
+              class="dropdown-menu dropdown-menu-right" style="border:0;">
+
+              <div *ngFor="let type of pluginsOfTypeList;let i=index;">
+                <div id="pluginsOfType{{i}}" (click)="loadPlugins(type)" class="alarm-txt" style="height:30px"
+                  [ngClass]="{'active-alarmmenu':type==pluginsOfType}">{{type}}</div>
+              </div>
+
+            </ul>
+          </div>
+
+
+        </div>
+        <div class="form-group ">
+          <canvas id="pluginchart"></canvas>
+        </div>
+        <div class="equipment-date-align">
+          <span class="chargers-date" *ngIf="pluginsOfType=='PAST 2 WEEKS' || pluginsOfType=='MONTH'">{{fromDate2}} -
+            {{toDate2}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xl-4 pl-0">
+      <div class="Rectangle-21-Copy-2">
+        <div class="prodictive-title">
+          FAULTS OF
+          <div id="alarmsOf" class="btn-group" dropdown> <a id="button-basic" dropdownToggle
+              aria-controls="dropdown-basic"
+              style="cursor:pointer;margin-left:1px;margin-right:5px;margin-top: -2px;color:#169bd7">
+              {{alarmType}}
+            </a>
+            <ul id="alarmsOfType" *dropdownMenu role="menu" aria-labelledby="button-basic"
+              class="dropdown-menu dropdown-menu-right" style="border:0;">
+
+              <div *ngFor="let type of alarOfTypeList;let i=index;">
+                <div id="alarmsOfType{{i}}" (click)="loadAlarms(type)" class="alarm-txt" style="height:30px"
+                  [ngClass]="{'active-alarmmenu':type==alarmType}">{{type}}</div>
+              </div>
+
+            </ul>
+          </div>
+        </div>
+        <div class="form-group ">
+          <canvas id="alarmscharts"></canvas>
+        </div>
+        <div class="equipment-date-align">
+          <span class="chargers-date" *ngIf="alarmType=='PAST 2 WEEKS' || alarmType=='MONTH'">{{fromDate3}} -
+            {{toDate3}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xl-4 pl-0">
+      <div class="Rectangle-21-Copy-2">
+        <div class="prodictive-title">USAGE</div>
+        <div class="form-group">
+          <canvas *ngIf="!maintenanceRecordEnable" id="chargesdoughnutChart" class="responsive-dohnut"></canvas>
+          <div class="empty-widget-msg" *ngIf="maintenanceRecordEnable">No data available</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="container-fluid">
+
+
+  <div class="row" style="margin-top:3%;margin-bottom:0;">
+    <div class="col-xl-7 col-lg-5">
+      <div class="asset-list-text">
+        <span class="asset-list-align"> ASSETS LIST </span>
+        <!-- <mat-checkbox id="equipmentshowAlarms" [(ngModel)]="showAlarms" (ngModelChange)="showAlarm()"
+              class="mat-check-box-align" style="font-size: 82%;">Show
+              with alarms only</mat-checkbox> -->
+      </div>
+    </div>
+
+
+    <div class="col-3 col-md-2 col-lg-3 col-xl-2 filter-text filter-icon filter-resize"
+      style="cursor: pointer;padding-right: 0%;">
+
+      <div (click)="selectedFilter=type" id="equipmentFilter" class="btn-group" dropdown>
+        Filters <img dropdownToggle src="../../../assets/icon/filter.PNG" alt="Filter-icon">
+        <a id="button-basic" aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7">
+        </a>
+        <ul id="equipmentFiltertype" *dropdownMenu role="menu" aria-labelledby="button-basic"
+          class="dropdown-menu dropdown-menu-right" style="border:0;overflow-y: scroll;
+                    height: 200px;">
+          <div *ngFor="let type of filterTypeList;let i=index;">
+            <div id="equipmentFilter{{i}}" class="alarm-txt" style="height:30px"
+              [ngClass]="{'active-alarmmenu':type==selectedFilter}">{{type}}</div>
+          </div>
+        </ul>
+      </div>
+
+    </div>
+    <form class="col-6 col-md-5 col-sm-6 col-lg-4 col-xl-3 form-align" action="" method="" name="search">
+      <div class="search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21" height="18"
+          alt="search icon" />
+        <input id="equipmentSearch" [(ngModel)]="tableFilter" class="remove-focus"
+          (keyup)="applyFilter($event.target.value)"  (paste)="applyFilter($event.target.value)" (keydown)="filterEnter($event)" autocomplete="off" name="seach"
+          type="text" placeholder="Search here" />
+      </div>
+    </form>
+
+
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="mb-3">
+      <mat-chip-list *ngFor="let item of filters;let i=index" style="float: left">
+        <mat-chip color="primary" selected> {{item}}<mat-icon (click)="RemoveFilterItem(i)" class="remove-icon">
+            close
+          </mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+</div>
+<div class="container-fluid pl-0">
+  <div style="position:sticky;" class="mat-elevation-z8">
+    <div class="asset-table-sroll">
+      <table matSort multiTemplateDataRows mat-table [dataSource]="dataSource" style="width:100% !important;">
+        <ng-container matColumnDef="expand">
+          <th mat-sort-header *matHeaderCellDef> </th>
+          <td style="cursor: pointer;" [ngClass]="{'row-color': i%2==0}" mat-cell
+            *matCellDef="let element;let i = dataIndex;">
+
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="select">
+          <th class="table-txt-head" style="padding-top:1%;border-bottom: none" mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td style="padding-top:1%;border-bottom: none" [ngClass]="{'row-color': i%2==0}" mat-cell
+            *matCellDef="let row;let i = dataIndex;">
+            <div *ngIf="i%2==0">
+              <span style="font-weight: bold;margin-top: -3px">Asset Name:</span>
+              <br /> <br />
+            </div>
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ID" style="text-align: center;">
+          <th class="table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> ID
+          </th>
+
+          <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+            (click)="loadExpandGrid(element)">
+            <div *ngIf="i%2==0">
+              <span style="font-weight: bold;">{{element.name}}</span>
+              <br /> <br />
+            </div>
+            {{element.ID}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="LastSeen">
+          <th class="table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> Last
+            seen </th>
+          <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+            (click)="loadExpandGrid(element)">
+            <div *ngIf="i%2==0">
+              <br /> <br />
+            </div>
+            <div *ngIf="element.LastSeen=='Log on'" class="online-btn-last-seen"><span
+                class="online-txt text-center">Online</span></div>
+            <div style="color: #93959a;" *ngIf="element.LastSeen!='Log on'">{{element?.EventDate}}</div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="symbol">
+          <th class="table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef>
+            Current Status </th>
+          <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+            (click)="loadExpandGrid(element)">
+            <div *ngIf="i%2==0">
+              <br /> <br />
+            </div>
+            {{element.LastSeen}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Status">
+          <th class="table-txt-head" style="border-bottom:none" mat-header-cell *matHeaderCellDef mat-sort-header>
+            Status </th>
+          <td [ngClass]="{'row-color': i%2==0}" style="cursor: pointer;" (click)="
+          mationDialog(element,i)"
+            mat-cell *matCellDef="let element;let i=dataIndex;">
+            <div *ngIf="i%2==0">
+              <br /> <br />
+            </div>
+            <div *ngIf="element.Status=='Active'" class="online-btn"><span
+                class="online-txt text-center">{{element.Status}}</span></div>
+            <div *ngIf="element.Status!='Active'" class="inactive-btn"><span
+                class="online-txt text-center">{{element.Status}}</span></div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="curren_alarms">
+          <th class="table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef>
+            Current Fault Codes </th>
+          <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+            (click)="loadExpandGrid(element)">
+            <div *ngIf="i%2==0">
+              <br /> <br />
+            </div>
+            22
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="assettype">
+          <th class="table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> Asset
+            type </th>
+          <td [ngClass]="{'row-color': i%2==0}" style="font-weight: bold;" mat-cell
+            *matCellDef="let element;let i = dataIndex;" (click)="loadExpandGrid(element)">
+            <div *ngIf="i%2==0">
+              {{element.assettype}}
+            </div>
+            <div *ngIf="i%2==0">
+              <br /> <br />
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="seemore">
+          <th class="mobile-label" style="border-bottom:none;padding-right: 0;" mat-header-cell *matHeaderCellDef>
+            <a id="availableactions" style="color:#169bd7 !important;cursor:pointer;white-space: nowrap;"
+              class="available-actions-btn col-2" dropdown dropdownToggle>
+              <span class="avail-text-hide">Available Actions
+                <img class="available-actions-btn-arrow" title="Available Actions"
+                  src="../../../assets/icon/dropdown-teal-ic.png">
+              </span>
+              <span class="avail-text-img">
+                <img class="available-actions-btn-arrow" title="Available Actions"
+                src="../../../assets/icon/dropdown-teal-ic.png">
+              </span>
+              <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                class="dropdown-menu dropdown-menu-right" style="border:0;white-space:nowrap;min-width: 11rem;overflow-y: scroll;
+                height: 150px;">
+                <div *ngFor="let type of availableType">
+                  <div (click)="openDialog(type)" class="alarm-txt" style="height:30px">{{type.value}}</div>
+                </div>
+
+              </ul>
+            </a>
+          </th>
+          <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;" class="txt-blue">
+            <div *ngIf="i%2==0" (click)="opensideBar(element,i)" id="chargessseemore{{i}}">See more>>
+            </div>
+            <div *ngIf="i%2==0">
+              <br /> <br />
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+            [ngClass]="{'test-one':element == expandedElement ?true:false} ">
+            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <div class="on-hover-data-table p-3 sizeng">
+                <div class="row m-b-15">
+                  <div class="login-timer-text2 col-md-2 col-sm-2 col-2">Temperature</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2"></div>
+                  <div class="login-timer-text col-md-2 col-sm-2 col-2" title="Voltage/Current">Output</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2">{{subGridDatas?.Output}}</div>
+                  <div class="login-timer-text col-md-2 col-sm-2 col-2">Soc Level</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2">{{subGridDatas?.SocLevel}}</div>
+                </div>
+                <div class="row m-b-15">
+                  <div class="login-timer-text2 col-md-2 col-sm-2 col-2">Device Serial No</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2">{{subGridDatas?.SerialNo}}</div>
+                  <div class="login-timer-text col-md-2 col-sm-2 col-2">Ah Charged</div>
+                  <div class="red-text col-md-2 col-sm-2 col-2">{{subGridDatas?.AhCharged}}</div>
+                  <div class="login-timer-text col-md-2 col-sm-2 col-2">Paired Device</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2 pl-0">{{subGridDatas?.PairedDevice}}</div>
+                </div>
+                <div class="row m-b-15">
+                  <div class="login-timer-text2 col-md-2 col-sm-2 col-xs-12">Flimware Version</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2">{{subGridDatas?.Version}}</div>
+                  <div class="login-timer-text col-md-2 col-sm-2 col-2">Install Date</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2">{{subGridDatas?.InstallDate2}}</div>
+                  <div class="login-timer-text col-md-2 col-sm-2 col-2">Warranty</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2 red-text">{{subGridDatas?.Warranty2}}<span
+                      class="blue-txt extend ml-2">Extend</span></div>
+                </div>
+                <div class="row m-b-15">
+                  <div class="login-timer-text2 col-md-2 col-sm-2 col-xs-12">Unit ID</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2">{{subGridDatas?.UniqueID}}</div>
+                  <!-- <div class="login-timer-text col-md-2 col-sm-2 col-2">Install Date</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2">{{subGridDatas?.InstallDate2}}</div>
+                  <div class="login-timer-text col-md-2 col-sm-2 col-2">Warranty</div>
+                  <div class="table-data-text col-md-2 col-sm-2 col-2 red-text">{{subGridDatas?.Warranty2}}<span
+                      class="blue-txt extend ml-2">Extend</span></div> -->
+                </div>
+
+              </div>
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element"
+          [ngClass]="{'test-two':element == expandedElement ?true:false} ">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+<!-- <charges-sidebar-component #chargesSidebarComponent></charges-sidebar-component>
+<div class="col-12 pad-0 col-xs-12">
+  <table cellpadding="0" cellspacing="0" class="communication-table m-b-10 label-class">
+    <tr>
+      <td width="6%">
+        <h6>18</h6>
+        <p>OVERALL</p>
+      </td>
+      <td width="6%">
+        <h6>22</h6>
+        <p>ONLINE</p>
+      </td>
+      <td width="6%">
+        <h6>14</h6>
+        <p>OFFLINE</p>
+      </td>
+      <td width="10%">
+        <h6 style="color:#d42e2e">6</h6>
+        <p style="color:#d02424;">OUT OF RANGE</p>
+      </td>
+    </tr>
+  </table>
+
+</div>
+<br />
+<div>
+
+  <div class="Rectangle-21-Copy-2 ">
+    <div class="txt-cls font-class">
+      <span
+        matTooltip="HOURS/AMP-HOURS/KWH DELIVERED OF">{{maxScreen==false?'HOURS/AMP-HOURS...':'HOURS/AMP-HOURS/KWH DELIVERED OF'}}</span>
+
+      <div id="pluginsOf" class="btn-group" dropdown> <a id="button-basic" dropdownToggle aria-controls="dropdown-basic"
+          style="cursor:pointer;margin-left:5px;margin-right:5px;color:#169bd7">
+          {{pluginsOfType}}
+        </a>
+        <ul id="pluginsOfType" *dropdownMenu role="menu" aria-labelledby="button-basic"
+          class="dropdown-menu dropdown-menu-right" style="border:0;">
+
+          <div *ngFor="let type of pluginsOfTypeList;let i=index;">
+            <div id="pluginsOfType{{i}}" (click)="loadPlugins(type)" class="alarm-txt" style="height:30px"
+              [ngClass]="{'active-alarmmenu':type==pluginsOfType}">{{type}}</div>
+          </div>
+
+        </ul>
+      </div>
+
+    </div>
+
+
+    <div class="grp-space">
+      <canvas id="pluginchart"></canvas>
+    </div><span class="batteries-date3" *ngIf="pluginsOfType=='PAST 2 WEEKS' || pluginsOfType=='MONTH'">Mar,20 -
+      Mar,27</span>
+  </div>
+  <div class="Rectangle-21-Copy-2">
+    <div class="txt-cls font-class">FAULTS OF
+      <div id="alarmsOf" class="btn-group" dropdown> <a id="button-basic" dropdownToggle aria-controls="dropdown-basic"
+          style="cursor:pointer;margin-left:5px;margin-right:5px;color:#169bd7">
+          {{alarmType}}
+        </a>
+        <ul id="alarmsOfType" *dropdownMenu role="menu" aria-labelledby="button-basic"
+          class="dropdown-menu dropdown-menu-right" style="border:0;">
+
+          <div *ngFor="let type of alarOfTypeList;let i=index;">
+            <div id="alarmsOfType{{i}}" (click)="loadAlarms(type)" class="alarm-txt" style="height:30px"
+              [ngClass]="{'active-alarmmenu':type==alarmType}">{{type}}</div>
+          </div>
+
+        </ul>
+      </div>
+    </div>
+    <div class="grp-space">
+      <canvas id="alarmscharts"></canvas>
+    </div><span class="batteries-date4" *ngIf="alarmType=='PAST 2 WEEKS' || alarmType=='MONTH'">Mar,20 - Mar,27</span>
+  </div>
+  <div class="Rectangle-21-Copy-2">
+    <div class="prodictive-title">USAGE</div>
+    <div class="grp-space">
+      <canvas id="chargesdoughnutChart" class="responsive-dohnut"></canvas>
+    </div>
+  </div>
+</div>
+<br />
+
+<div class="row">
+
+  <div class="col-md-3 col-sm-3">
+    <div class="asset-list-text">
+      <span class="asset-list-align"> ASSETS LIST </span>
+      <mat-checkbox id="batteriesShowCritical" [(ngModel)]="showAlarms" (ngModelChange)="showAlarm()"
+        class="mat-check-box-align" style="font-size: 82%;">Show with alarms only</mat-checkbox>
+    </div>
+  </div>
+  <div class="col-4"></div>
+  <div class="col-md-1 col-sm-1 mt-2 filter-text filter-icon filter-resize">Filters <span>
+
+      <div id="batteriesFilterDropDown" class="btn-group" style=" cursor: pointer;" dropdown>
+        <img dropdownToggle src="../../../assets/icon/filter.PNG" alt="Filter-icon">
+        <a id="button-basic" aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7">
+
+        </a>
+        <ul id="batteriesFilterDropDownType" *dropdownMenu role="menu" aria-labelledby="button-basic"
+          class="dropdown-menu dropdown-menu-right" style="border:0;">
+
+          <div *ngFor="let type of filterTypeList;let i=index;">
+            <div id="batteriesFilterDropDownType{{i}}" (click)="selectedFilter=type" class="alarm-txt"
+              style="height:30px" [ngClass]="{'active-alarmmenu':type==selectedFilter}">{{type}}</div>
+          </div>
+
+        </ul>
+      </div>
+    </span>
+  </div>
+
+
+  <a id="availableactions" style="color:#169bd7 !important;cursor:pointer;"
+    class="create-btn available-action-btn col-2" dropdown dropdownToggle>Available Actions
+    <div class="btn-group">
+
+      <i style="vertical-align: middle;" class="material-icons">
+        arrow_drop_down
+        <a id="button-basic" aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7">
+
+        </a>
+        <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+          class="dropdown-menu dropdown-menu-right" style="border:0;">
+
+          <div *ngFor="let type of availableType">
+            <div (click)="openDialog(type)" class="alarm-txt" style="height:30px">{{type.value}}</div>
+          </div>
+
+        </ul>
+
+      </i> </div>
+  </a>
+</div>
+<div class="row mt-2">
+  <div class="col-4">
+    <mat-chip-list *ngFor="let item of filters;let i=index" style="float: left">
+      <mat-chip color="primary" selected> {{item}}<mat-icon (click)="RemoveFilterItem(i)" class="remove-icon">close
+        </mat-icon>
+      </mat-chip>
+
+    </mat-chip-list>
+  </div>
+  <div class="col-4 text-left search-resize">
+    <div class="search-wrapper">
+      <form action="" method="" name="search">
+        <div class="search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21" height="18"
+            alt="search icon" />
+          <input id="batteriesSearch" [(ngModel)]="tableFilter" class="remove-focus"
+            (keyup)="applyFilter($event.target.value)" (keydown)="filterEnter($event)" name="seach" type="text"
+            autocomplete="off" placeholder="Enter keyword to search" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="mat-elevation-z8 table-div">
+  <table matSort multiTemplateDataRows mat-table [dataSource]="dataSource" style="width:100% !important;">
+    <ng-container matColumnDef="expand">
+      <th mat-sort-header *matHeaderCellDef> </th>
+      <td style="cursor: pointer;" [ngClass]="{'row-color': i%2==0}" mat-cell
+        *matCellDef="let element;let i = dataIndex;">
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="select">
+      <th style="padding-top:1%;border-bottom: none" mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td style="padding-top:1%;border-bottom: none" [ngClass]="{'row-color': i%2==0}" mat-cell
+        *matCellDef="let row;let i = dataIndex;">
+        <div *ngIf="i%2==0">
+          <span style="font-weight: bold;">Asset Name:</span>
+          <br /> <br />
+        </div>
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ID" style="text-align: center;">
+      <th style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> ID </th>
+
+      <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+        (click)="loadExpandGrid(element)">
+        <div *ngIf="i%2==0">
+          <span style="font-weight: bold;">Charging Station</span>
+          <br /> <br />
+        </div>
+        {{element.ID}}
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="LastSeen">
+      <th style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> Last seen </th>
+      <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+        (click)="loadExpandGrid(element)">
+        <div *ngIf="i%2==0">
+          <br /> <br />
+        </div>
+        <div class="online-btn"><span class="online-txt text-center">Online</span></div>
+
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="symbol">
+      <th style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> Current Status </th>
+      <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+        (click)="loadExpandGrid(element)">
+        <div *ngIf="i%2==0">
+          <br /> <br />
+        </div>
+        {{element.LastSeen}}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="Status">
+      <th style="border-bottom:none" mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+      <td [ngClass]="{'row-color': i%2==0}" style="cursor: pointer;" (click)="confirmationDialog(element,i)" mat-cell
+        *matCellDef="let element;let i=dataIndex;">
+        <div *ngIf="i%2==0">
+          <br /> <br />
+        </div>
+        <div *ngIf="element.Status=='Active'" class="online-btn"><span
+            class="online-txt text-center">{{element.Status}}</span></div>
+        <div *ngIf="element.Status!='Active'" class="inactive-btn"><span
+            class="online-txt text-center">{{element.Status}}</span></div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="curren_alarms">
+      <th style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> Current Fault Codes </th>
+      <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;"
+        (click)="loadExpandGrid(element)">
+        <div *ngIf="i%2==0">
+          <br /> <br />
+        </div>
+        22
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="assettype">
+      <th style="border-bottom:none" mat-sort-header mat-header-cell *matHeaderCellDef> Asset type </th>
+      <td [ngClass]="{'row-color': i%2==0}" style="font-weight: bold;" mat-cell
+        *matCellDef="let element;let i = dataIndex;" (click)="loadExpandGrid(element)">
+        <div *ngIf="i%2==0">
+          {{element.assettype}}
+        </div>
+        <div *ngIf="i%2==0">
+          <br /> <br />
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="seemore">
+      <th style="border-bottom:none" mat-header-cell *matHeaderCellDef></th>
+      <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i = dataIndex;" class="txt-blue">
+
+        <div *ngIf="i%2==0" (click)="opensideBar(element,i)" id="chargessseemore{{i}}">See more>>
+        </div>
+        <div *ngIf="i%2==0">
+          <br /> <br />
+        </div>
+
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+        [ngClass]="{'test-one':element == expandedElement ?true:false} ">
+        <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <div class="on-hover-data-table p-3 sizeng">
+            <div class="row m-b-15">
+              <div class="login-timer-text2 col-md-2 col-sm-2 col-xs-12">Status</div>
+              <div class="table-data-text col-md-1 col-sm-1 col-xs-12"></div>
+              <div class="login-timer-text col-md-2 col-sm-2 col-xs-12">Output</div>
+              <div class="table-data-text col-md-1 col-sm-1 col-xs-12">{{subGridDatas?.Output}}</div>
+              <div class="login-timer-text col-md-2 col-sm-2 col-xs-12 ml-5">Soc Level</div>
+              <div class="table-data-text col-md-1 col-sm-1 col-xs-12">{{subGridDatas?.SocLevel}}</div>
+            </div>
+            <div class="row m-b-15">
+              <div class="login-timer-text2 col-md-2 col-sm-2 col-xs-12">Temperature</div>
+              <div class="table-data-text col-md-1 col-sm-1 col-xs-12"></div>
+              <div class="login-timer-text col-md-2 col-sm-2 col-xs-12">Ah Charged</div>
+              <div class="red-text col-md-1 col-sm-1 col-xs-12">{{subGridDatas?.AhCharged}}</div>
+              <div class="login-timer-text col-md-2 col-sm-2 col-xs-12 ml-5">Paired Device</div>
+              <div class="table-data-text col-md-1 col-sm-1 col-xs-12">{{subGridDatas?.PairedDevice}}</div>
+            </div>
+            <div class="row m-b-15">
+              <div class="login-timer-text2 col-md-2 col-sm-2 col-xs-12">Device Serial No</div>
+              <div class="table-data-text col-md-1 col-sm-1 col-xs-12">{{subGridDatas?.SerialNo}}</div>
+              <div class="login-timer-text col-md-2 col-sm-2 col-xs-12">Install Date</div>
+              <div class="table-data-text col-md-1 col-sm-1 col-xs-12">{{subGridDatas?.InstallDate2}}</div>
+              <div class="login-timer-text col-md-2 col-sm-2 col-xs-12 ml-5">Warranty</div>
+              <div class="table-data-text col-md-3 col-sm-3 col-xs-12 red-text">{{subGridDatas?.Warranty2}}<span
+                  class="blue-txt extend ml-2">Extend</span></div>
+            </div>
+            <div class="row m-b-15">
+              <div class="login-timer-text2 col-md-2 col-sm-2 col-xs-12">Flimware Version</div>
+              <div style="min-width: 50%;" class="table-data-text col-md-1 col-sm-1 col-xs-12">
+                {{subGridDatas?.Version}}</div>
+
+            </div>
+
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      [ngClass]="{'test-two':element == expandedElement ?true:false} ">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+
+</div> -->

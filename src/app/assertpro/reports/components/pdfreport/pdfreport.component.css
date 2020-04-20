@@ -1,0 +1,148 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  font-family: robotoCondensedregular;
+}
+
+td,
+th {
+  text-align: center;
+  padding: 8px;
+}
+
+th {
+  font-weight: lighter;
+}
+
+.apply-btn {
+  background-color: #169bd7;
+  border-radius: 15px;
+  height: 30px;
+  width: 90px;
+  cursor: pointer;
+  outline: none;
+}
+
+.apply-text {
+  line-height: 18px;
+  letter-spacing: 0.87px;
+  font-size: 13px;
+  color: #ffffff;
+  font-family: robotoCondensedregular;
+  padding-top: 6px;
+  padding-left: 29%;
+}
+
+.cancel-btn {
+  background-color: #ffffff;
+  border-radius: 15px;
+  height: 30px;
+  width: 90px;
+  cursor: pointer;
+  outline: none;
+}
+
+.cancel-text {
+  line-height: 22px;
+  text-align: left;
+  letter-spacing: 0.87px;
+  font-size: 13px;
+  color: #64646e;
+  font-family: robotoCondensedregular;
+  padding-top: 4px;
+  padding-left: 29%;
+  border: 1px solid #169bd7;
+  border-radius: 13%/51%;
+}
+
+#pdfformat {
+  padding-top: 5%;
+}
+
+.container-fluid {
+  margin-top: -70px !important;
+}
+
+.left-side-text {
+  line-height: 18px;
+  letter-spacing: 0.87px;
+  font-size: 13px;
+  color: #a7a7b4;
+  font-family: robotoCondensedregular;
+  margin-top: 5px;
+}
+
+.chart-info {
+  font-size: 19px !important;
+}
+
+.chart-value {
+  color: #3184cc;
+  font-weight: bold;
+}
+
+#second-header th {
+  text-align: center;
+}
+
+.back-btn {
+  margin-top: 0%;
+  float: right;
+  margin-bottom: 2%;
+}
+
+.assetTypeRows td {
+  cursor: pointer !important;
+}
+
+.assetRows {
+  cursor: default !important;
+}
+
+.batteryRows {
+  cursor: default !important;
+}
+
+tr:nth-child(even) {
+  background-color: white;
+  font-family: robotoregular;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+}
+
+tr:nth-child(odd) {
+  background-color: #f0fbff;
+  font-family: robotoregular;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+}
+
+thead tr {
+  background: white;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+  color: #a7a7b4;
+  font-family: robotoCondensedregular;
+  padding-left: 0px;
+  padding-top: 2%;
+  font-weight: lighter;
+  cursor: default;
+}
+
+.reports-table {
+  box-shadow: 0 7px 20px 0 rgba(22, 155, 215, 0.12);
+}
+
+.grid-display {
+  top: 30px;
+  position: relative;
+}
+
+.mt-6 {
+  margin-top: 6%;
+}
+
+.alert-red {
+  color: red;
+}

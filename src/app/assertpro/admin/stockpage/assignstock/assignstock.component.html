@@ -1,0 +1,147 @@
+<div class="container-fluid">
+  <div class="row" style="padding-top:10px;">
+    <div class="col-5">
+    <b><label>{{title}}</label></b>
+  </div>
+  <div class="col-7">
+    <div mat-dialog-actions align="end" style="padding-top:5px;">
+      <button mat-button (click)="onNoClick()">Close</button>
+      <button mat-raised-button color="primary" (click)="onSubmit()">ASSIGN</button>
+    </div>
+    </div>
+  </div>
+  <br>
+</div>
+
+<div class="row" >
+  <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-3">
+    <mat-form-field>
+      <mat-select [(ngModel)]="assetType" cdkFocusInitial placeholder="Asset Type" (ngModelChange)="assetChange()">
+        <mat-option *ngFor="let food of assetTypeList" [value]="food">
+          {{food.assetstype}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-3">
+    <mat-form-field>
+      <mat-select [(ngModel)]="asset" cdkFocusInitial placeholder="Assets" (ngModelChange)="assetc()">
+        <mat-option *ngFor="let food of assetList" [value]="food">
+          {{food.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<!-- <div class="row" style="margin-bottom:4%">
+  <div class="col-4">
+  </div>
+  <div class="col-4">
+
+  </div>
+  <div class="col-4 mt-2">
+    <div mat-dialog-actions align="end">
+      <button (click)="assign()" mat-raised-button color="primary">ASSIGN</button>
+    </div>
+  </div>
+</div> -->
+
+<div *ngIf="tapType=='stock'" class="mat-elevation-z8">
+  <div class="angular-table example-container table-responsive">
+    <table style="width:100%;" class="table borderless" [dataSource]="dataSource" matSort mat-table>
+      <ng-container matColumnDef="select">
+        <th style="padding-top:1%;padding-left:24px;" mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td style="padding-top:1%" mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="UniqueID">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element"> {{element.UniqueID}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="AssetName">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Asset Name</th>
+        <td mat-cell *matCellDef="let element"> {{element.AssetName}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="SystemName">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Product</th>
+        <td mat-cell *matCellDef="let element"> {{element.SystemName}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="DeviceModel">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Device Model</th>
+        <td mat-cell *matCellDef="let element"> {{element.DeviceModel}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="LastSeenDate">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Last Seen</th>
+        <td mat-cell *matCellDef="let element">
+            <div>{{element.LastSeenDate}}</div>
+            <div class="last-seen-text-design">{{element.LastSeenTime}}</div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="DeviceStatus">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element"> {{element.DeviceStatus}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Description">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let element"> {{element.Description}}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[4, 8, 100]" showFirstLastButtons></mat-paginator>
+</div>
+<div *ngIf="tapType!='stock'" class="mat-elevation-z8">
+  <div class="angular-table example-container table-responsive">
+    <table style="width:100%;" class="table borderless" [dataSource]="dataSource2" matSort mat-table>
+      <ng-container matColumnDef="select">
+        <th style="padding-top:1%;padding-left:24px;" mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+            [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+          </mat-checkbox>
+        </th>
+        <td style="padding-top:1%" mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+            [checked]="selection2.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Product">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Product</th>
+        <td mat-cell *matCellDef="let element"> {{element.Product}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="ModelName">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Model</th>
+        <td mat-cell *matCellDef="let element"> {{element.ModelName}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Total">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Total Units</th>
+        <td mat-cell *matCellDef="let element">{{element.Total}}
+        </td>
+      </ng-container>
+      
+      <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns2;">
+      </tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[4, 8, 100]" showFirstLastButtons></mat-paginator>
+</div>

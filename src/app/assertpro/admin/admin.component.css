@@ -1,0 +1,26 @@
+.dash-body {
+  background-color: #f8fdff;
+  padding-top: 3%;
+}
+
+.ud-menu.active-ud {
+  color: #169bd7;
+  border-bottom: 1px solid #169bd7;
+}
+
+.ud-menu {
+  color: #4D4D61;
+  font-family: robotoCondensedregular;
+  font-size: 84%;
+  font-stretch: condensed;
+  letter-spacing: 0.9px;
+  cursor: pointer;
+  padding-bottom: 16px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@media (min-width:0px) and (max-width:575px) {
+  .ud-menu.active-ud {
+    border-bottom: unset;
+  }
+}

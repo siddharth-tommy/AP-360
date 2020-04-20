@@ -1,0 +1,104 @@
+<div *ngIf="loader==true" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<!-- <app-fixedmenubar></app-fixedmenubar>
+<app-fixedsidebar></app-fixedsidebar> -->
+<app-messagebar #messagebarComponent (saveSucces)="messageTable([],[],null,null)"></app-messagebar>
+<app-filterbar #filterbarComponent (saveEmit)="filter($event)"></app-filterbar>
+<div class="container-fluid" style="background-color:#f8fdff;" *ngIf="siteName!='All Sites'">
+  <div class="row">
+    <div class="col-md-1 col-sm-1 col-xl-1 col-lg-1"></div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-lg-1"></div>
+    <div class="col-md-6 col-sm-6 col-lg-7 col-xl-7 col-12" style="margin-top: 35px;">
+      <div class="msg-txt">MESSAGES</div>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xl-2 col-lg-2 col-12 image-position">
+      <img (click)="deleteRecord()" style="cursor: pointer;" src="../../../assets/icon/delete-btn.png">
+      <img (click)="opensideBar1()" class="img-two" style="cursor: pointer;"
+        src="../../../assets/icon/btn-filter-btn.png">
+      <img (click)="opensideBar()" class="img-three" style="cursor: pointer;" src="../../../assets/icon/add-btn.png">
+    </div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-lg-1 col-xs-12" style="margin-top: 35px;"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-1 col-sm-1 col-xl-1 col-lg-1 col-xs-12"></div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-lg-1 col-xs-12"></div>
+    <div class="col-md-9 col-sm-9 col-xl-9 col-lg-9 col-xs-12" style="margin-top: 10px;">
+      <div class="mat-elevation-z8 angular-table">
+        <table matSort mat-table [dataSource]="dataSource" style="width:100% !important;">
+          <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width:87%;"> -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="EventTime">
+            <th mat-header-cell *matHeaderCellDef> Timestamp </th>
+            <td mat-cell *matCellDef="let element" class="time-txt"> {{element.EventDate}}
+              <br />
+              <div class="time-txt1">{{element.EventTime}}</div>
+            </td>
+          </ng-container>
+          <!-- Name Column -->
+          <ng-container matColumnDef="AssetName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="color:#169bd7;"> Asset </th>
+            <td mat-cell *matCellDef="let element" class="time-txt"> {{element.AssetName}} </td>
+          </ng-container>
+          <!-- Weight Column -->
+          <ng-container matColumnDef="OperatorName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Operator </th>
+            <td mat-cell *matCellDef="let element" class="time-txt">{{element.OperatorName}}
+            </td>
+          </ng-container>
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="Message">
+            <th mat-header-cell *matHeaderCellDef> Message </th>
+            <td mat-cell *matCellDef="let element" class="time-txt"> {{element.Message}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Status" style="text-align: left;margin-right: 2% !important">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td class="pt-1" mat-cell *matCellDef="let element" style="text-align: left;width: 20% !important;">
+              <div *ngIf="element.Status=='SENT'" class="online-btn"><span
+                  class="online-txt text-center">{{element.Status}}</span></div>
+              <div *ngIf="element.Status=='PENDING'" class="online-btn-green"><span
+                  class="online-txt text-center">{{element.Status}}</span></div>
+              <div class="row" *ngIf="element.Status=='FAILED'">
+                <div class="col-xl-4 col-lg-5 col-md-6 col-sm-9 col-10">
+                  <div class="online-btn-red">
+                    <span class="online-txt text-center">{{element.Status}}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-1 col-2 referesh-icon" (click)="resendMessage(element)">
+                  <img style="cursor: pointer;" src="../../../assets/icon/blue-reset.PNG" alt="">
+                </div>
+              </div>
+              <!-- <div>  <img _ngcontent-c17="" alt="" src="../../../assets/icon/icons-reset-ic.png"></div> -->
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Answer">
+            <th mat-header-cell *matHeaderCellDef class="answer-head"> Answer </th>
+            <td mat-cell *matCellDef="let element" class="time-txt answer-text-align-mobile-view"> {{element.Answer}}   
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 20,50,100,200,300]" showFirstLastButtons></mat-paginator>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="row pb-5"></div>
+</div>

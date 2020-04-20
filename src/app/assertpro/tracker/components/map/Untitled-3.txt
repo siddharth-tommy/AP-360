@@ -1,0 +1,140 @@
+
+
+
+
+<div class="backdrop">  
+  
+  
+  <app-fixedmenubar></app-fixedmenubar>
+  <div class="home-page-map ">
+    <div class="row">
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop">
+            <div id="container" [routerLink]="['/home/dashboard']">
+              <div class="text-center menu-icon">
+                <img class="d-xl-none" src="assets/icon/menu-dashboard.png">
+                <img class="icon-display" src="assets/icon/lg-menu-dashboard.png">
+                <div class="menu-icon-text">DASHBOARD</div>
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop">
+          <div id="container" [routerLink]="['/home/asset']">
+            <div class="text-center menu-icon">
+              <img class="d-xl-none" src="assets/icon/menu-assets.png">
+              <img class="icon-display"  src="assets/icon/lg-menu-assets.png">
+              <div class="menu-icon-text">ASSETS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop">
+          <div id="container" [routerLink]="['/home/userdirectory']">
+            <div class="text-center menu-icon">
+              <img class="d-xl-none" src="assets/icon/menu-user.png">
+              <img class="icon-display" src="assets/icon/lg-menu-user.png">
+              <div class="menu-icon-text">USERS DIRECTORY</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row menu-section-container">
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop">
+          <div id="container" [routerLink]="['/home/tracker']">
+            <div class="text-center menu-icon">
+                <img class="d-xl-none" src="assets/icon/menu-tracker.png">
+              <img class="icon-display"  src="assets/icon/lg-menu-tracker.png">
+                <div class="menu-icon-text">TRACKER</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop ">
+          <div id="container" [routerLink]="['/home/reports']">
+            <div class="text-center menu-icon">
+                <img class="d-xl-none" src="assets/icon/menu-reports.png">
+              <img class="icon-display"  src="assets/icon/lg-menu-reports.png">
+                <div class="menu-icon-text">REPORTS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop ">
+          <div id="container" [routerLink]="['/home/messaging']">
+            <div class="text-center menu-icon">
+                <img class="d-xl-none" src="assets/icon/menu-messaging.png">
+              <img class="icon-display"  src="assets/icon/lg-menu-messaging.png">
+                <div class="menu-icon-text">MESSAGING</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row menu-section-container">
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop">
+          <div id="container" [routerLink]="['/home/notification']">
+            <div class="text-center menu-icon">
+                <img class="d-xl-none"  src="assets/icon/menu-notifications.png">
+                <img class="icon-display" src="assets/icon/lg-menu-notifications.png">                
+                <div class="menu-icon-text">NOTIFICATION</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop">
+          <div id="container" [routerLink]="['/home/configuration']">
+            <div class="text-center menu-icon">
+                <img class="d-xl-none" src="assets/icon/menu-configuration.png">
+              <img class="icon-display"  src="assets/icon/lg-menu-configuration.png">
+                <div class="menu-icon-text">CONFIGURATION</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 menu-item-container">
+        <div class="section-backdrop">
+          <div id="container" [routerLink]="['/home/admin']">
+            <div class="text-center menu-icon">
+                <img class="d-xl-none" src="assets/icon/menu-admin.png"  >   
+                <img class="icon-display"  src="assets/icon/lg-menu-admin.png"  >       
+                <div class="menu-icon-text">ADMIN</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<router-outlet></router-outlet>

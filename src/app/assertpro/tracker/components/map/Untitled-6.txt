@@ -1,0 +1,2113 @@
+import { Component, OnInit, ViewChild,HostListener } from '@angular/core';
+import { AssetprohelperService } from '../../share/services/assetprohelper.service';
+import { OperatorsPipe } from '../../share/pipe/operators.pipe';
+import { AssetsPipe } from '../../share/pipe/assets.pipe';
+import { AssetstypePipe } from '../../share/pipe/assetstype.pipe'
+
+var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
+
+@Component({
+  selector: 'app-tracker',
+  templateUrl: './tracker.component.html',
+  styleUrls: ['./tracker.component.css'],
+  providers: [AssetsPipe, AssetstypePipe]
+})
+export class TrackerComponent implements OnInit {
+
+  map: any;
+  markar: any = [];
+  lat = 78.6568942;
+  lng = 11.127122499999999;
+  message = 'Hello World!';
+  activemenu: any = 'location';
+  locationtype: any = 'assert';
+
+  // data
+  source: any;
+  markers: any;
+
+  public bubbles: any = [];
+  public bubblevalue;
+  public assets: any = [];
+  public operators: any = [];
+  public selectgeofence = 'Zoom to....';
+  public mode = false;
+  public alarm = false;
+  public geofences: any = [];
+  public EventCodes: any = [];
+
+
+  public SelectAssettype: any = [];
+  public SelectAsset: any = [];
+  public SelectedOperator: any = [];
+
+  public SelectAssettypeID: any = null;
+  public SelectAssetId: any = null;
+  public SelectOperator: any = null;
+
+
+
+
+
+  onEnter(value: string, type, typevalue) {
+    this.bubblevalue = '';
+    this.SelectAssetId = null;
+    this.SelectAssettypeID = null;
+    this.SelectOperator = null;
+
+    if (value != '') {
+      for (var i = 0; i < this.bubbles.length; i++) {
+        if (this.bubbles[i] == value) {
+          this.bubbles.splice(i, 1);
+        }
+      }
+      this.bubbles.push(value);
+    }
+    if (type == 'asset') {
+      for (var i = 0; i < this.SelectAsset.length; i++) {
+        if (this.SelectAsset[i] == typevalue.ID) {
+          this.SelectAsset.splice(i, 1);
+        }
+      }
+      this.SelectAsset.push(typevalue.ID);
+    }
+
+    else if (type == 'assettype') {
+      for (var i = 0; i < this.SelectAssettype.length; i++) {
+        if (this.SelectAssettype[i] == typevalue.ID) {
+          this.SelectAssettype.splice(i, 1);
+        }
+      }
+      this.SelectAssettype.push(typevalue.ID);
+    }
+    else if (type == 'operator') {
+      this.SelectOperator = typevalue.ID;
+    }
+  }
+
+
+
+
+
+  AssetItem(value: string, type, typevalue) {
+    if (value != '') {
+      for (var i = 0; i < this.bubbles.length; i++) {
+        if (this.bubbles[i].id == typevalue.ID) {
+          this.bubbles.splice(i, 1);
+        }
+      }
+      this.bubbles.push({ 'id': typevalue.ID, 'value': value, 'type': type });
+    }
+    if (type == 'asset') {
+
+      for (var i = 0; i < this.SelectAsset.length; i++) {
+        if (this.SelectAsset[i] == typevalue.ID) {
+          this.SelectAsset.splice(i, 1);
+        }
+      }
+      this.SelectAsset.push(typevalue.ID);
+    }
+
+    else if (type == 'assettype') {
+      for (var i = 0; i < this.SelectAssettype.length; i++) {
+        if (this.SelectAssettype[i] == typevalue.ID) {
+          this.SelectAssettype.splice(i, 1);
+        }
+      }
+      this.SelectAssettype.push(typevalue.ID);
+    }
+    this.AssetResult();
+  }
+
+  OperatorItem(value: string, type, typevalue) {
+    if (value != '') {
+      for (var i = 0; i < this.bubbles.length; i++) {
+        if (this.bubbles[i].id == typevalue.ID) {
+          this.bubbles.splice(i, 1);
+        }
+      }
+      this.bubbles.push({ 'id': typevalue.ID, 'value': value, 'type': type });
+    }
+    for (var i = 0; i < this.SelectedOperator.length; i++) {
+      if (this.SelectedOperator[i] == typevalue.ID) {
+        this.SelectedOperator.splice(i, 1);
+      }
+    }
+    this.SelectedOperator.push(typevalue.ID)
+
+    this.OperatorResult();
+  }
+
+
+
+
+
+
+
+
+  Timelinecount: any = [];
+  bsValue = new Date();
+  bsRangeValue: Date[];
+  maxDate = new Date();
+  @ViewChild('dpr') dpr;
+  public CurrentassetHistory = new Array(135);
+
+
+  constructor(private assetprohelperService: AssetprohelperService, private assetsPipe: AssetsPipe, private assetstypePipe: AssetstypePipe, private operatorsPipe: OperatorsPipe) {
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZ293dGhhbTI2NSIsImEiOiJjamxubGJiZWQxa2JsM3FvYW1ob3lrOGpkIn0.WDhIeCxEm2uNlKmEPF2vSw';
+
+    let test = [
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "7DE73DA0-A6AD-4A78-83AA-B94584C801F8",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T13:25:47.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T13:18:49.657Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 436,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81837,
+        "lon": -79.87973,
+        "EventName": "Impact Alert",
+        "ColorCode": "loaded"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "A5F2C3A5-0830-4FA1-B4FE-43BAFF2B88FA",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T13:40:02.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T13:33:05.440Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 306,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81718,
+        "lon": -79.88058,
+        "EventName": "Impact Alert",
+        "ColorCode": "loaded"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "A47EC707-BC24-46FD-8CDF-1384D954CCFE",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T13:45:07.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T13:38:11.827Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 293,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81779,
+        "lon": -79.88046,
+        "EventName": "Impact Alert",
+        "ColorCode": "loaded"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "C14E61AD-DFA7-4A4C-A92D-B8F36641C762",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T13:54:48.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T13:47:51.377Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 161,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81797,
+        "lon": -79.87948,
+        "EventName": "Impact Alert",
+        "ColorCode": "loaded"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "DB4A6C73-D490-4045-8B2D-9507CE110E57",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T14:06:10.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T13:59:13.397Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 356,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81844,
+        "lon": -79.87967,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "F14DA572-3E6D-4CB5-B160-9241A01505AD",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T14:58:58.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T14:52:03.237Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 13,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.8176,
+        "lon": -79.88042,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "1ACA093C-1437-4306-BDCD-4C5266A776ED",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T15:04:40.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T14:57:42.697Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 453,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81846,
+        "lon": -79.87971,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "0A48BCE6-5B53-44FB-AE1D-074CB427B21E",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T15:12:50.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T15:05:52.963Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 213,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81839,
+        "lon": -79.87974,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "A9A9F87F-203A-4830-AD3F-45302AE2D758",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T15:23:14.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T15:16:16.803Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 130,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81707,
+        "lon": -79.88042,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "4433B293-C539-4D19-8847-1B4941D9992C",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T15:32:34.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T15:25:36.543Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 106,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81843,
+        "lon": -79.8797,
+        "EventName": "Impact Alert",
+        "ColorCode": "idle"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "9C1509F1-0FB9-4AEC-BF23-EEF5C05D01FC",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T15:47:03.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T15:40:05.477Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 319,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81682,
+        "lon": -79.87997,
+        "EventName": "Impact Alert",
+        "ColorCode": "idle"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "389AAD34-B788-4459-87DA-DC67BB829FCE",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T16:21:32.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T16:14:36.563Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 214,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.8184,
+        "lon": -79.88006,
+        "EventName": "Impact Alert",
+        "ColorCode": "idle"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "0F9F48EB-E271-4829-B106-878265B01F2A",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T16:23:01.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T16:16:02.947Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 10,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81833,
+        "lon": -79.88098,
+        "EventName": "Impact Alert",
+        "ColorCode": "idle"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "6CA2EEB1-4463-45B0-91CE-D73962DF1FB3",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T16:24:33.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T16:17:37.463Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 58,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81843,
+        "lon": -79.88019,
+        "EventName": "Impact Alert",
+        "ColorCode": "accident"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "3CDC9183-BC58-4E24-BCE8-36A1CAD65748",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T16:28:13.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-29T16:21:15.070Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 194,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81777,
+        "lon": -79.88054,
+        "EventName": "Impact Alert",
+        "ColorCode": "accident"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "7A76E60E-B02A-45BD-BB08-C76105A39567",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T17:13:37.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:06.157Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 97,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81836,
+        "lon": -79.88098,
+        "EventName": "Impact Alert",
+        "ColorCode": "accident"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "705BAE06-A36B-4C17-9665-7DE52D85E6AF",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T17:15:54.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:06.517Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 4,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81835,
+        "lon": -79.88099,
+        "EventName": "Impact Alert",
+        "ColorCode": "accident"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "3186BCBB-FFD4-4DE9-AA7F-D8D7535E8986",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T17:26:09.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:07.490Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 335,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81839,
+        "lon": -79.87977,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "FE5593B9-830C-45CE-9E4D-4E0B94D02735",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T17:29:48.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:07.553Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 249,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81844,
+        "lon": -79.87972,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "EA908283-7517-44B6-AF2F-02B663F4D842",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T17:40:38.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:07.757Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 220,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81837,
+        "lon": -79.87971,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "0625F440-CB37-416C-B723-5A05BBBE204F",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T17:59:58.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:07.873Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 416,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81728,
+        "lon": -79.8811,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "02DCFD3B-5F48-411A-8B21-8B8922A7DC7B",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T18:07:38.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:07.927Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 7,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81841,
+        "lon": -79.87973,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "09B51440-A7A8-4E54-ABC7-0076D3DBDD01",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T18:09:34.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:26.807Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 293,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81704,
+        "lon": -79.88058,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "826D5EFE-53DA-49B5-B4A1-346325E1F505",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T18:17:39.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:08.583Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 136,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81839,
+        "lon": -79.87978,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Jeremy Foy",
+        "ID": "0B09B7F2-3F0D-4108-82BE-D03C609359A2",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-29T18:24:41.000Z",
+        "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+        "EventCode": 774,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T05:43:08.663Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 27,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.8171,
+        "lon": -79.88086,
+        "EventName": "Impact Alert",
+        "ColorCode": "normal"
+      },
+      {
+        "AssetName": "TF-32                                                                                               ",
+        "OperatorName": "Bobby Martin",
+        "ID": "0392AD0C-0EBC-4A7B-B78D-259E40A7BDAC",
+        "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+        "Date": "2018-05-30T10:18:07.000Z",
+        "OperatorID": "FD12DBE4-899C-4DB8-909A-33BA369CD866",
+        "EventCode": 1286,
+        "AcknowledgedBy": null,
+        "AlarmTS": "2018-05-30T10:11:09.603Z",
+        "ResetByID": null,
+        "AcknowledgeDate": null,
+        "AlarmStatus": 0,
+        "Speed": 3,
+        "Site_SpeedUnitPreference": 1,
+        "ParentID": null,
+        "AssetCurrentMode": 0,
+        "lat": 38.81781,
+        "lon": -79.88003,
+        "EventName": "Checklist Test Answers Event",
+        "ColorCode": "normal"
+      }
+    ]
+
+    for (var i = 0; i < test.length; i++) {
+      this.CurrentassetHistory[i] = test[i];
+    }
+
+
+
+
+    for (var i = 0; i < 135; i++) {
+      this.Timelinecount.push(i);
+    }
+    this.maxDate.setDate(this.maxDate.getDate() + 7);
+    this.bsRangeValue = [this.bsValue, this.maxDate];
+
+  }
+
+  filtermode = [
+    { 'id': '1282', 'api': 'LogOn', 'name': 'Log on', 'status': false },
+    { 'id': '1283', 'api': 'LogOff', 'name': 'Log off', 'status': false },
+    { 'id': '3587', 'api': 'MaintainanceLockout', 'name': 'Maintenance', 'status': false },
+    { 'id': '3588', 'api': 'BypassCode', 'name': 'ByPass', 'status': false }
+  ]
+
+  filteralarms = [
+    { 'id': '261', 'api': 'ImpactAlarm', 'name': 'Impact', 'status': false },
+    { 'id': '259', 'api': 'CheckListAlarm', 'name': 'Checklist', 'status': false },
+    { 'id': '264', 'api': 'PMDueAlarm', 'name': 'PM due', 'status': false },
+    { 'id': '265', 'api': 'LowFuel', 'name': 'Low fuel', 'status': false },
+    { 'id': '1284', 'api': 'Assetfault', 'name': 'Asset fault', 'status': false }
+  ]
+
+
+
+
+  public intervalId: any;
+  public innerWidth: any;
+
+
+  ngOnInit() {
+
+
+
+    this.innerWidth = window.innerWidth;
+
+
+
+
+
+
+    //     mapboxgl.accessToken = 'pk.eyJ1IjoiZ293dGhhbTI2NSIsImEiOiJjamxubGJiZWQxa2JsM3FvYW1ob3lrOGpkIn0.WDhIeCxEm2uNlKmEPF2vSw'; 
+
+    //     var monument = [-77.0353, 38.8895];
+    // var map = new mapboxgl.Map({
+    //     container: 'map',
+    //     style: 'mapbox://styles/mapbox/light-v9',
+    //     center: monument,
+    //     zoom: 15
+    // });
+
+    // // create the popup
+    // var popup = new mapboxgl.Popup({ offset: 25 })
+    //     .setText('Construction on the Washington Monument began in 1848.');
+
+    // // create DOM element for the marker
+    // var el = document.createElement('div');
+    // el.id = 'marker';
+
+    // // create the marker
+    // new mapboxgl.Marker(el)
+    //     .setLngLat(monument)
+    //     .setPopup(popup) // sets a popup on this marker
+    //     .addTo(map);
+
+    //     /* if (navigator.geolocation) {
+    //       navigator.geolocation.getCurrentPosition(position => {
+    //         this.lat = position.coords.latitude;
+    //         this.lng = position.coords.longitude;
+    //         this.map.flyTo({
+    //           center: [this.lng, this.lat]
+    //         })
+    //       });
+    //     } */
+
+    //     //this.GetAssetsList();
+    //     //this.GetOperatorList();
+    //     this.GetStaticLocationDetails()
+    //     this.intervalId = setInterval(() => { this.GetLocationDetails(); }, 1000);
+
+    //this.GetSiteGeofence();
+    this.buildMap();
+    this.assetprohelperService.SiteAction$.subscribe(() => {
+      this.GetAssetsList();
+      this.GetOperatorList();
+      this.GetSiteGeofence();
+      this.GetHistorybasedAssetsList();
+      this.GetHistorybasedOperatorList();
+    })
+    let thiskey = this;
+    var geojson = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [-77.031952, 38.913184]
+        },
+        properties: {
+          title: 'Mapbox DC',
+          description: '1714 14th St NW, Washington DC',
+          image: 'https://farm9.staticflickr.com/8604/15769066303_3e4dcce464_n.jpg',
+          icon: {
+            iconUrl: 'https://www.mapbox.com/mapbox.js/assets/images/astronaut1.png',
+            iconSize: [50, 50], // size of the icon
+            iconAnchor: [25, 25], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -25], // point from which the popup should open relative to the iconAnchor
+            className: 'dot'
+          }
+        }
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [-122.413682, 37.775408]
+        },
+        properties: {
+          title: 'Mapbox SF',
+          description: '155 9th St, San Francisco',
+          image: 'https://farm9.staticflickr.com/8571/15844010757_63b093d527_n.jpg',
+          icon: {
+            iconUrl: 'https://www.mapbox.com/mapbox.js/assets/images/astronaut2.png',
+            iconSize: [50, 50], // size of the icon
+            iconAnchor: [25, 25], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -25], // point from which the popup should open relative to the iconAnchor
+            className: 'dot'
+          }
+        }
+      }
+    ];
+
+    this.map.on('load', function () {
+
+      thiskey.map.addLayer({
+        "id": "route",
+        "type": "line",
+        "source": {
+          "type": "geojson",
+          "data": {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [-122.48369693756104, 37.83381888486939],
+                [-122.48348236083984, 37.83317489144141],
+                [-122.48339653015138, 37.83270036637107],
+                [-122.48356819152832, 37.832056363179625],
+                [-122.48404026031496, 37.83114119107971],
+                [-122.48404026031496, 37.83049717427869],
+                [-122.48348236083984, 37.829920943955045],
+                [-122.48356819152832, 37.82954808664175],
+                [-122.48507022857666, 37.82944639795659],
+                [-122.48610019683838, 37.82880236636284],
+                [-122.48695850372314, 37.82931081282506],
+                [-122.48700141906738, 37.83080223556934],
+                [-122.48751640319824, 37.83168351665737],
+                [-122.48803138732912, 37.832158048267786],
+                [-122.48888969421387, 37.83297152392784],
+                [-122.48987674713133, 37.83263257682617],
+                [-122.49043464660643, 37.832937629287755],
+                [-122.49125003814696, 37.832429207817725],
+                [-122.49163627624512, 37.832564787218985],
+                [-122.49223709106445, 37.83337825839438],
+                [-122.49378204345702, 37.83368330777276]
+              ]
+            }
+          }
+        },
+        "layout": {
+          "line-join": "round",
+          "line-cap": "round"
+        },
+        "paint": {
+          "line-color": "#169bd7",
+          "line-width": 5
+        }
+      });
+    });
+    let tes = {
+      title: 'Mapbox DC',
+      description: '1714 14th St NW, Washington DC',
+      image: 'https://farm9.staticflickr.com/8604/15769066303_3e4dcce464_n.jpg',
+      icon: {
+        iconUrl: 'https://www.mapbox.com/mapbox.js/assets/images/astronaut1.png',
+        iconSize: [50, 50], // size of the icon
+        iconAnchor: [25, 25], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -25], // point from which the popup should open relative to the iconAnchor
+        className: 'dot'
+      }
+    }
+
+    let markar = new mapboxgl.Marker({
+      'color': '#1d3d57',
+      'circle-color': 'red'
+    }).setLngLat(['-122.48404026031496', '37.83049717427869']).addTo(this.map);
+
+    let startmarkar = new mapboxgl.Marker({
+      'color': '#1d3d57',
+      'circle-color': 'red'
+    }).setLngLat(['-122.48369693756104', '37.83381888486939']).addTo(this.map);
+
+    let endmarkar = new mapboxgl.Marker({
+      'color': '#1d3d57',
+      'circle-color': 'red'
+    }).setLngLat(['-122.49378204345702', '37.83368330777276']).addTo(this.map);
+
+
+
+    //this.initializeMap();
+
+  }
+
+
+
+  buildMap() {
+    //var el = document.createElement('div');
+    //el.id = 'marker';
+    /*   this.map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v9',
+        center: [this.lng, this.lat],
+        zoom: 2
+      });
+      var marker = new mapboxgl.Marker({
+        
+        icon: "https://www.mapbox.com/mapbox-gl-js/assets/radar.gif",
+        
+    })
+        .setLngLat([this.lng, this.lat])
+        .addTo(this.map); */
+    let thiskey = this;
+    this.map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v9',
+      //style: 'mapbox://styles/mapbox/light-v9',
+      center: [-122.486052, 37.830348],
+      zoom: 15
+    });
+
+
+
+
+
+
+    var nav = new mapboxgl.NavigationControl();
+    this.map.addControl(nav, 'bottom-right');
+  }
+
+
+  removemarkar() {
+    this.markar.remove();
+    //map.removeLayer(x);
+  }
+
+  menuactivemanger(menu) {
+    this.activemenu = menu;
+  }
+
+
+  clearAllasset() {
+    this.bubbles = [];
+    this.SelectAsset = [];
+    this.SelectAssettype = [];
+  }
+
+  GetSiteGeofence() {
+    let url = 'TrackingLocation/GetGeoFence?siteID=' + localStorage.getItem('selectitemId');
+    this.assetprohelperService.GetMethod(url).subscribe(
+      data => {
+        let body: any = JSON.parse(data['_body']);
+        this.geofences = body.Data;
+      })
+  }
+
+
+  RemoveFilterItem(value) {
+    if (value.type == 'asset') {
+      for (var i = 0; i < this.SelectAsset.length; i++) {
+        if (this.SelectAsset[i] == value.id) {
+          this.SelectAsset.splice(i, 1);
+        }
+      }
+    }
+    else if (value.type == 'assettype') {
+      for (var j = 0; j < this.SelectAssettype.length; j++) {
+        if (this.SelectAssettype[j] == value.id) {
+          this.SelectAssettype.splice(j, 1);
+        }
+      }
+    }
+
+    var index = this.bubbles.indexOf(value);
+    if (index > -1) {
+      this.bubbles.splice(index, 1);
+    }
+    this.AssetResult();
+
+  }
+
+  RemoveOperatorFilterItem(value) {
+    var index = this.bubbles.indexOf(value);
+    if (index > -1) {
+      this.bubbles.splice(index, 1);
+    }
+    for (var j = 0; j < this.SelectedOperator.length; j++) {
+      if (this.SelectedOperator[j] == value.id) {
+        this.SelectedOperator.splice(j, 1);
+      }
+    }
+    this.OperatorResult();;
+  }
+
+
+
+
+  // GetLocationDetails() {
+
+
+  //   let IsAsset: any;
+  //   if (this.locationtype == 'assert') {
+  //     IsAsset = 1;
+  //   }
+  //   else {
+  //     IsAsset = '0';
+  //   }
+  //   let url = 'TrackingLocation/Locationwithsite';
+  //   let data = {
+  //     "SiteId": localStorage.getItem('selectitemId'),
+  //     "AssetType": this.SelectAssettypeID,
+  //     "Assets": this.SelectAssetId,
+  //     "EventCodes": this.EventCodes,
+  //     "Operators": this.SelectOperator,
+  //     "IsAsset": IsAsset
+  //   }
+  //   this.assetprohelperService.PostMethod(url, data).subscribe(
+  //     data => {
+  //       let body: any = JSON.parse(data['_body']);
+  //       let l = 0;
+  //       for (var k = 0; k < this.markar.length; k++) {
+  //         this.markar[k].remove();
+  //         //this.map.removeLayer(this.markar[k])
+  //       }
+  //       if (this.locationtype == 'assert') {
+  //         for (var i = 0; i < body.Data.length; i++) {
+  //           for (var j = 0; j < body.Data[i].assets.length; j++) {
+  //             if (body.Data[i].assets[j].AssetLat && body.Data[i].assets[j].AssetLon) {
+  //               this.markar[l] = new mapboxgl.Marker({
+  //                 'color': '#1d3d57',
+  //                 'circle-color': 'red'
+  //               }).setLngLat([body.Data[i].assets[j].AssetLon, body.Data[i].assets[j].AssetLat]).addTo(this.map);
+  //               l = l + 1;
+  //             }
+  //           }
+  //         }
+  //       }
+  //       else {
+  //         for (var i = 0; i < this.operators.length; i++) {
+  //           for (var j = 0; j < this.operators[i].assets.length; j++) {
+  //             if (body.Data[i].assets[j].AssetLat && body.Data[i].assets[j].AssetLon) {
+  //               this.markar[l] = new mapboxgl.Marker({
+  //                 'color': '#1d3d57',
+  //                 'circle-color': 'red'
+  //               }).setLngLat([body.Data[i].assets[j].AssetLon, body.Data[i].assets[j].AssetLat]).addTo(this.map);
+  //               l = l + 1;
+  //             }
+  //           }
+  //         }
+  //       }
+
+  //     })
+  // }
+
+  // GetStaticLocationDetails() {
+  //   let IsAsset: any;
+  //   if (this.locationtype == 'assert') {
+  //     IsAsset = 1;
+  //   }
+  //   else {
+  //     IsAsset = '0';
+  //   }
+  //   let url = 'TrackingLocation/Locationwithsite';
+  //   let data = {
+  //     "SiteId": localStorage.getItem('selectitemId'),
+  //     "AssetType": this.SelectAssettypeID,
+  //     "Assets": this.SelectAssetId,
+  //     "EventCodes": this.EventCodes,
+  //     "Operators": this.SelectOperator,
+  //     "IsAsset": IsAsset
+  //   }
+  //   this.assetprohelperService.PostMethod(url, data).subscribe(
+  //     data => {
+  //       let body: any = JSON.parse(data['_body']);
+  //       let l = 0;
+
+  //       if (this.locationtype == 'assert') {
+  //         this.assets = [];
+  //         this.assets = body.Data;
+  //       }
+  //       else {
+  //         this.operators = [];
+  //         this.operators = body.Data;
+
+  //       }
+
+  //     })
+  // }
+
+
+  Locationtype(type) {
+    this.locationtype = type;
+
+    this.bubbles = [];
+    if (type == 'assert') {
+      this.AssetResult();
+    }
+    else {
+      this.OperatorResult();
+    }
+    //this.GetLocationDetails();
+    //this.GetStaticLocationDetails();
+    //clearInterval(this.intervalId);
+  }
+
+
+
+
+
+
+
+
+  GetAssetsList() {
+    let url = 'TrackingLocation/assetwithsite?id=' + localStorage.getItem('selectitemId');
+    this.assets = [];
+    this.assetprohelperService.GetMethod(url).subscribe(
+      data => {
+        let body: any = JSON.parse(data['_body']);
+        this.assets = body.Data;
+        this.AssetResult();
+      })
+  }
+
+
+  GetOperatorList() {
+    let url = 'TrackingLocation/operatorwithsite?id=' + localStorage.getItem('selectitemId');
+    this.operators = [];
+    this.assetprohelperService.GetMethod(url).subscribe(
+      data => {
+        let body: any = JSON.parse(data['_body']);
+        this.operators = body.Data;
+        this.OperatorResult();
+      })
+  }
+
+
+
+  singlefilter(type, value) {
+    this.EventCodes = [];
+    if (type == 'mode') {
+      value.status = !value.status;
+      this.mode = true;
+      for (var i = 0; i < this.filtermode.length; i++) {
+        if (!this.filtermode[i].status) {
+          this.mode = false;
+        }
+      }
+    }
+    else {
+      value.status = !value.status;
+      this.alarm = true
+      for (var j = 0; j < this.filteralarms.length; j++) {
+        if (!this.filteralarms[j].status) {
+          this.alarm = false;
+        }
+
+      }
+    }
+
+    for (var i = 0; i < this.filtermode.length; i++) {
+      if (this.filtermode[i].status) {
+        this.EventCodes.push(this.filtermode[i].api);
+      }
+    }
+
+    for (var j = 0; j < this.filteralarms.length; j++) {
+      if (this.filteralarms[j].status) {
+        this.EventCodes.push(this.filteralarms[j].api);
+      }
+    }
+    if (this.locationtype == 'assert') {
+      this.AssetResult();
+    }
+    else {
+      this.OperatorResult();
+    }
+  }
+
+
+  selectfilter(type) {
+    this.EventCodes = [];
+    if (type == 'mode') {
+      this.mode = !this.mode;
+      if (this.mode) {
+        for (var i = 0; i < this.filtermode.length; i++) {
+          this.filtermode[i].status = true;
+        }
+      }
+      else {
+        for (var i = 0; i < this.filtermode.length; i++) {
+          this.filtermode[i].status = false;
+        }
+      }
+
+    }
+    else {
+      this.alarm = !this.alarm;
+      if (this.alarm) {
+        for (var j = 0; j < this.filteralarms.length; j++) {
+          this.filteralarms[j].status = true;
+        }
+      }
+      else {
+        for (var j = 0; j < this.filteralarms.length; j++) {
+          this.filteralarms[j].status = false;
+        }
+      }
+    }
+
+    for (var i = 0; i < this.filtermode.length; i++) {
+      if (this.filtermode[i].status) {
+        this.EventCodes.push(this.filtermode[i].api);
+      }
+    }
+
+    for (var j = 0; j < this.filteralarms.length; j++) {
+      if (this.filteralarms[j].status) {
+        this.EventCodes.push(this.filteralarms[j].api);
+      }
+    }
+
+    if (this.locationtype == 'assert') {
+      this.AssetResult();
+    }
+    else {
+      this.OperatorResult();
+    }
+
+  }
+
+
+  selectallitem() {
+    this.mode = true;
+    this.alarm = true;
+    this.EventCodes = [];
+    for (var i = 0; i < this.filtermode.length; i++) {
+      this.filtermode[i].status = true;
+    }
+    for (var j = 0; j < this.filteralarms.length; j++) {
+      this.filteralarms[j].status = true;
+    }
+
+    for (var i = 0; i < this.filtermode.length; i++) {
+      if (this.filtermode[i].status) {
+        this.EventCodes.push(this.filtermode[i].api);
+      }
+    }
+
+    for (var j = 0; j < this.filteralarms.length; j++) {
+      if (this.filteralarms[j].status) {
+        this.EventCodes.push(this.filteralarms[j].api);
+      }
+    }
+    if (this.locationtype == 'assert') {
+      this.AssetResult();
+    }
+    else {
+      this.OperatorResult();
+    }
+  }
+
+
+  popup: any = [];
+
+  AssetResult() {
+    let currentasset: any = [];
+
+    for (var l = 0; l < this.markar.length; l++) {
+      this.markar[l].remove();
+    }
+    var assettypefilter: any = this.assetstypePipe.transform(this.assets, this.SelectAssettype, this.SelectAsset, this.EventCodes);
+    let k = 0;
+    for (var i = 0; i < assettypefilter.length; i++) {
+      var finalfilterasset = this.assetsPipe.transform(assettypefilter[i].assets, this.SelectAssettype, this.SelectAsset, this.EventCodes);
+      for (var j = 0; j < finalfilterasset.length; j++) {
+        currentasset.push(finalfilterasset[j]);
+      }
+    }
+    for (var m = 0; m < currentasset.length; m++) {
+
+      let Alarms: any = '';
+      let Status: any = '';
+      let Mode: any = '';
+
+      if (currentasset[m].ImpactAlarm == "Y") {
+        Alarms = 'Impact' + ','
+      }
+      else if (currentasset[m].CheckListAlarm == "Y") {
+        Alarms = Alarms + 'checklist' + ','
+      }
+      else if (currentasset[m].AssetFault == "Y") {
+        Alarms = Alarms + 'AssetFault' + ','
+      }
+      else if (currentasset[m].LowFuel == "Y") {
+        Alarms = Alarms + 'lowfuel' + ','
+      }
+
+      if (currentasset[m].LogOn == "Y") {
+        Status = 'Logged in'
+      }
+      else {
+        Status = 'Logged off'
+      }
+
+      if (currentasset[m].BypassCode == "Y") {
+        Mode = 'ByPass' + ','
+      }
+      else if (currentasset[m].MaintainanceLockout == "Y") {
+        Mode = Mode + 'Maintainance'
+      }
+      else if (currentasset[m].BypassCode != "Y" && currentasset[m].MaintainanceLockout != "Y") {
+        Mode = 'Normal'
+      }
+
+      if (currentasset[m].lon !== null && currentasset[m].lat !== null) {
+
+        var description = "<div style='width:300px'><div class='row'><div class='col-5'><strong>Asset name</Strong></div><div class='col-7'>" + currentasset[m].name + "</div></div><div class='row'><div class='col-6'><strong>Alarms</strong></div><div class='col-6'>" + Alarms + "</div></div><div class='row'><div class='col-5'><strong>Event Timestamp</strong></div><div class='col-7'>" + currentasset[m].EventDate + "</div></div><div class='row'><div class='col-5'><strong>Operator</strong></div><div class='col-7'>" + currentasset[m].OperatorName + "</div></div><div class='row'><div class='col-6'><strong>Mode</strong></div><div class='col-6'><span style='margin-left:-30px'>" + Mode + "</span></div></div><div class='row'><div class='col-6'><strong>Status</strong></div><div class='col-6'><span style='margin-left:-30px'>" + Status + "<span></div></div></div>"
+        this.popup[k] = new mapboxgl.Popup({ offset: 25 })
+          .setHTML(description);
+        this.markar[k] = new mapboxgl.Marker({
+          'color': '#1d3d57',
+          'circle-color': 'red'
+        }).setLngLat([currentasset[m].lon, currentasset[m].lat]).setPopup(this.popup[k]).addTo(this.map);
+        k = k + 1;
+      }
+
+    }
+
+  }
+
+  OperatorResult() {
+    let filteroperator: any = this.operatorsPipe.transform(this.operators, this.SelectedOperator, this.EventCodes);
+    let k = 0;
+    for (var l = 0; l < this.markar.length; l++) {
+      this.markar[l].remove();
+    }
+    for (var i = 0; i < filteroperator.length; i++) {
+
+      if (filteroperator[i].lon !== null && filteroperator[i].lat !== null) {
+        {
+
+          let Alarms: any = '';
+          let Status: any = '';
+          let Mode: any = '';
+
+          if (filteroperator[i].ImpactAlarm == "Y") {
+            Alarms = 'Impact' + ','
+          }
+          else if (filteroperator[i].CheckListAlarm == "Y") {
+            Alarms = Alarms + 'checklist' + ','
+          }
+          else if (filteroperator[i].AssetFault == "Y") {
+            Alarms = Alarms + 'AssetFault' + ','
+          }
+          else if (filteroperator[i].LowFuel == "Y") {
+            Alarms = Alarms + 'lowfuel' + ','
+          }
+
+          if (filteroperator[i].LogOn == "Y") {
+            Status = 'Logged in'
+          }
+          else {
+            Status = 'Logged off'
+          }
+
+          if (filteroperator[i].BypassCode == "Y") {
+            Mode = 'ByPass' + ','
+          }
+          else if (filteroperator[i].MaintainanceLockout == "Y") {
+            Mode = Mode + 'Maintainance'
+          }
+          else if (filteroperator[i].BypassCode != "Y" && filteroperator[i].MaintainanceLockout != "Y") {
+            Mode = 'Normal'
+          }
+          var description = "<div style='width:300px'><div class='row'><div class='col-5'><strong>Asset name</Strong></div><div class='col-7'>" + filteroperator[i].AssetName + "</div></div><div class='row'><div class='col-6'><strong>Alarms</strong></div><div class='col-6'>" + Alarms + "</div></div><div class='row'><div class='col-5'><strong>Event Timestamp</strong></div><div class='col-7'>" + filteroperator[i].EventDate + "</div></div><div class='row'><div class='col-5'><strong>Operator</strong></div><div class='col-7'>" + filteroperator[i].OperatorName + "</div></div><div class='row'><div class='col-6'><strong>Mode</strong></div><div class='col-6'><span style='margin-left:-30px'>" + Mode + "</span></div></div><div class='row'><div class='col-6'><strong>Status</strong></div><div class='col-6'><span style='margin-left:-30px'>" + Status + "<span></div></div></div>"
+          this.popup[k] = new mapboxgl.Popup({ offset: 25 })
+            .setHTML(description);
+          this.markar[k] = new mapboxgl.Marker({
+            'color': '#1d3d57',
+            'circle-color': 'red'
+          }).setLngLat([filteroperator[i].lon, filteroperator[i].lat]).setPopup(this.popup[k]).addTo(this.map);
+          k = k + 1;
+        }
+
+      }
+    }
+  }
+
+
+
+
+
+
+
+  public historytype: any = 'assert';
+  public historyassets: any = [];
+  public historyoperators: any = [];
+
+  public CurrentassetHiory: any = [
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "7DE73DA0-A6AD-4A78-83AA-B94584C801F8",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T13:25:47.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T13:18:49.657Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 436,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81837,
+      "lon": -79.87973,
+      "EventName": "Impact Alert",
+      "ColorCode": "loaded"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "A5F2C3A5-0830-4FA1-B4FE-43BAFF2B88FA",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T13:40:02.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T13:33:05.440Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 306,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81718,
+      "lon": -79.88058,
+      "EventName": "Impact Alert",
+      "ColorCode": "loaded"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "A47EC707-BC24-46FD-8CDF-1384D954CCFE",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T13:45:07.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T13:38:11.827Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 293,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81779,
+      "lon": -79.88046,
+      "EventName": "Impact Alert",
+      "ColorCode": "loaded"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "C14E61AD-DFA7-4A4C-A92D-B8F36641C762",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T13:54:48.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T13:47:51.377Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 161,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81797,
+      "lon": -79.87948,
+      "EventName": "Impact Alert",
+      "ColorCode": "loaded"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "DB4A6C73-D490-4045-8B2D-9507CE110E57",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T14:06:10.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T13:59:13.397Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 356,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81844,
+      "lon": -79.87967,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "F14DA572-3E6D-4CB5-B160-9241A01505AD",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T14:58:58.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T14:52:03.237Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 13,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.8176,
+      "lon": -79.88042,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "1ACA093C-1437-4306-BDCD-4C5266A776ED",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T15:04:40.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T14:57:42.697Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 453,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81846,
+      "lon": -79.87971,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "0A48BCE6-5B53-44FB-AE1D-074CB427B21E",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T15:12:50.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T15:05:52.963Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 213,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81839,
+      "lon": -79.87974,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "A9A9F87F-203A-4830-AD3F-45302AE2D758",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T15:23:14.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T15:16:16.803Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 130,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81707,
+      "lon": -79.88042,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "4433B293-C539-4D19-8847-1B4941D9992C",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T15:32:34.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T15:25:36.543Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 106,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81843,
+      "lon": -79.8797,
+      "EventName": "Impact Alert",
+      "ColorCode": "idle"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "9C1509F1-0FB9-4AEC-BF23-EEF5C05D01FC",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T15:47:03.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T15:40:05.477Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 319,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81682,
+      "lon": -79.87997,
+      "EventName": "Impact Alert",
+      "ColorCode": "idle"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "389AAD34-B788-4459-87DA-DC67BB829FCE",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T16:21:32.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T16:14:36.563Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 214,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.8184,
+      "lon": -79.88006,
+      "EventName": "Impact Alert",
+      "ColorCode": "idle"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "0F9F48EB-E271-4829-B106-878265B01F2A",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T16:23:01.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T16:16:02.947Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 10,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81833,
+      "lon": -79.88098,
+      "EventName": "Impact Alert",
+      "ColorCode": "idle"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "6CA2EEB1-4463-45B0-91CE-D73962DF1FB3",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T16:24:33.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T16:17:37.463Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 58,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81843,
+      "lon": -79.88019,
+      "EventName": "Impact Alert",
+      "ColorCode": "accident"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "3CDC9183-BC58-4E24-BCE8-36A1CAD65748",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T16:28:13.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-29T16:21:15.070Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 194,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81777,
+      "lon": -79.88054,
+      "EventName": "Impact Alert",
+      "ColorCode": "accident"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "7A76E60E-B02A-45BD-BB08-C76105A39567",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T17:13:37.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:06.157Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 97,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81836,
+      "lon": -79.88098,
+      "EventName": "Impact Alert",
+      "ColorCode": "accident"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "705BAE06-A36B-4C17-9665-7DE52D85E6AF",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T17:15:54.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:06.517Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 4,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81835,
+      "lon": -79.88099,
+      "EventName": "Impact Alert",
+      "ColorCode": "accident"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "3186BCBB-FFD4-4DE9-AA7F-D8D7535E8986",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T17:26:09.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:07.490Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 335,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81839,
+      "lon": -79.87977,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "FE5593B9-830C-45CE-9E4D-4E0B94D02735",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T17:29:48.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:07.553Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 249,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81844,
+      "lon": -79.87972,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "EA908283-7517-44B6-AF2F-02B663F4D842",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T17:40:38.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:07.757Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 220,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81837,
+      "lon": -79.87971,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "0625F440-CB37-416C-B723-5A05BBBE204F",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T17:59:58.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:07.873Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 416,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81728,
+      "lon": -79.8811,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "02DCFD3B-5F48-411A-8B21-8B8922A7DC7B",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T18:07:38.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:07.927Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 7,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81841,
+      "lon": -79.87973,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "09B51440-A7A8-4E54-ABC7-0076D3DBDD01",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T18:09:34.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:26.807Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 293,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81704,
+      "lon": -79.88058,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "826D5EFE-53DA-49B5-B4A1-346325E1F505",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T18:17:39.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:08.583Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 136,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81839,
+      "lon": -79.87978,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Jeremy Foy",
+      "ID": "0B09B7F2-3F0D-4108-82BE-D03C609359A2",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-29T18:24:41.000Z",
+      "OperatorID": "F13DC236-B046-4018-8156-63E48B9F1DEE",
+      "EventCode": 774,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T05:43:08.663Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 27,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.8171,
+      "lon": -79.88086,
+      "EventName": "Impact Alert",
+      "ColorCode": "normal"
+    },
+    {
+      "AssetName": "TF-32                                                                                               ",
+      "OperatorName": "Bobby Martin",
+      "ID": "0392AD0C-0EBC-4A7B-B78D-259E40A7BDAC",
+      "AssetID": "CAAE2C53-C9BC-4D49-B914-E401E2F59BB1",
+      "Date": "2018-05-30T10:18:07.000Z",
+      "OperatorID": "FD12DBE4-899C-4DB8-909A-33BA369CD866",
+      "EventCode": 1286,
+      "AcknowledgedBy": null,
+      "AlarmTS": "2018-05-30T10:11:09.603Z",
+      "ResetByID": null,
+      "AcknowledgeDate": null,
+      "AlarmStatus": 0,
+      "Speed": 3,
+      "Site_SpeedUnitPreference": 1,
+      "ParentID": null,
+      "AssetCurrentMode": 0,
+      "lat": 38.81781,
+      "lon": -79.88003,
+      "EventName": "Checklist Test Answers Event",
+      "ColorCode": "normal"
+    }
+  ]
+
+  SetHistoryType(type) {
+    this.historytype = type;
+  }
+
+
+
+
+
+  GetHistorybasedAssetsList() {
+    let url = 'TrackingLocation/assetlistwithsite?id=' + localStorage.getItem('selectitemId');
+    this.historyassets = [];
+    this.assetprohelperService.GetMethod(url).subscribe(
+      data => {
+        let body: any = JSON.parse(data['_body']);
+        this.historyassets = body.Data;
+      })
+  }
+
+
+  GetHistorybasedOperatorList() {
+    let url = 'TrackingLocation/operatorlistwithsite?id=' + localStorage.getItem('selectitemId');
+    this.historyoperators = [];
+    this.assetprohelperService.GetMethod(url).subscribe(
+      data => {
+        let body: any = JSON.parse(data['_body']);
+        this.historyoperators = body.Data;
+      })
+  }
+
+  GetSelectedHistorybasedAssets() {
+
+
+    let data = {
+      "SiteId": "3F873282-716C-43AF-A85D-C149FA288DEA",
+      "StartDate": "2018-05-27 00:00:00",
+      "EndDate": "2018-06-01 00:00:00",
+      "Assets": ["caae2c53-c9bc-4d49-b914-e401e2f59bb1"]
+    }
+    let url = '/TrackingLocation/AssetHistoryDetails';
+    this.historyoperators = [];
+    this.assetprohelperService.PostMethod(url, data).subscribe(
+      data => {
+        let body: any = JSON.parse(data['_body']);
+        
+      })
+  }
+
+  GetSelectedHistorybasedOperator() {
+    let url = 'TrackingLocation/operatorlistwithsite?id=' + localStorage.getItem('selectitemId');
+    this.historyoperators = [];
+    this.assetprohelperService.GetMethod(url).subscribe(
+      data => {
+        let body: any = JSON.parse(data['_body']);
+        this.historyoperators = body.Data;
+      })
+  }
+
+
+
+
+  public isDropup = true;
+
+  public showcolorcode = false;
+
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.innerWidth = window.innerWidth;
+  }
+
+
+
+}
+
+
+
+
+
+
+
+

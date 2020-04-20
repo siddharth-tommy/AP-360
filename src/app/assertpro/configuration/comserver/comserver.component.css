@@ -1,0 +1,388 @@
+.dash-body {
+  background-color: #f8fdff;
+  padding-top: 3%;
+}
+
+.head-label {
+  font-family: robotoCondensedregular;
+  line-height: 20px;
+  letter-spacing: 0.54px;
+  font-size: 15px;
+  color: #4D4D61;
+  letter-spacing: 0.54px;
+  line-height: 20px;
+}
+
+.connection-stats-num {
+  color: #169BD7;
+  font-weight: bold;
+  letter-spacing: 1.73px;
+  line-height: 34px;
+  text-align: center;
+  font-family: robotoCondensedregular;
+  font-size: 26px
+}
+
+.connection-stats-text {
+  color: #4A4A4A;
+  font-size: 11px;
+  letter-spacing: 0.73px;
+  line-height: 15px;
+  text-align: center;
+  font-family: robotoCondensedregular;
+}
+
+.available-action-btn {
+  color: #169BD7;
+  letter-spacing: 0.7px;
+  font-family: robotoregular;
+  font-weight: normal;
+  background-color: #FFFFFF;
+  text-align: center;
+  border-radius: 20px;
+  padding: 4%;
+  width: 100%;
+  border: 1px solid #169BD7
+}
+
+@media (max-width:999px) and (min-width:890px) {
+  .available-text {
+    font-size: 9px;
+  }
+
+  .checklist-text {
+    font-size: 9px;
+  }
+}
+
+@media (max-width:1110px) and (min-width:1000px) {
+  .available-text {
+    font-size: 10px;
+  }
+
+  .checklist-text {
+    font-size: 10px;
+  }
+}
+
+@media (max-width:693px) {
+  .add-checklist-btn {
+    margin-bottom: 15px
+  }
+}
+
+
+.add-checklist-btn {
+  color: #FFFFFF;
+  letter-spacing: 0.7px;
+  font-family: robotoregular;
+  font-weight: normal;
+  background-color: #169BD7;
+  text-align: center;
+  border-radius: 20px;
+  padding: 6%;
+  width: 100%;
+}
+
+.blue-label {
+  color: #169bd7;
+  cursor: pointer;
+  letter-spacing: 0.9px;
+  font-family: robotoregular;
+  font-weight: normal;
+  font-size: 67%;
+  padding: 5px 10px;
+}
+
+.edit-label {
+  color: #169bd7;
+  cursor: pointer;
+  letter-spacing: 0.9px;
+  font-family: robotoregular;
+  font-weight: normal;
+  font-size: 67%;
+}
+
+.img {
+  height: 20px;
+  width: 20px;
+}
+
+.admin-label {
+  color: white;
+  background-color: #169BD7;
+  text-align: left;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+.admin-txt {
+  letter-spacing: 0.87px;
+  font-family: robotoregular;
+  font-size: 84%;
+}
+
+.lbl {
+  font-family: robotoCondensedregular;
+  font-size: 80%;
+  font-stretch: condensed;
+  letter-spacing: 0.9px;
+  color: #B3B3BE;
+}
+
+.lbl-val {
+  font-family: robotoregular;
+  font-size: 13px;
+  color: #4d4d61;
+  letter-spacing: .87px;
+}
+
+.create-report-img {
+  height: 24px;
+  width: 14px;
+  padding-top: 11px;
+  cursor: pointer;
+}
+
+.more-label {
+  color: #169bd7;
+  background-color: rgba(22, 155, 215, 0.11);
+  text-align: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+
+}
+
+.more-txt {
+  letter-spacing: 0.87px;
+  font-family: robotoregular;
+  font-size: 66%;
+  cursor: pointer;
+}
+
+.act-ina-btn {
+  width: 76%;
+  border-radius: 13%/47%;
+  background: #50e3c2;
+  font-family: robotoCondensedregular;
+  font-size: 70%;
+  letter-spacing: .87px;
+  color: white;
+  cursor: pointer;
+}
+
+.act-ina-btn2 {
+  width: 84%;
+  border-radius: 13%/47%;
+  background: #A7A7B4;
+  font-family: robotoCondensedregular;
+  font-size: 70%;
+  letter-spacing: .87px;
+  color: white;
+  cursor: pointer;
+}
+
+::ng-deep .mat-checkbox-frame {
+  border-width: 1px !important;
+}
+
+.mat-row:nth-child(even) {
+  background-color: white;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: #f0fbff;
+}
+
+:host ::ng-deep td.mat-cell,
+td.mat-footer-cell,
+th.mat-header-cell {
+  border-bottom-style: unset !important;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .mat-cell,
+.mat-footer-cell {
+  font-size: 76%;
+  padding: .75rem;
+  white-space: nowrap;
+}
+
+.online-btn {
+  width: 57px;
+  height: 21px;
+  border-radius: 21%/45%;
+  background: #50e3c2
+}
+
+.online-btn2 {
+  width: 60px;
+  height: 21px;
+  border-radius: 21%/45%;
+  background: #A7A7B4;
+}
+
+.online-txt {
+  font-family: robotoCondensedregular;
+  font-size: 86%;
+  letter-spacing: .87px;
+  color: white;
+  cursor: pointer;
+}
+
+/* width */
+::-webkit-scrollbar {
+  /* width: 7px; */
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #45AFDF;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(26, 153, 212);
+}
+
+:host ::ng-deep table.mat-table {
+  overflow-x: scroll;
+  padding: 15px;
+  margin-bottom: 0%;
+}
+
+.borderless td,
+.borderless th {
+  border: none;
+}
+
+:host ::ng-deep .table thead th {
+  vertical-align: middle;
+  padding: 1%;
+}
+
+@media (min-width:0px) and (max-width:768px) {
+  .admin-bar {
+    margin-top: 5%;
+  }
+}
+
+.loading-indicator {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Transparent Overlay */
+.loading-indicator:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.row-space {
+  padding-left: 4%;
+}
+
+.mar-space {
+  margin-bottom: 1%;
+}
+
+
+.vendor-btn {
+  height: 31px;
+  border-radius: 33px;
+  background: #169BD7;
+  cursor: pointer;
+  margin-left: 1%;
+  margin-top: 3%;
+  text-align: center;
+}
+
+.vendor-txt {
+  font-family: robotoregular;
+  font-size: 77%;
+  letter-spacing: 0.7px;
+  color: #ffffff;
+}
+
+:host ::ng-deep tr.mat-header-row {
+  background: white;
+}
+
+.cancel-btn {
+  background-color: #FFFFFF;
+  border-radius: 15px;
+  margin-top: 11%;
+  cursor: pointer;
+  width: 100%;
+  float: right;
+}
+
+.cancel-text {
+  line-height: 22px;
+  letter-spacing: 0.87px;
+  font-size: 13px;
+  color: #64646E;
+  font-family: robotoCondensedregular;
+  text-align: center;
+  border: 1px solid #169bd7;
+  border-radius: 13%/51%;
+}
+
+.apply-btn {
+  background-color: #169BD7;
+  border-radius: 15px;
+  margin-top: 11%;
+  cursor: pointer;
+  float: right;
+  width: 100%
+}
+
+.apply-text {
+  line-height: 18px;
+  letter-spacing: 0.87px;
+  font-size: 13px;
+  color: #FFFFFF;
+  font-family: robotoCondensedregular;
+  text-align: center;
+  line-height: 24px;
+}
+
+.conections {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  outline: none;
+  height: 83%;
+  background: white;
+  margin-top: 7%;
+  border: 1px solid #d4f2ff;
+}
+
+.lbl-class {
+  line-height: 18px;
+  letter-spacing: 0.87px;
+  font-size: 13px;
+  color: #9B9B9B;
+  font-family: robotoCondensedregular;
+  margin-top: 3%;
+}

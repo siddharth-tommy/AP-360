@@ -1,0 +1,431 @@
+<style>
+  /* width */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 1%;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #45AFDF;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(26, 153, 212);
+  }
+  /* .dash-h6 {
+  font-family: robotoregular;
+  font-size: 17px;
+  color: #4a4a4a;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  margin-top: 5px;
+} */
+/* .stat-overview-table th {
+    font-family: robotoCondensedregular;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: condensed;
+    letter-spacing: 0.9px;
+    padding: 20px 0px 20px 1%;
+    color: #9b9b9b;
+
+  }
+
+  .stat-overview-table td {
+    font-family: robotoregular;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.9px;
+    padding: 15px 0px 15px 1%;
+    color: #4d4d61;
+  } */
+</style>
+<div *ngIf="loader==true" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="modal-header pl-0">
+  <h4 class="modal-title dash-h6">EQUIPMENTS</h4>
+  <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="row">
+
+
+  <div class="col-md-12">
+    <div class="dash-box table-scroll state-overview-table2">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" cellspacing="0"
+      cellpadding="0" class="stat-overview-table" style="width:100%;">
+
+      <ng-container matColumnDef="SiteName">
+        <th class="table-txt-head table-header align-left" style="padding-left: 25px;background: white !important"
+          mat-header-cell *matHeaderCellDef >Site Name</th>
+        <td class="table-txt align-left" mat-cell *matCellDef="let element"
+          style="padding-left: 25px;cursor: pointer;" matTooltip="{{element.SiteName}}">
+
+          {{element.SiteName?.length>22?element.SiteName.substring(0,22)+'...':element.SiteName}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Units" >
+        <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+        *matHeaderCellDef >Units
+      </th>
+      <td class="table-txt" mat-cell *matCellDef="let element">
+              {{element.Units}}
+      </td>
+      </ng-container>
+      <ng-container matColumnDef="UsageTime">
+        <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+          *matHeaderCellDef >Usage
+        </th>
+        <td (click)="usageDivShow()" class="table-txt" mat-cell *matCellDef="let element">
+
+          <div class="hover-dropdown">
+            <span
+                  [ngStyle]="{'color':element.UsageTimeExpected>element.UsageTime || element.UsageTime<70? '#ea4256' : 'black' }">{{element.UsageTime}}%</span>
+                <img *ngIf="element.UsageTimeExpected>=element.UsageTime && stateOverview!='LAST THREE MONTHS'"
+                src="assets/icon/td-arrow-down.png" class="create-report-img">
+              <img *ngIf="element.UsageTimeExpected<element.UsageTime  && stateOverview!='LAST THREE MONTHS'"
+                src="assets/icon/td-arrow-up.png" class="create-report-img">
+             
+              <!-- <div class="pl-0 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6"><span>
+                
+                </span></div> -->
+
+            <div class="hover-div usage-div hover-div-first"
+              [ngClass]="{'usage-time-hover':(stateOverviewDatas.length-4)<=(ind)}">
+              <div class="hover-div-point"
+                [ngClass]="{'usage-time-hover-point':(stateOverviewDatas.length-4)<=(ind)}"></div>
+              <div class="row m-t-25 pad-0-15">
+                <div class="col-md-5 form-group">
+                  <p style="margin-left: 24px;"
+                    [ngStyle]="{'color':element?.UsageTimeExpected>element?.UsageTime || element?.UsageTime<70 ? '#ea4256' : 'black' }">
+                    {{element?.UsageTime}}%</p>
+                  <p style="margin-left: 24px;" class="span-label1">ACTUAL</p>
+                </div>
+                <div class="col-md-7 form-group text-left">
+                  <p>{{element?.UsageTimeExpected}}%</p>
+                  <p class="span-label1">EXPECTED</p>
+                </div>
+                <div class="col-md-5 form-group text-left pad-l-40">
+                  <p class="span-label2">Most used :</p>
+                </div>
+                <div class="col-md-7 form-group text-left">
+                  <p class="span-label3">{{element?.MostUsedAT}}</p>
+                </div>
+                <div class="col-md-5 form-group text-left pad-l-40">
+                  <p class="span-label2">Most unused :</p>
+                </div>
+                <div class="col-md-7 form-group text-left">
+                  <p class="span-label3">{{element?.MostUnUsedAT}}</p>
+                </div>
+              </div>
+              <div (click)="assetNavigation(element)" style="cursor: pointer;" class="hover-div-footer">View details >></div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="IdlingTime">
+        <th class="table-txt-head table-header" style="background: white !important;padding:0 2% 0 0" mat-header-cell
+          *matHeaderCellDef >Idle
+        </th>
+        <td class="table-txt" mat-cell *matCellDef="let element">
+          <div class="hover-dropdown">
+          <span
+                  [ngStyle]="{'color':element.IdlingTime>20? '#ea4256' : 'black' }">{{element?.IdlingTime}}%</span>
+                    <img *ngIf="element?.PreIdlingTime>=element?.IdlingTime && stateOverview!='LAST THREE MONTHS'"
+                      src="assets/icon/td-arrow-up.png" class="create-report-img">
+                    <img *ngIf="element?.PreIdlingTime<element?.IdlingTime  && stateOverview!='LAST THREE MONTHS'"
+                      src="assets/icon/td-arrow-down.png" class="create-report-img">                         
+               </div>              
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="MaintWeightage">
+        <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+          *matHeaderCellDef >Maintenance</th>
+        <td class="table-txt" mat-cell *matCellDef="let element">
+         
+              {{element.MaintWeightage}}
+           
+         
+          <div class="hover-div alarm-div hover-div-third" style="margin-left:60px;"
+            [ngClass]="{'usage-time-hover':(dataSource.data.length-4)<=(ind)}">
+            <div class="hover-div-point"
+              [ngClass]="{'usage-time-hover-point':(dataSource.data.length.length-4)<=(ind)}"></div>
+            <div class="row m-t-25 pad-0-25">
+              <div class="col-md-12 form-group text-left">
+                <p class="span-label4">TOP 5 ALARM TYPES</p>
+              </div>
+            </div>
+            <div class="row pad-0-25" *ngFor="let item of popupAlarmAllSiteDatas">
+              <div class="col-md-2 form-group text-left">
+                <p class="span-label5">{{element?.EventTotal}}</p>
+              </div>
+              <div class="col-md-10 form-group text-left">
+                <p class="span-label2">{{element?.EventName}}</p>
+              </div>
+            </div>
+            <div class="hover-div-footer"  >View details >></div>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="AlarmWeightage">
+        <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+          *matHeaderCellDef >Alarms
+        </th>
+        <td class="table-txt" mat-cell *matCellDef="let element" (mouseenter)="openAlarmsAllSite(element)">
+          <div class="hover-dropdown">
+           
+                <span
+                  [ngStyle]="{'color':element.AlarmWeightage>10? '#ea4256' : 'black' }">{{element.AlarmWeightage}}</span>
+             
+            <div class="hover-div alarm-div hover-div-third" style="margin-left:60px;"
+              [ngClass]="{'usage-time-hover':(dataSource.data.length-4)<=(ind)}">
+              <div class="hover-div-point"
+                [ngClass]="{'usage-time-hover-point':(dataSource.data.length-4)<=(ind)}"></div>
+              <div class="row m-t-25 pad-0-25">
+                <div class="col-md-12 form-group text-left">
+                  <p class="span-label4">TOP 5 ALARM TYPES</p>
+                </div>
+              </div>
+              <div class="row pad-0-25" *ngFor="let item of popupAlarmAllSiteDatas">
+                <div class="col-md-2 form-group text-left">
+                  <p class="span-label5">{{item?.EventTotal}}</p>
+                </div>
+                <div class="col-md-10 form-group text-left">
+                  <p class="span-label2">{{item?.EventName}}</p>
+                </div>
+              </div>
+              <div class="hover-div-footer" (click)="alarmNavigation(element)" style="cursor: pointer;">View details >></div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="ComplianceWeightage">
+        <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+          *matHeaderCellDef >Compliance</th>
+        <td class="table-txt" mat-cell *matCellDef="let element" (mouseenter)="openAlarmsAllSite(item)">
+          <div class="hover-dropdown">
+           
+                {{element.ComplianceWeightage}}
+             
+            <div class="hover-div safety-div hover-div-fourth" style="margin-left:-290px!important;margin-top: -3%!important;"
+              [ngClass]="{'usage-time-hover':(dataSource.data.length.length-4)<=(ind)}">
+              <div class="" style="transform: rotate(319deg);margin-top: -2px;"
+                [ngClass]="{'usage-time-hover-point':(dataSource.data.length.length-4)<=(ind)}"></div>
+                <div class="hover-div-point"
+                [ngClass]="{'usage-time-hover-point':(dataSource.data.length.length-4)<=(ind)}"
+                style="transform: rotate(271deg);
+                margin-left: 89%;
+                margin-top: 8%;"></div>
+              <div class="row m-t-25 pad-0-25 m-b-25">
+                <div class="col-md-4 form-group">
+                  <p>{{element.ComplianceWeightageAlarm}}</p>
+                  <p class="span-label1">CHECKLIST ALARMS</p>
+                </div>
+                <div class="col-md-4 form-group">
+                  <p>{{element.ComplianceWeightageSkipped}}</p>
+                  <p class="span-label1">SKIPPED CHECKLIST</p>
+                </div>
+                <div class="col-md-4 form-group">
+                  <p>{{element.ComplianceWeightageShorted}}</p>
+                  <p class="span-label1">SHORTED CHECKLIST</p>
+                </div>
+              </div>
+              <div class="hover-div-footer" (click)="complainceNavigation(element)" style="cursor: pointer;">View details >></div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="AdminName">
+        <th class="table-txt-head table-header" style="padding:0px;background: white !important;" mat-header-cell
+          *matHeaderCellDef  >Person in
+          charge</th>
+        <td style="cursor:pointer" class="table-txt" (click)="openPersonIncharge(element)" mat-cell *matCellDef="let element" style="cursor: pointer;"
+        matTooltip="{{element.AdminName}}">
+              {{element.AdminName?.length>11?element.AdminName.substring(0,11)+'...':element.AdminName}}
+        </td>
+          
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns">
+    </table>
+      <!-- <table cellspacing="0" cellpadding="0" class="stat-overview-table">
+        <thead>
+          <tr>
+            <th>Site name</th>
+            <th>Units</th>
+            <th>Usage time</th>
+            <th>Idling time</th>
+            <th>Maint. overdue</th>
+            <th>Total alarms</th>
+            <th>Safety compliance</th>
+            <th class="person" >Person in charge</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of stateOverviewDatas;let ind=index;">
+            <td style="cursor:pointer" matTooltip="{{item.SiteName}}">
+              <div (click)="siteidis(item.ID)">
+                  {{item.SiteName?.length>20?item.SiteName.substring(0,20)+'...':item.SiteName}}
+              </div>
+            </td>
+            <td>
+              <div class="row">
+                <div class="col-xl-8 col-lg-8 col-md-5 col-sm-3 col-3" matTooltip="{{item.Units}}"
+                  style="text-align: center;">
+                  {{item.Units}}
+                </div>
+              </div>
+            </td>
+            <td style="cursor: pointer;">
+              
+              <div class="hover-dropdown">
+                  <div class="row">
+                    <div class="pr-0 text-center col-xl-5 col-lg-5 col-md-5 col-sm-5 col-5">
+                        <span [ngStyle]="{'color':item.UsageTimeExpected>item.UsageTime || item.UsageTime<70 ? '#ea4256' : 'black' }">{{item.UsageTime}}%</span>
+                    </div>
+                    <div class="pl-0 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                        <span><img *ngIf="item.UsageTimeExpected>=item.UsageTime && stateOverview!='LAST THREE MONTHS'"
+                          src="assets/icon/td-arrow-down.png" class="create-report-img">
+                        <img *ngIf="item.UsageTimeExpected<item.UsageTime && stateOverview!='LAST THREE MONTHS'"
+                          src="assets/icon/td-arrow-up.png" class="create-report-img">
+                        </span>
+                    </div>
+                  <div class="hover-div usage-div hover-div-first"
+                    [ngClass]="{'usage-time-hover':(stateOverviewDatas.length-4)<=(ind)}">
+                    <div class="hover-div-point"
+                      [ngClass]="{'usage-time-hover-point':(stateOverviewDatas.length-4)<=(ind)}"></div>
+                    <div class="row m-t-25 pad-0-15">
+                      <div class="col-md-5 form-group">
+                        <p style="margin-left: 24px;" [ngStyle]="{'color':item.UsageTimeExpected>item.UsageTime || item.UsageTime<70? '#ea4256' : 'black' }">{{item.UsageTime}}%</p>
+                        <p style="margin-left: 24px;" class="span-label1">TOTAL</p>
+                      </div>
+                      <div class="col-md-7 form-group text-left">
+                        <p>{{item.UsageTimeExpected}}%</p>
+                        <p class="span-label1">EXPECTED</p>
+                      </div>
+                      <div class="col-md-5 form-group text-left pad-l-40">
+                        <p class="span-label2">Most used :</p>
+                      </div>
+                      <div class="col-md-7 form-group text-left">
+                        <p class="span-label3">{{item.MostUsedAT}}</p>
+                      </div>
+                      <div class="col-md-5 form-group text-left pad-l-40">
+                        <p class="span-label2">Most unused :</p>
+                      </div>
+                      <div class="col-md-7 form-group text-left">
+                        <p class="span-label3">{{item.MostUnUsedAT}}</p>
+                      </div>
+                    </div>
+                    <div class="hover-div-footer">View details >></div>
+                  </div>
+                 </div>
+              </div>
+            </td>
+            <td style="cursor:pointer">
+              <div class="hover-dropdown">
+                <div class="row">
+                  <div class="pr-0 text-center col-xl-5 col-lg-5 col-md-5 col-sm-5 col-5">
+                      <span [ngStyle]="{'color':item.IdlingTime>20? '#ea4256' : 'black' }">{{item.IdlingTime}}%</span>
+                  </div>
+                  <div class="pl-0 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                      <span>
+                        <img *ngIf="item.PreIdlingTime>=item.IdlingTime && stateOverview!='LAST THREE MONTHS'"
+                        src="assets/icon/td-arrow-up.png" class="create-report-img">
+                      <img *ngIf="item.PreIdlingTime<item.IdlingTime  && stateOverview!='LAST THREE MONTHS'"
+                        src="assets/icon/td-arrow-down.png" class="create-report-img">
+                      </span>
+                      
+                  </div>
+              </div>
+              </div>
+            </td>
+            <td>
+              <div class="row">
+                  <div class="col-9" style="text-align: center;">
+                <span [ngStyle]="{'color':item.MaintWeightage>5? '#ea4256' : 'black' }">{{item.MaintWeightage}}</span>
+              </div>
+              </div>
+            </td>
+            <td style="cursor:pointer" (mouseenter)="openAlarmsAllSite(item)">
+              <div class="hover-dropdown">
+                <div class="row">
+                  <div class="col-9" style="text-align: center;">
+                      <span  [ngStyle]="{'color':item.AlarmWeightage>10? '#ea4256' : 'black' }">{{item.AlarmWeightage}}</span>
+                  </div>
+                <div class="hover-div alarm-div hover-div-third"
+                  [ngClass]="{'new-alarms-hover ':(stateOverviewDatas.length-4)<=(ind)}"  style="margin-left:60px;">
+                  <div class="hover-div-point"
+                    [ngClass]="{'new-alarms-hover-point':(stateOverviewDatas.length-4)<=(ind)}"></div>
+                  <div class="row m-t-25 pad-0-25">
+                    <div class="col-md-12 form-group text-left">
+                      <p class="span-label4">TOP 5 ALARM TYPES</p>
+                    </div>
+                  </div>
+                  <div class="row pad-0-25" *ngFor="let item of popupAlarmAllSiteDatas">
+                    <div class="col-md-2 form-group text-left">
+                      <p class="span-label5">{{item?.EventTotal}}</p>
+                    </div>
+                    <div class="col-md-10 form-group text-left">
+                      <p class="span-label2">{{item?.EventName}}</p>
+                    </div>
+                  </div>
+                  <div [routerLink]="['/home/notification']" class="hover-div-footer">View details >></div>
+                </div>
+              </div>
+              </div>
+            </td>
+            <td style="cursor: pointer;">
+              <div class="hover-dropdown">
+                <div class="row">
+                    <div class="col-9" style="text-align: center;">
+                        <span  [ngStyle]="{'color':item.ComplianceWeightage>1? '#ea4256' : 'black' }">{{item.ComplianceWeightage}}</span>
+                    </div>
+                </div>
+                
+                <div class="hover-div safety-div safty-complaince-hover1 hover-div-fourth"
+                  [ngClass]="{'safty-complaince-hover2':(stateOverviewDatas.length-4)<=(ind)}">
+                  <div class="hover-div-point safty-complaince-hover-point1 hover-div-fourth"
+                    [ngClass]="{'safty-complaince-hover-point2':(stateOverviewDatas.length-4)<=(ind)}"></div>
+                  <div class="row m-t-25 pad-0-25 m-b-25">
+                    <div class="col-md-4 form-group">
+                      <p>{{item.ComplianceWeightageAlarm}}</p>
+                      <p class="span-label1">CHECKLIST ALARMS</p>
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <p>{{item.ComplianceWeightageSkipped}}</p>
+                      <p class="span-label1">SKIPPED CHECKLIST</p>
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <p>{{item.ComplianceWeightageShorted}}</p>
+                      <p class="span-label1">SHORTED CHECKLIST</p>
+                    </div>
+                  </div>
+                  <div class="hover-div-footer">View details >></div>
+                </div>
+              </div>
+            </td>
+            <td style="cursor: pointer;font-size: 12px">
+              <div class="row">
+                <div class="col-9" matTooltip="{{item.AdminName}}" style="text-align: center;" (click)="openPersonIncharge(item)" >
+                    <span>
+                        {{item.AdminName?.length>11?item.AdminName.substring(0,11)+'...':item.AdminName}}
+                    </span>
+                </div>
+            </div>
+              </td>
+          </tr>
+
+        </tbody>
+      </table> -->
+    </div>
+  </div>
+</div>

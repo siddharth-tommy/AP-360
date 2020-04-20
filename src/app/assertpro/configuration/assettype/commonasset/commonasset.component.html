@@ -1,0 +1,97 @@
+<div *ngIf="loader" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="container search-container pl-0">
+  <div class="row">
+    <div class="col-12 pr-0">
+      <div class="text-left select-geofence">
+        {{ header }}
+      </div>
+    </div>
+    <div class="col-3 pl-0 pr-0" *ngIf="isMultiSelectEnabled">
+      <div class="text-right geofence-add" (click)="selectAllAsset()">Select All</div>
+    </div>
+  </div>
+</div>
+
+<div class="container tree-box-container pl-0 pr-0">
+  <div class="tree-box">
+    <div id="style-5" class="search-btn">
+      <div class="row" *ngIf="bubbles">
+        <div *ngIf="bubbles.length==0 && heightAdj" style="height: 25px;margin-top: 13px;">
+
+        </div>
+        <div class="col-auto" style="padding-left:10px;padding-right:0px" *ngFor="let bubble of bubbles">
+          <div class="bubbles bubbles-txt">
+            {{ bubble.value }}
+            <a (click)="RemoveFilterItem(bubble)" style="margin-left:10px;cursor: pointer;">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px"
+                version="1.1" height="14px" viewBox="0 0 64 64" enable-background="new 0 0 64 64">
+                <g>
+                  <path fill="#FFFFFF"
+                    d="M28.941,31.786L0.613,60.114c-0.787,0.787-0.787,2.062,0,2.849c0.393,0.394,0.909,0.59,1.424,0.59   c0.516,0,1.031-0.196,1.424-0.59l28.541-28.541l28.541,28.541c0.394,0.394,0.909,0.59,1.424,0.59c0.515,0,1.031-0.196,1.424-0.59   c0.787-0.787,0.787-2.062,0-2.849L35.064,31.786L63.41,3.438c0.787-0.787,0.787-2.062,0-2.849c-0.787-0.786-2.062-0.786-2.848,0   L32.003,29.15L3.441,0.59c-0.787-0.786-2.061-0.786-2.848,0c-0.787,0.787-0.787,2.062,0,2.849L28.941,31.786z" />
+                </g>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+          <input type="text" style="width:100%;border:none;outline: none;margin-top:2px"
+            placeholder="Name of the asset..." [(ngModel)]="searchText" />
+        </div>
+        <div class="col-2">
+          <div class="text-text">
+            <img src="assets/icon/icon-search.png" style="height:15px;margin-top:5px" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="style-5" class="asset-container">
+      <div *ngFor="let assetstype of assets | search: searchText">
+        <a style="cursor:pointer" [attr.aria-expanded]="assetstype.status" aria-controls="collapseBasic">
+          <img *ngIf="!assetstype.status" (click)="assetstype.status = !assetstype.status"
+            src="assets/common/assetplus.png" />
+          <img *ngIf="assetstype.status" (click)="assetstype.status = !assetstype.status"
+            src="assets/common/assetminus.png" />
+          <span class="assettype-txt" (click)="
+              AssetItem(
+                assetstype.assetstype + '/' + 'All',
+                'assettype',
+                assetstype,
+                assetstype.assetstype
+              )
+            ">{{ assetstype.assetstype }}</span>
+          <span class="assettype-txt" *ngIf="
+              (!assetstype.assets ||
+                assetstype.assets.length == 0 ||
+                assetstype.assets[0].ID == null) &&
+              isDeleteEnabled
+            " style="color:red" (click)="
+              deletAsset(
+                assetstype.assetstype + '/' + 'All',
+                'assettype',
+                assetstype,
+                assetstype.assetstype
+              )
+            ">
+            Delete</span>
+        </a>
+        <div id="collapseBasic" [collapse]="!assetstype.status">
+          <div *ngFor="let asset of assetstype.assets | subsearch: searchText">
+            <span *ngIf="asset.ID != null" class="asset-txt" style="cursor: pointer" (click)="
+                AssetItem(
+                  assetstype.assetstype + '/' + asset.name,
+                  'asset',
+                  asset,
+                  asset.AssetTypeName
+                )
+              ">{{ asset.name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</div>

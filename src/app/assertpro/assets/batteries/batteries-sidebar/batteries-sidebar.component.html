@@ -1,0 +1,388 @@
+
+<div #side class="side-bar">
+<div #myDiv class="additional-box" id="additional-box">
+  <div class="scroll-align">
+    <div class="row mt-4 ml-1 pb-2">
+      <div class="col-4 pl-0">
+        <svg _ngcontent-c3="" xml:space="preserve" id="closeSideBar" (click)="goBack()"
+        class="side-bar-back-icon" xmlns:xlink="http://www.w3.org/1999/xlink" height="20px"
+        style="enable-background:new 0 0 31.494 31.494;" version="1.1" viewBox="0 0 31.494 31.494" width="20px" x="0px"
+        xmlns="http://www.w3.org/2000/svg" y="0px">
+        <path _ngcontent-c3=""
+          d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+          fill="#169bd7"></path>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+      </svg>
+      </div>
+      <div class="col-4"></div>
+      <div class="col-3 float-right">
+        <span [routerLink]="['/home/configuration']" class="float-right"><mat-icon class="gear-icon cursor" aria-hidden="false">settings</mat-icon></span>
+      </div>
+   
+    </div>
+    <div class="row">
+      <div class="col-md-8"></div>
+      <a *ngIf="editHomeEnabled" (click)="cancelHomeEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+        <span class="cancel-text"> Cancel </span></a>
+      <a *ngIf="editHomeEnabled" class="ml-2" (click)="saveHome()"> <img src="../../../assets/icon/icons-apply-ic.png"
+          alt=""> <span class="apply-text"> Apply </span></a>
+    </div>
+  </div>
+  <div class="row pt-2">
+      <div class="col-2 station-txt">Asset Type</div>
+      <div *ngIf="!editHomeEnabled" class="col-6 tampa-txt"> {{model.assetTypeName}}</div>
+      <div *ngIf="editHomeEnabled" class="btn-group " dropdown [isDisabled]="false">
+        <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+            {{model.assetTypeName}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="dropdown-disabled-menu" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px;height: 100px !important;overflow-y: scroll">
+          <li *ngFor="let data of assetList;let i=index">
+            <div class="text-left help-site-name" (click)="assetSelection(data,i)">{{data.assetstype}}</div>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="!editHomeEnabled" (click)="editHome()" class="col-2 additional-box-edit-text">
+        <img src="../../../../assets/icon/icons-edit-ic.png" alt=""> Edit
+      </div>
+    </div>
+    <div class="row pt-3">
+      <div class="col-2 station-txt">Asset Name</div>
+      <div *ngIf="!editHomeEnabled" class="col-6 tampa-txt">{{model.name}}</div>
+      <div *ngIf="editHomeEnabled" class="col-9" style="padding: 0;margin-top: 5px;">
+        <input maxlength="20" minlength="3" [(ngModel)]='model.name' type="text" class="help-input">
+      </div>
+    </div>
+  
+  <div class="row pt-5">
+
+    <div class="col-2 station-txt">Site</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt"> {{model.siteName?.trim()}}</div>
+
+    <div *ngIf="editHomeEnabled" class="btn-group " dropdown [isDisabled]="false">
+      <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+        {{model.siteName?.trim()}}
+        <span style="position: absolute;right:0;margin-right:20px">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="dropdown-disabled-menu" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px;height: 200px !important;overflow-y: scroll">
+        <li *ngFor="let sites of usersites">
+          <div class="text-left help-site-name" (click)="SelectSiteMenu(sites)">{{sites.Name}}</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="row pt-3">
+    <div class="col-2 station-txt">Department</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt">{{Department}}</div>
+    <div *ngIf="editHomeEnabled" class="btn-group " dropdown [isDisabled]="false">
+      <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+        {{Department}}
+        <span style="position: absolute;right:0;margin-right:20px">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="deparment" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of departmentList">
+          <div class="text-left help-site-name" (click)="departmentChange(data)">{{data.NAME}}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- title-text -->
+  <div class="row pt-5">
+
+    <div class="col-2 asset-info-txt" [ngClass]="{'device-info':sidebarmenu=='asset'}" (click)="sidebarActive('asset')">
+      ASSET
+      INFO</div>
+
+    <div class="col-2 device-info-txt" [ngClass]="{'device-info':sidebarmenu=='device'}"
+      (click)="sidebarActive('device')">DEVICE
+      INFO</div>
+  </div>
+  <hr class="hr-line pb-4">
+  <div class="row">
+    <div class="col-8"></div>
+    <div *ngIf="!editEnabled" (click)="onEditClilck()" class="col-3 additional-box-edit-text edit-pen-img"><img
+        src="../../../../assets/icon/icons-edit-ic.png" alt="">
+      Edit</div>
+    <a *ngIf="editEnabled" (click)="cancelEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+      <span class="cancel-text"> Cancel </span></a>
+    <a *ngIf="editEnabled" class="ml-2" (click)="save()"> <img src="../../../assets/icon/icons-apply-ic.png" alt="">
+      <span class="apply-text"> Apply </span></a>
+  </div>
+  <div *ngIf="sidebarmenu=='asset'">
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Vendor</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.vendorName}}</div>
+            <div *ngIf="editEnabled" class="btn-group " dropdown [isDisabled]="false">
+        <div id="vendorType" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+          aria-controls="dropdown-disabled-menu">
+          {{model.vendorName}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="vendorlist" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let data of vendorList">
+            <div class="text-left help-site-name" (click)="vendorChange(data)">{{data.Name}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Make</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.make}}</div>
+      <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+      </div> -->
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [(ngModel)]='model.make' type="text" class="help-input">
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Model</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.model}}</div>
+      <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" />
+      </div> -->
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [(ngModel)]='model.model' type="text" class="help-input">
+      </div>
+    </div>
+    <!-- <div class="row pt-4">
+      <div class="col-2 station-txt">Serial No</div>
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.model}}</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [(ngModel)]='model.serialNumber' type="text" class="help-input">
+      </div>
+    </div> -->
+      
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Install date</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.installDate| date:'dd-MM-yyyy hh:mm:ss a'}}</div>
+      <div *ngIf="editEnabled" class="col-4">
+        <input [(ngModel)]="model.installDate" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Install Date"
+          style="border:none;font-size: 90%;">
+        <i [owlDateTimeTrigger]="dt1" class="material-icons"
+          style="cursor: pointer;    vertical-align:middle;color:#33b6d6">
+          date_range
+        </i>
+        <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Lease/rental Tresh</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{leastRendal}}</div>
+      <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="leastRendal" />
+      </div> -->
+      <div *ngIf="editEnabled" class="col-4">
+        <input [(ngModel)]="model.leaseRentalDate" [owlDateTime]="dt15" [owlDateTimeTrigger]="dt15" placeholder="Lease/rental Tresh"
+          style="border:none;font-size: 90%;">
+        <i [owlDateTimeTrigger]="dt15" class="material-icons"
+          style="cursor: pointer;    vertical-align:middle;color:#33b6d6">
+          date_range
+        </i>
+        <owl-date-time [pickerType]="'calendar'" #dt15></owl-date-time>
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Acquisition date</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.acquisitionDate|date:'dd-MM-yyyy'}}</div>
+      <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="aquationDate" />
+      </div> -->
+
+      <div *ngIf="editEnabled" class="col-4">
+
+        <input [(ngModel)]="model.acquisitionDate" [owlDateTime]="dt11" [owlDateTimeTrigger]="dt11"
+          placeholder="Acquisition date" style="border:none;font-size: 90%;">
+        <i [owlDateTimeTrigger]="dt11" class="material-icons"
+          style="cursor: pointer;    vertical-align:middle;color:#33b6d6">
+          date_range
+        </i>
+        <owl-date-time [pickerType]="'calendar'" #dt11></owl-date-time>
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Acquisition type</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.acquisition}}</div>
+      <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="acuationType" />
+      </div> -->
+      <div *ngIf="editEnabled" class="btn-group " dropdown [isDisabled]="false">
+        <div id="acuationTypeType" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+          aria-controls="dropdown-disabled-menu">
+          {{model.acquisition}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="acuationTypelist" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="height: 100px;overflow-y: auto">
+          <li *ngFor="let data of aquationList">
+            <div class="text-left help-site-name" (click)="actuationChange(data)">{{data.value}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Acquisition cost ($)</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.acquisitionCost}}</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input placeholder="$$$$" [(ngModel)]='model.acquisitionCost' type="text" class="help-input">
+      </div>
+    </div>
+   
+    <br><br><br>
+  </div>
+  <!-- Device-info-data -->
+  <div *ngIf="sidebarmenu=='device'">
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Unit ID</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.unitID}}</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [(ngModel)]='model.unitID' type="text" class="help-input">
+      </div>
+    </div>
+    <div class="row pt-4">
+      <div class="col-2 station-txt">Unit type</div>
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.unitName}}</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [(ngModel)]='model.unitName' type="text" class="help-input">
+      </div>
+    </div>
+    <div class="row pt-4">
+      <div class="col-2 station-txt">Modem type</div>
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.modemTypeName}}</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [(ngModel)]='model.modemTypeName' type="text" class="help-input">
+      </div>
+    </div>
+    <div class="row pt-4">
+      <div class="col-2 station-txt">F/W version</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input type="text" [(ngModel)]="model.version" class="help-input">
+      </div>
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.version}}</div>
+    </div>
+    <div class="row pt-4">
+      <div class="col-2 station-txt">ICCID/MAC Address</div>
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.iCCID}}</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [ngModel]='model.iCCID' type="text" class="help-input">
+      </div>
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Serial number</div>
+       
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{model.serialNo}}</div>
+     
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input [(ngModel)]='model.serialNo' type="text" class="help-input" >
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Model</div>
+       
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{deviceModel}}</div>
+      <div *ngIf="editEnabled" class="btn-group " dropdown [isDisabled]="false">
+        <div  id="deviceModelType" class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{deviceModel}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="deviceModellist" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let data of devicemodellist">
+            <div class="text-left help-site-name" (click)="deviceModel=data">{{data}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row pt-4">
+      <div class="col-2 station-txt">Battery Life</div>
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt"></div>
+      <div *ngIf="editEnabled" class="btn-group " dropdown [isDisabled]="false">
+        <div  id="batterielifeType" class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+          {{batterielife}}
+          <span style="position: absolute;right:0;margin-right:20px">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="batterielifelist" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px">
+          <li *ngFor="let data of devicemodellist">
+            <div class="text-left help-site-name" (click)="batterielife=data">{{data}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row pt-4">
+      <div class="col-2 station-txt">Expected EOL</div>
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{expectedEol}}</div>
+      <div *ngIf="editEnabled" class="col-9" style="padding: 0;">
+        <input  type="text" class="help-input" [(ngModel)]="expectedEol">
+      </div>
+    </div>
+  
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt"></div>
+       
+      <div class="col-5 pb-5 tampa-txt"></div>
+
+    </div>
+  </div>
+  <br><br><br>
+</div>
+</div>

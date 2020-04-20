@@ -1,0 +1,353 @@
+<div *ngIf="loader==true || loader2" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<createcompany #createcompany></createcompany>
+<createsite #createsite (saveorupdate)="unset()"></createsite>
+<div class="row">
+  <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+  <div class="col-sm-10 col-md-9 col-lg-9 col-xl-9">
+    <mat-card style="padding-left:3%;margin-top:3%;">
+      <div class="row">
+
+        <div class="col-9 col-sm-7 col-md-6 col-xl-6">
+          <span class="head-label">{{accessControlGroupDetatils?.Name}}</span>
+          <span class="blue-label" id="accessDetails" (click)="openCompany(false)">Details &gt;&gt;</span>
+        </div>
+        <div class="d-none d-sm-block col-sm-3 col-md-4 col-xl-5"></div>
+        <div class="col-3 col-sm-2 col-md-2 col-xl-1 pr-0"><a><img src="assets/icon/edit-pen.png" class="img"><span
+              class="edit-label" id="accessDeailsEdit" (click)="openCompany(true)">Edit</span></a></div>
+      </div>
+      <div class="row" style="margin-top:1.5%;">
+        <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
+          <!--1 row-->
+          <div class="row">
+            <div class="col-10 col-sm-7 col-md-10 col-lg-7 col-xl-6">
+              <div class="row">
+                <div class="col-4 col-sm-5 col-md-4 col-lg-5 col-xl-4">
+                  <span class="lbl">Address</span>
+                </div>
+                <div class="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-8 pr-0">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.Address1}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-4">
+              <div class="row">
+                <div class="col-5 col-sm-5 col-md-5 col-lg-5 col-xl-6 pr-0">
+                  <span class="lbl">Main Phone</span>
+                </div>
+                <div class="col-6 col-sm-6 col-md-5 col-lg-6 col-xl-4 ">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.Phone}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+              <div class="row">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                  <span class="lbl">Ext.</span>
+                </div>
+                <div class="col-6 col-sm-6   col-md-6 col-lg-6 col-xl-6">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.Ext}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--2 row-->
+          <div class="row">
+            <div class="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-6">
+              <div class="row">
+                <div class="col-5 col-sm-5 col-md-5 col-lg-5 col-xl-4">
+                  <span class="lbl">Country</span>
+                </div>
+                <div class="col-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.Country}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 col-sm-4 col-md-4 col-lg-5 col-xl-4">
+              <div class="row">
+                <div class="col-7 col-sm-7 col-md-5 col-lg-5 col-xl-7">
+                  <span class="lbl">Fax</span>
+                </div>
+                <div class="col-4 col-sm-5 col-md-5 col-lg-6 col-xl-4 pl-0">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.Fax}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--3 row-->
+          <div class="row">
+            <div class="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-6">
+              <div class="row">
+                <div class="col-5 col-sm-5 col-md-5 col-lg-5 col-xl-4">
+                  <span class="lbl">State</span>
+                </div>
+                <div class="col-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.State}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--4 row-->
+          <div class="row">
+            <div class="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-6">
+              <div class="row">
+                <div class="col-5 col-sm-5 col-md-5 col-lg-5 col-xl-4">
+                  <span class="lbl">City</span>
+                </div>
+                <div class="col-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.City}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--5 row-->
+          <div class="row">
+            <div class="col-8 col-sm-7 col-md-8 col-lg-7 col-xl-6">
+              <div class="row">
+                <div class="col-5 col-sm-5 col-md-5 col-lg-5 col-xl-4">
+                  <span class="lbl">ZIP code</span>
+                </div>
+                <div class="col-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
+                  <span class="lbl-val">{{accessControlGroupDetatils?.Zipcode}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 admin-bar">
+          <mat-card style="padding-top:0;">
+            <div class="row admin-label" style="margin-bottom:2%;">
+              <div class="col-1"></div>
+              <div class="col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5 pl-0">
+                <span class="admin-txt">Admin</span>
+              </div>
+            </div>
+
+            <div class="row mar-space">
+              <div class=" col-1 col-lg-1 col-xl-1"></div>
+              <div class="col-3 col-sm-4 col-md-2 col-lg-2 col-xl-3 pl-0">
+                <span class="lbl">Name</span>
+              </div>
+              <div class="col-6 col-sm-5 col-md-9 col-lg-7 col-xl-6 pl-0">
+                <span class="lbl-val">{{accessControlGroupDetatils?.AdminName}}</span>
+              </div>
+            </div>
+            <div class="row mar-space">
+              <div class="col-1  col-lg-1 col-xl-1"></div>
+              <div class="col-3 col-sm-4 col-md-2 col-lg-2 col-xl-3 pl-0">
+                <span class="lbl">Phone</span>
+              </div>
+              <div class="col-3 col-sm-4 col-md-5 col-lg-5 col-xl-4 pl-0">
+                <span class="lbl-val">{{accessControlGroupDetatils?.Phone}}</span>
+              </div>
+              <div class="col-3 col-sm-3 col-md-4 col-sm-2 col-lg-3 col-xl-2 pr-0">
+                <div class="row">
+                  <div class="col-4 col-md-2 col-lg-2 col-xl-2">
+                    <span class="lbl">Ext.</span>
+                  </div>
+                  <div class="col-8 col-md-3 col-lg-2 col-xl-2">
+                    <span class="lbl-val">{{accessControlGroupDetatils?.Ext}}</span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="row mar-space">
+              <div class="col-1 col-lg-1 col-xl-1"></div>
+              <div class="col-3 col-sm-4 col-md-2 col-lg-2 col-xl-3 pl-0">
+                <span class="lbl">Email</span>
+              </div>
+              <div class="col-5 col-sm-5 col-md-9 col-lg-7 col-xl-6 pl-0">
+                <span class="lbl-val">{{accessControlGroupDetatils?.AdminEmail}}</span>
+              </div>
+            </div>
+            <br><br>
+          </mat-card>
+        </div>
+      </div>
+      <div class="row" style="margin-top:4%;margin-bottom: 1%;">
+        <div class="col-7 col-sm-7 co-md-7 col-lg-8 col-xl-9">
+          <span class="lbl-val">SITES</span>
+        </div>
+        <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-3">
+          <div class="row">
+            <div class="pl-0 col-6 col-sm-6 col-md-5 col-lg-5 col-xl-5">
+              <img id="createSite" style="cursor:pointer;" src="../../../assets/icon/add-btn.png"
+                (click)="createSite(true)">
+                <img style="cursor:pointer;" class="float-right" src="../../../assets/icon/delete-btn.png" (click)="deleteSite(undefined)">
+            </div>
+            
+            <div id="listview" class="col-1 col-md-1 col-lg-1 col-xl-1">
+              <img *ngIf="view=='tile'" src="assets/icon/list-view.png" class="create-report-img"
+                (click)="viewType('tile')">
+              <img *ngIf="view=='list'" src="assets/icon/list-view2.png" class="create-report-img"
+                (click)="viewType('tile')">
+            </div>
+            <div id="tileView" class="col-1 col-md-1 col-lg-1 col-xl-1">
+              <img *ngIf="view=='tile'" src="assets/icon/tile-view.png" class="create-report-img"
+                (click)="viewType('list')">
+              <img *ngIf="view=='list'" src="assets/icon/tile-view2.png" class="create-report-img"
+                (click)="viewType('list')">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="view=='list'" class="row" style="padding-right:3%;">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 pr-0" *ngFor="let type of sitesList;let i=index;">
+          <mat-card style="margin-bottom:6%;" class="pb-0 shadow">
+            <div class="row row-space">
+              <div class="col-6 col-sm-7 col-md-7 col-lg-8 col-xl-8">
+                <span matTooltip="{{type?.Name}}" class="head-label">
+                  {{type.Name?.length>16?type.Name.substring(0,15)+'...':type?.Name}}
+                </span>
+              </div>
+              <div class="col-5 col-sm-5 col-md-5 col-lg-4 col-xl-4 text-right pl-0">
+                <span class="edit-label" id="editSite" (click)="openSite(type,true)">Edit</span>
+                <img (click)="deleteSite(type)" width="25" height="25" style="cursor: pointer" class="ml-2"
+                  src="../../../assets/icon/delete-btn.png" alt="">
+              </div>
+            </div>
+            <div class="row row-space">
+              <div id="active{{i}}" class="col-2 col-sm-2 col-md-4 col-lg-5 col-xl-3 pr-0"
+                (click)="confirmationDialog(type)">
+                <div *ngIf="type.Status=='Active'" class="act-ina-btn text-center">{{type?.Status}}</div>
+                <div *ngIf="type.Status!='Active'" class="act-ina-btn2 text-center">{{type?.Status}}</div>
+              </div>
+            </div>
+            <!--row 1-->
+            <div class="row row-space">
+              <div class="col-3 col-sm-3 col-md-4 col-lg-4 col-xl-4 pr-0">
+                <span class="lbl">Address</span>
+              </div>
+              <div class="col-9 col-sm-9 col-md-8 col-lg-8 col-xl-8 pr-0">
+                <span matTooltip="{{type?.Address1}}" class="lbl-val">
+                  {{type.Address1?.length>16?type.Address1.substring(0,15)+'...':type?.Address1}}
+                </span>
+              </div>
+            </div>
+            <!--row 2-->
+            <div class="row row-space">
+              <div class="col-3 col-sm-3 col-md-4 col-lg-4 col-xl-4 pr-0">
+                <span class="lbl">Country</span>
+              </div>
+              <div class="col-9 col-sm-9 col-md-8 col-lg-8 col-xl-8 pr-0">
+                <span class="lbl-val">{{type?.Country}}</span>
+              </div>
+            </div>
+            <!--row 3-->
+            <div class="row row-space">
+              <div class="col-3 col-sm-3 col-md-4 col-lg-4 col-xl-4 pr-0">
+                <span class="lbl">State</span>
+              </div>
+              <div class="col-9 col-sm-9 col-md-8 col-lg-8 col-xl-8 pr-0">
+                <span class="lbl-val">{{type?.State}}</span>
+              </div>
+            </div>
+            <!--row 4-->
+            <div class="row row-space">
+              <div class="col-3 col-sm-3 col-md-4 col-lg-4 col-xl-4 pr-0">
+                <span class="lbl">City</span>
+              </div>
+              <div class="col-9 col-sm-9 col-md-8 col-lg-8 col-xl-8 pr-0">
+                <span class="lbl-val">{{type?.City}}</span>
+              </div>
+            </div>
+            <!--row 5-->
+            <div class="row row-space">
+              <div class="col-3 col-sm-3 col-md-4 col-lg-4 col-xl-4 pr-0">
+                <span class="lbl">ZIP Code</span>
+              </div>
+              <div class="col-9 col-sm-9 col-md-8 col-lg-8 col-xl-8 pr-0">
+                <span class="lbl-val">{{type?.Zipcode}}</span>
+              </div>
+            </div>
+            <br>
+            <!--row 6-->
+            <div id="viewsiteDetails" class="row more-label">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <span class="more-txt" (click)="openSite(type,false)">MORE</span>
+              </div>
+            </div>
+
+          </mat-card>
+        </div>
+      </div>
+      <div *ngIf="view=='tile'" class="container-fluid pl-0">
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 pr-0 pl-0">
+            <div class="angular-table table-responsive">
+              <table class="table borderless" [dataSource]="dataSource" matSort mat-table>
+                <ng-container matColumnDef="select">
+                  <th style="padding-top:1%;padding-left:24px;" mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                  </th>
+                  <td style="padding-top:1%" mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Name">
+                  <th mat-sort-header mat-header-cell *matHeaderCellDef>Site name</th>
+                  <td mat-cell *matCellDef="let element" style="color:#2EA6DC;cursor: pointer;"
+                    (click)="openSite(element,true)"> {{element.Name}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Address1">
+                  <th mat-sort-header mat-header-cell *matHeaderCellDef>Address</th>
+                  <td mat-cell *matCellDef="let element"> {{element.Address1}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="AdminName">
+                  <th mat-sort-header mat-header-cell *matHeaderCellDef>Contact name</th>
+                  <td mat-cell *matCellDef="let element"> {{element.AdminName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="AdminEmail">
+                  <th mat-sort-header mat-header-cell *matHeaderCellDef>Email</th>
+                  <td mat-cell *matCellDef="let element">
+                    <span><img src="../../../assets/icon/send-msg.png" alt=""></span><span
+                      class="ml-2">{{element.AdminEmail}}
+                    </span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="AdminPhone">
+                  <th mat-sort-header mat-header-cell *matHeaderCellDef>Phone</th>
+                  <td mat-cell *matCellDef="let element">
+                    <span><img src="../../../assets/icon/call.png" alt=""></span><span
+                      class="ml-2">{{element.AdminPhone}}
+                    </span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Status">
+                  <th mat-sort-header mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let element" class="text-center pr-0" style="padding-left: 0;"
+                    (click)="confirmationDialog(element)">
+                    <div *ngIf="element.Status=='Active'" class="online-btn"><span
+                        class="online-txt text-center">{{element.Status}}</span></div>
+                    <div *ngIf="element.Status!='Active'" class="online-btn2"><span
+                        class="online-txt text-center">{{element.Status}}</span></div>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+
+            </div>
+            <mat-paginator [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="col-md-1 col-lg-1 col-xl-1"></div>
+</div>

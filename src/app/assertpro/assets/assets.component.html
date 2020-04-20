@@ -1,0 +1,449 @@
+<!-- <app-fixedmenubar></app-fixedmenubar>
+<app-fixedsidebar></app-fixedsidebar> -->
+<sidebar-component #sidebarComponent (saveEmit)="loadTable()"  *ngIf="(!equipmentEnable && !equipmentEnable2) && (!chargesEnable && !chargesEnable2) && (!batteriesEnable && !batteriesEnable2) && (!gateways&& !gateways2)"></sidebar-component>
+<div *ngIf="loader || loader2" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+
+
+<div class="container-fluid" style="background-color:#f8fdff" *ngIf="siteName!='All Sites'">
+    <div class="row common-center" *ngIf="(!equipmentEnable && !equipmentEnable2) && (!chargesEnable && !chargesEnable2) && (!batteriesEnable && !batteriesEnable2) && (!gateways&& !gateways2)">
+        <div class="col-md-12 form-group text-center">
+            <h6 class="dash-h6">No product has been assigned to this site. Please assign any product to this site first.</h6>
+         </div>
+      </div>
+  <div *ngIf="((equipmentEnable && equipmentEnable2) || (chargesEnable && chargesEnable2) || (batteriesEnable && batteriesEnable2) || (gateways && gateways2))" class="row" style="background-color: #f8fdff;">
+    <div class="col-sm-1 col-md-1 col-lg-1  col-xl-1 side-bar"></div>
+    <div class="col-1 col-sm-1  col-md-2  col-lg-1 col-xl-1  bg-empty-div-one"></div>
+    <div class="col-10 col-sm-8  col-md-8  col-lg-9 col-xl-9  main-div bg-empty-div-one pl-0" style="margin-top: 35px;">
+      <div class="row">
+        <div class="col-sm-12  col-md-12  col-lg-12 col-xl-12 ">
+          <div class="div">
+            <div>
+              <div class="Tampa-assets-stats-m pl-0 col-md-8">{{siteName}} ASSETS STATS MONITOR</div>
+              <!-- <span [routerLink]="['/home/configuration']" class="float-right"><mat-icon class="gear-icon cursor" aria-hidden="false">settings</mat-icon></span> -->
+            </div>
+          </div>
+          <div class="ud-container bdr">
+            <div class="row">
+              <div *ngIf="equipmentEnable" id="equipmenttab" class="ud-menu col-3 col-md-2 col-lg-2 col-xl-2"
+                [ngClass]="{'blue-txt bdr-blue': tabType=='equipment'}" (click)="tabTypeChanged('equipment')">EQUIPMENT
+              </div>
+              <div *ngIf="batteriesEnable" id="batteriestab" class="ud-menu col-3 col-md-2 col-lg-2 col-xl-2"
+                [ngClass]="{'blue-txt bdr-blue': tabType=='batteries'}" (click)="tabTypeChanged('batteries')">BATTERIES
+              </div>
+              <div *ngIf="chargesEnable" id="chargestab" class="ud-menu col-3 col-md-2 col-lg-2 col-xl-2"
+                [ngClass]="{'blue-txt bdr-blue': tabType=='charges'}" (click)="tabTypeChanged('charges')">CHARGERS</div>
+              <div *ngIf="gateways" id="headtab" class="ud-menu col-3 col-md-2 col-lg-2 col-xl-2"
+                [ngClass]="{'blue-txt bdr-blue': tabType=='head'}" (click)="tabTypeChanged('head')">GATEWAYS</div>
+            </div>
+          </div>
+          <div style="padding-left: 3%" class="row">
+            <div *ngIf="tabType=='equipment' && equipmentEnable"
+              class="col-sm-12 col-md-12 col-xs-12 col-xl-12 mt-3 pl-0">
+              <table cellpadding="0" cellspacing="0" class="communication-table  col-sm-12 col-md-8 col-xs-5 col-xl-5">
+                <tr>
+                  <td>
+                    <h4>{{overAllList?.OverAll}}</h4>
+                    <p>TOTAL</p>
+                  </td>
+                  <td>
+                    <h4 style="color: green">{{overAllList?.Online}}</h4>
+                    <p style="color: green">ONLINE</p>
+                  </td>
+                  <td>
+                    <h4 style="color: grey">{{overAllList?.Offline}}</h4>
+                    <p style="color: grey">OFFLINE</p>
+                  </td>
+                  <td>
+                    <h4 style="color:purple;width:60%;">{{overAllList?.OutOfRange}}</h4>
+                    <p style="color:purple;width:60%;">OUT OF RANGE</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <batteries-component *ngIf="tabType=='batteries'"></batteries-component>
+          <charges-component *ngIf="tabType=='charges'"></charges-component>
+          <header-component *ngIf="tabType=='head'"></header-component>
+          <div *ngIf="tabType=='equipment' && equipmentEnable" class="container-fluid">
+            <div class="row">
+              <div class="col-lg-4 col-xl-4 pl-0">
+                <div class="Rectangle-21-Copy-2">
+                  <div class="prodictive-title">EQUIPMENT USAGE OF
+                    <div id="equipmentFilter" class="btn-group" dropdown> <a id="button-basic" dropdownToggle
+                        aria-controls="dropdown-basic"
+                        style="cursor:pointer;margin-left:1px;margin-right:5px;margin-top: -2px;color:#169bd7">
+                        {{equipmentType}}
+                      </a>
+                      <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                        class="dropdown-menu dropdown-menu-right" style="border:0;left: 1px !important">
+                        <div *ngFor="let type of maintenanceTypeList;let i=index;">
+                          <div id="equipmentFilter{{i}}" (click)="LoadUsageOf(type)" class="alarm-txt"
+                            style="height:30px" [ngClass]="{'active-alarmmenu':type==equipmentType}">{{type}}</div>
+                        </div>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <canvas id="lineChart1"></canvas>
+                  </div>
+                 <div class="equipment-date-align">
+                    <span class="equipment-date"
+                    *ngIf="equipmentType=='PAST 2 WEEKS' || equipmentType=='MONTH'">{{fromDate1}} -
+                    {{toDate1}}</span>
+                 </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-xl-4 pl-0">
+                <div class="Rectangle-21-Copy-2">
+                  <div class="prodictive-title">ALARMS OF
+                    <div id="alarmsOf" class="btn-group" dropdown> <a id="button-basic" dropdownToggle
+                        aria-controls="dropdown-basic"
+                        style="cursor:pointer;margin-left:1px;margin-right:5px;margin-top: -2px;color:#169bd7">
+                        {{alarmType}}
+                      </a>
+                      <ul id="alarmsOftype" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                        class="dropdown-menu dropdown-menu-right" style="border:0;left: 1px !important">
+                        <div *ngFor="let type of maintenanceTypeList;let i=index;">
+                          <div id="alarmsOf{{i}}" (click)="loadAlarms(type)" class="alarm-txt" style="height:30px"
+                            [ngClass]="{'active-alarmmenu':type==alarmType}">{{type}}</div>
+                        </div>
+                      </ul>
+                      <!-- <ul id="alarmsOftype" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                        class="dropdown-menu dropdown-menu-right" style="border:0;">
+                        <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;">
+                          <div *ngFor="let type of maintenanceTypeList;let i=index;">
+                            <div id="alarmsOf{{i}}" (click)="loadAlarms(type)" class="alarm-txt" style="height:30px"
+                              [ngClass]="{'active-alarmmenu':type==alarmType}">{{type}}</div>
+                          </div>
+                        </div>
+                      </ul> -->
+                    </div>
+                  </div>
+                  <div class="form-group ">
+                    <canvas #barchart1 id="bar-chart-grouped"></canvas>
+                  </div>
+                  <div class="equipment-date-align">
+                  <span class="equipment-date" *ngIf="alarmType=='PAST 2 WEEKS' || alarmType=='MONTH'">{{fromDate2}} -
+                    {{toDate2}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-xl-4 pl-0">
+                <div class="Rectangle-21-Copy-2">
+                  <div class="prodictive-title">MAINTENANCE</div>
+                  <div class="form-group">
+                    <canvas *ngIf="!maintenanceRecordEnable" id="doughnutChart" class="responsive-dohnut"></canvas>
+                    <div class="empty-widget-msg" *ngIf="maintenanceRecordEnable">No data available</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="tabType=='equipment' && equipmentEnable" class="container-fluid">
+            <div class="row" style="margin-top:3%;margin-bottom:0;">
+              <div class="col-xl-7 col-lg-5">
+                <div class="asset-list-text">
+                  <span class="asset-list-align"> ASSETS LIST </span>
+                  <mat-checkbox id="equipmentshowAlarms" [(ngModel)]="showAlarms" (ngModelChange)="showAlarm()"
+                    class="mat-check-box-align" style="font-size: 82%;">Show
+                    with alarms only</mat-checkbox>
+                </div>
+              </div>
+
+
+              <div class="col-3 col-md-2 col-lg-3 col-xl-2 filter-text filter-icon filter-resize"
+                style="cursor: pointer;padding-right: 0%;">
+
+                <div (click)="selectedFilter=type" id="equipmentFilter" class="btn-group" dropdown>
+                  Filters <img dropdownToggle src="../../../assets/icon/filter.PNG" alt="Filter-icon">
+                  <a id="button-basic" aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7">
+                  </a>
+                  <ul id="equipmentFiltertype" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                    class="dropdown-menu dropdown-menu-right" style="border:0;overflow-y: scroll;
+                          height: 200px;">
+                    <div *ngFor="let type of filterTypeList;let i=index;">
+                      <div id="equipmentFilter{{i}}" class="alarm-txt" style="height:30px"
+                        [ngClass]="{'active-alarmmenu':type==selectedFilter}">{{type}}</div>
+                    </div>
+                  </ul>
+                </div>
+
+              </div>
+              <form class="col-6 col-md-5 col-sm-6 col-lg-4 col-xl-3 form-align" action="" method="" name="search">
+                <div class="search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21"
+                    height="18" alt="search icon" />
+                  <input id="equipmentSearch" [(ngModel)]="tableFilter" class="remove-focus"
+                    (keyup)="applyFilter($event.target.value)" (paste)="applyFilter($event.target.value)" (keydown)="filterEnter($event)" autocomplete="off"
+                    name="seach" type="text" placeholder="Search here" />
+                </div>
+              </form>
+
+
+            </div>
+          </div>
+          <div *ngIf="tabType=='equipment' && equipmentEnable" class="container-fluid">
+            <div class="row">
+              <div class="mb-3">
+                <mat-chip-list *ngFor="let item of filters;let i=index" style="float: left">
+                  <mat-chip color="primary" selected> {{item}}<mat-icon (click)="RemoveFilterItem(i)"
+                      class="remove-icon">
+                      close
+                    </mat-icon>
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="tabType=='equipment' && equipmentEnable" class="container-fluid pl-0">
+            <div style="position:sticky;" class="mat-elevation-z8">
+              <div class="asset-table-sroll">
+                <table matSort multiTemplateDataRows mat-table [dataSource]="dataSource" style="width:100% !important; "
+                  [class.isMobile]="isMobile">
+                  <ng-container matColumnDef="select">
+                    <th style="padding-top:1%;border-bottom: none" class="table-txt-head" mat-header-cell
+                      *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                      </mat-checkbox>
+                    </th>
+                    <td style="padding-top:1%" mat-cell [ngClass]="{'row-color': i%2==0}"
+                      *matCellDef="let row; let i = dataIndex">
+                      <mat-checkbox id="equipmentId{{i}}" (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+                  <!-- <ng-container style="padding-right: 2%;padding-top: 5%" matColumnDef="UniqueID">
+                    <th class="mobile-label table-txt-head" style="margin-left:0%; border-bottom:none" mat-sort-header
+                      mat-header-cell *matHeaderCellDef> ID
+                    </th>
+                    <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element; let i = dataIndex;"
+                      (click)="loadExpandGrid(element)"> {{element.UniqueID}} </td>
+                  </ng-container> -->
+                  <ng-container matColumnDef="LastSeen">
+                    <th class="mobile-label table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell
+                      *matHeaderCellDef>
+                      Last seen </th>
+                    <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element; let i = dataIndex;"
+                      (click)="loadExpandGrid(element)">
+                      <!-- online -->
+                      <div *ngIf="element.LastSeen=='Log on'" class="online-btn-last-seen"><span
+                          class="online-txt text-center">online</span></div>
+                     <!-- offline -->
+                          <div *ngIf="element.LastSeen=='Log off'" style="color: grey;">{{element?.LastSeenTime}}</div>
+                          <div *ngIf="element.LastSeen=='Log off'" style="color: grey;">{{element?.LastSeenDate}}</div>
+                          <div *ngIf="element.LastSeen=='Log off'" class="off-line">OFFLINE</div>
+                    <!-- out of range -->
+                          <div *ngIf="element.LastSeen=='Out of Range'" style="color: purple;">{{element?.LastSeenTime}}</div>
+                      <div *ngIf="element.LastSeen=='Out of Range'" style="color: purple;">{{element?.LastSeenDate}}</div>
+                      <div *ngIf="element.LastSeen=='Out of Range'" class="outofRange">OUT OF RANGE</div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="name">
+                    <th class="mobile-label table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell
+                      *matHeaderCellDef class="txt-blue"> Asset name
+                    </th>
+                    <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element; let i = dataIndex;"
+                      (click)="loadExpandGrid(element)">
+                      <span><img src="../../../assets/icon/blue-small-pin.PNG" alt=""></span>{{element.name}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="AssetTypeName">
+                    <th class="mobile-label table-txt-head" style="border-bottom:none" mat-sort-header mat-header-cell
+                      *matHeaderCellDef>
+                      Asset type </th>
+                    <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element; let i = dataIndex;"
+                      (click)="loadExpandGrid(element)">{{element.AssetTypeName}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="CurrentStatus">
+                    <th class="mobile-label table-txt-head text-center" style="border-bottom:none" mat-sort-header
+                      mat-header-cell *matHeaderCellDef> Current Status </th>
+                    <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element;let i=dataIndex;"
+                      (click)="loadExpandGrid(element)">{{element.CurrentStatus}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="OperatorName">
+                    <th class="mobile-label table-txt-head text-center" style="border-bottom:none" mat-sort-header
+                      mat-header-cell *matHeaderCellDef> Current operator </th>
+                    <td [ngClass]="{'row-color': i%2==0}" class="txt-blue" mat-cell
+                      *matCellDef="let element; let i = dataIndex;" (click)="loadExpandGrid(element)">
+                      {{element.OperatorName}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Status">
+                    <th class="mobile-label table-txt-head text-center" style="border-bottom:none;padding-right:1%" mat-header-cell
+                      *matHeaderCellDef mat-sort-header> Status </th>
+                    <td [ngClass]="{'row-color': i%2==0}" style="cursor: pointer;padding-right:1%"
+                      (click)="confirmationDialog(element,i)" mat-cell *matCellDef="let element;let i=dataIndex;"
+                      class="text-center">
+                      <div *ngIf="element.Status=='Active'" class="online-btn"><span
+                          class="online-txt text-center">{{element.Status}}</span></div>
+                      <div *ngIf="element.Status!='Active'" class="inactive-btn"><span
+                          class="online-txt2 text-center">{{element.Status}}</span></div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="EventName">
+                    <th class="mobile-label table-txt-head text-left" style="border-bottom:none"
+                      mat-sort-header mat-header-cell *matHeaderCellDef> Current alarms </th>
+                    <td style="padding-right: 1% !important" [ngClass]="{'row-color': i%2==0}" class="txt-blue" mat-cell
+                      *matCellDef="let element; let i = dataIndex;">
+
+                      <div *ngIf="(element.EventName=='No Alarms')" style="color:black!important">
+                        {{element.EventName}}
+                      </div>
+                      <div *ngIf="element.EventName!='No Alarms'">
+
+                        <span dropdown dropdownToggle id="pin">
+                          <img style="height: 30px;width: 25px;" src="../../../assets/icon/red-pin.png">
+                          <div class="btn-group">
+                            <!-- <a id="button-basic" aria-controls="dropdown-basic"
+                                style="cursor:pointer;margin-left:5px;margin-right:5px;color:#169bd7">
+                              </a> -->
+                            <ul *dropdownMenu role="menu" aria-labelledby="button-basic"
+                              class="dropdown-menu dropdown-menu-top alrm-popup-box">
+                              <div class="row">
+                                <div matTooltip='{{element.EventName}}' class="col-12 col-xl-12 col-lg-12 col-sm-12 col-md-12">
+                                  <div class="alarm-name">
+                                    <b>{{element.EventName?.length>15?element.EventName.substring(0,19)+'...':element.EventName}}</b>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-7 col-xl-7 col-lg-7 col-sm-7 col-md-7">
+                                  <div class="alarm-date-time">{{element.AlarmDate}}</div>
+                                </div>
+                                <!-- <div class="col-5 col-xl-5 col-lg-5 col-sm-15 col-md-5">
+                                  <div class="alarm-date-time">00:00</div>
+                                </div> -->
+                              </div>
+                            </ul>
+                          </div>
+                        </span>
+                      </div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="seemore">
+                    <th class="mobile-label" style="border-bottom:none;padding-right: 0;" mat-header-cell
+                      *matHeaderCellDef>
+                      <a id="availableactions" style="color:#169bd7 !important;cursor:pointer;white-space:nowrap;"
+                        class="available-actions-btn col-2" dropdown dropdownToggle>
+                        <span class="avail-text-hide">Available Actions
+                          <img class="available-actions-btn-arrow" title="Available Actions"
+                          src="../../../assets/icon/dropdown-teal-ic.png">
+                        </span>
+                        <span class="avail-text-img">
+                          <img class="available-actions-btn-arrow" title="Available Actions"
+                          src="../../../assets/icon/dropdown-teal-ic.png">
+                        </span>
+                        <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                          class="dropdown-menu dropdown-menu-right" style="border:0;white-space:nowrap;min-width: 11rem;overflow-y: scroll;
+                        height: 150px;">
+                          <div *ngFor="let type of availableType">
+                            <div (click)="openDialog(type)" class="alarm-txt" style="height:30px">{{type.value}}</div>
+                          </div>
+                        </ul>
+                      </a>
+                    </th>
+                    <td [ngClass]="{'row-color': i%2==0}" mat-cell *matCellDef="let element; let i = dataIndex;"
+                      class="txt-blue">
+                      <div (click)="opensideBar(element,element)" id="equipmentsemore{{i}}">See more>></div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+                      [ngClass]="{'test-one':element == expandedElement ?true:false} ">
+                      <div class="example-element-detail"
+                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div class="sizeng">
+                          <div class="row m-b-15">
+                            <div class="login-timer-text col-2">Login timer</div>
+                            <div class="table-data-text col-1">3067.2</div>
+                            <div class="col-2">
+                              <div class="table-rect-bar-one"></div>
+                            </div>
+                            <div class="login-timer-text col-2">Maintenance</div>
+                            <div class="table-data-text col-2">09/17/2018</div>
+                            <div class="login-timer-text col-2 pl-0">Model</div>
+                            <div class="table-data-text col-1 pl-0">{{subGridDatas?.Model}}</div>
+                          </div>
+                          <div class="row m-b-15">
+                            <div class="login-timer-text col-2">Key</div>
+                            <div class="table-data-text col-1">2481.4</div>
+                            <div class="col-2">
+                              <div class="table-rect-bar-two"></div>
+                            </div>
+                            <div class="login-timer-text col-2">Safety Complience</div>
+                            <div class="red-text col-2">68%</div>
+                            <div class="login-timer-text col-2 pl-0 pr-0">Classification</div>
+                            <div class="table-data-text col-1 pl-0 pr-0">Some classification</div>
+                          </div>
+                          <div class="row m-b-15">
+                            <div class="login-timer-text col-2">Seat</div>
+                            <div class="table-data-text col-1">2561.1</div>
+                            <div class="col-2">
+                              <div class="table-rect-bar-three"></div>
+                            </div>
+                            <div class="login-timer-text col-2">Rental Timer</div>
+                            <div class="table-data-text col-2">09/17/2018</div>
+                            <div class="login-timer-text col-2 pl-0">Firmware Version</div>
+                            <div class="table-data-text col-1 pl-0">{{subGridDatas?.Version}}</div>
+                          </div>
+                          <div class="row m-b-15">
+                            <div class="login-timer-text col-2">R-Travel</div>
+                            <div class="table-data-text col-1">679.2</div>
+                            <div class="col-2">
+                              <div class="table-rect-bar-four"></div>
+                            </div>
+                            <div class="login-timer-text col-2">Warranty</div>
+                            <div class="red-text col-2">05/03/2018 <span class="blue-txt extend ">Extend</span>
+                            </div>
+                            <div class="login-timer-text col-2 pl-0">Serial Number</div>
+                            <div class="table-data-text col-1 pl-0">{{subGridDatas?.SerialNo}}</div>
+                          </div>
+                          <div class="row m-b-15">
+                            <div class="login-timer-text col-2">F-Travel</div>
+                            <div class="table-data-text col-1">1640.6</div>
+                            <div class="col-2">
+                              <div class="table-rect-bar-five"></div>
+                            </div>
+                            <div class="login-timer-text col-2">Unit ID</div>
+                            <div class="col-2">  {{element.UniqueID}} </div>
+                            <div class="login-timer-text col-2 pl-0">Vendor</div>
+                            <div class="table-data-text col-2 pl-0">{{subGridDatas?.VendorName}}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-2"><span class="blue-text-bottom" (click)="updateHmr(subGridDatas)">Update
+                                HMR</span>
+                            </div>
+                            <div class="col-9"></div>
+                            <div *ngIf="showMessageIcon" (click)="mailFun(element.OperatorName)"
+                              class="col-1 text-right"><span><img class="blue-mail-box"
+                                  src="../../../assets/icon/blue-mail-box.PNG" alt="mail-box"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let element; columns: displayedColumns" class="example-element-row"
+                    [class.example-expanded-row]="expandedElement === element"
+                    [ngClass]="{'test-two':element == expandedElement ?true:false} ">
+                  </tr>
+                  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                </table>
+              </div>
+              <mat-paginator [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+          <div class="col-4 form-group"><span></span> <span></span></div>
+        </div>
+        <div class="row">
+        </div>
+      </div>
+      <div class="col-sm-12  col-md-1  col-lg-1 col-xl-1  bg-empty-div-one"></div>
+      <br>
+    </div>
+  </div>
+</div>

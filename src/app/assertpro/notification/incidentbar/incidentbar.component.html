@@ -1,0 +1,224 @@
+
+<div #side class="side-bar"><div #incidentbar class="additional-box" id="additional-box">
+  <div class="row mt-4 ml-1 pb-2">
+
+    <svg _ngcontent-c3="" xml:space="preserve" id="closeSideBar" (click)="goBack()"
+      class="side-bar-back-icon" xmlns:xlink="http://www.w3.org/1999/xlink" height="20px"
+      style="enable-background:new 0 0 31.494 31.494;" version="1.1" viewBox="0 0 31.494 31.494" width="20px" x="0px"
+      xmlns="http://www.w3.org/2000/svg" y="0px">
+      <path _ngcontent-c3=""
+        d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+        fill="#169bd7"></path>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+    </svg>
+  </div>
+  <div class="row pt-1">
+
+    <div class="col-4 bf-five-text">CREATING INCIDENT</div>
+    <div class="col-4"></div>
+    <a class="ml-2" (click)="resetEdit()"> <img class="reset-btn"
+      src="../../../../assets/icon/icons-reset-ic.png" alt="">
+    <span class="reset-text mr-2" (click)="resetEdit()"> Reset </span></a>
+    <a (click)="cancelEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+      <span class="cancel-text"> Cancel </span></a>
+    <a class="ml-2" (click)="apply()"> <img src="../../../assets/icon/icons-apply-ic.png" alt="">
+      <span class="apply-text">
+        Apply
+      </span>
+    </a>
+  </div>
+  <div class="row">
+
+  </div>
+  <div class="row pt-5">
+
+    <div class="col-3 station-txt">Department</div>
+
+
+    <div class="btn-group col-4 " dropdown [isDisabled]="disabled">
+      <div class="help-selected-item help-dropdown-menu-item" dropdownToggle aria-controls="dropdown-disabled-menu">
+        {{dept}}
+        <span style="position: absolute;right:0;margin-right:35px;">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="dropdown-disabled-menu" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of departmentList">
+          <div class="text-left help-site-name" (click)="departmentChange(data)">{{data.NAME}}</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Operator Name</div>
+    <div class="btn-group col-4 " dropdown [isDisabled]="!addMode">
+      <div id="operatorNameList" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+        aria-controls="dropdown-disabled-menu">
+        {{operatorName}}
+        <span style="position: absolute;right:0;margin-right:35px;">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="operatorNameCol" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of operatorList">
+          <div class="text-left help-site-name" (click)="operatorChange(data)">{{data.OperatorName}}</div>
+        </li>
+      </ul>
+    </div>
+
+    <span class="view-txt" (click)="clickHistory()">View history>></span>
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Incident kind</div>
+    <div class="btn-group col-4 " dropdown [isDisabled]="disabled">
+      <div id="incidentList" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+        aria-controls="dropdown-disabled-menu" matTooltip="{{incident}}">
+        {{incident.length>20?incident.substring(0,20)+'...':incident}}
+        <span style="position: absolute;right:0;margin-right:35px;">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="incidentCol" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of incidenKindList">
+          <div class="text-left help-site-name" (click)="incident=data">{{data}}</div>
+        </li>
+      </ul>
+    </div>
+    
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Injury</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt">
+      <mat-button-toggle-group [(ngModel)]="injury" appearance="legacy" name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle value="Yes" ngDefaultControl>YES</mat-button-toggle>
+        <mat-button-toggle value="No" ngDefaultControl>NO</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Drug test required</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt">
+      <mat-button-toggle-group [(ngModel)]="drug" appearance="legacy" name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle value="Yes" ngDefaultControl>YES</mat-button-toggle>
+        <mat-button-toggle value="No" ngDefaultControl>NO</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Asset</div>
+    <div class="btn-group col-4 " dropdown [isDisabled]="disabled">
+      <div id="assetvalList" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+        aria-controls="dropdown-disabled-menu">
+        {{assetval}}
+        <span style="position: absolute;right:0;margin-right:35px;">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="assetvalCol" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of assetList">
+          <div class="text-left help-site-name" (click)="assetChange(data)">{{data.assetstype}}</div>
+        </li>
+      </ul>
+    </div>
+    
+  </div>
+
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Incident date/time</div>
+
+    <div class="col-4">
+      <input [(ngModel)]="incidentDate" autocomplete="off" onpaste="return false" oncopy="return false" id="my_id" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
+        placeholder="Date Time" style="border:none;font-size: 90%;">
+      <i [owlDateTimeTrigger]="dt1" class="material-icons"
+        style="cursor: pointer;  vertical-align: middle;color:#33b6d6">
+        date_range
+      </i>
+      <owl-date-time #dt1></owl-date-time>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Cost ($)</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt">
+      <input numbersOnly placeholder="Enter the Cost" type="text" [disabled]="editMode" class="help-input input-box-size"
+        [(ngModel)]="cost1" style="width:80%;">
+    </div>
+  </div>
+
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Corrective Action</div>
+    <div class="btn-group col-4 " dropdown [isDisabled]="disabled">
+      <div id="correctiveList" class="help-selected-item help-dropdown-menu-item" dropdownToggle
+        aria-controls="dropdown-disabled-menu">
+        {{corrective}}
+        <span style="position: absolute;right:0;margin-right:35px;">
+          <img src="assets/common/inputs-dropdown.png">
+        </span>
+      </div>
+      <ul id="correctiveCol" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+        aria-labelledby="button-disabled-menu" style="margin-top:10px">
+        <li *ngFor="let data of correctiveActionList">
+          <div class="text-left help-site-name" (click)="corrective=data">{{data}}</div>
+        </li>
+      </ul>
+    </div>
+    
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Suspend</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt">
+      <mat-button-toggle-group appearance="legacy" [(ngModel)]="suspend" name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle value="Yes" ngDefaultControl>YES</mat-button-toggle>
+        <mat-button-toggle value="No" ngDefaultControl>NO</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Damage</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt">
+      <mat-button-toggle-group appearance="legacy" [(ngModel)]="damage" name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle value="Yes" ngDefaultControl>YES</mat-button-toggle>
+        <mat-button-toggle value="No" ngDefaultControl>NO</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-3 station-txt">Comments</div>
+
+    <div *ngIf="!editHomeEnabled" class="col-5 tampa-txt pb-5 pl-3"><textarea [(ngModel)]="comment" name="" id=""
+        cols="50" rows="4" placeholder="Type checklist description here" maxlength="280"></textarea>
+    </div>
+
+  </div>
+
+  <div class="row pb-5">
+  </div>
+  <div class="row pb-5">
+  </div>
+
+</div>
+</div>

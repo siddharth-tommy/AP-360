@@ -1,0 +1,256 @@
+<div *ngIf="loader" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="col-sm-12 col-md-12 col-xs-12 col-xl-12 mt-3 pl-0">
+  <div style="padding-left: 3%" class="row">
+    <table cellpadding="0" cellspacing="0" class="communication-table  col-sm-12 col-md-8 col-xs-5 col-xl-5">
+      <tr>
+        <td style="padding-left: 4%;">
+          <h4>{{overAllList?.OverAll}}</h4>
+          <p>TOTAL</p>
+        </td>
+        <td>
+          <h4 style="color: green">{{overAllList?.Online}}</h4>
+          <p style="color: green">ONLINE</p>
+        </td>
+        <td>
+          <h4 style="color: grey">{{overAllList?.Offline}}</h4>
+          <p style="color: grey">OFFLINE</p>
+        </td>
+        <td>
+          <h4 style="color:purple;width:60%;">{{overAllList?.TotalClients}}</h4>
+          <p style="color:purple;width:60%;">OUT OF RANGE</p>
+        </td>
+      </tr>
+    </table>
+    <div class="col-md-4 col-xs-7 col-xl-7">
+      <div class=" text-right"><span class="time-class ">Last Sync: {{refreshtime|date:'M/d/y hh:mm:ss a'}}<i
+            style="vertical-align:middle;cursor: pointer;" class="material-icons" (click)="loadTable()">
+            refresh
+          </i></span></div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row pb-3">
+    <div class="col-lg-4 col-xl-3 col-md-6 text-left">
+      <div class="search-wrapper">
+        <form action="" method="" name="search" class="search-box-one">
+          <div class="search-box zoom-align-search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21"
+              height="18" alt="search icon" />
+            <input id="table1Search" [(ngModel)]="tableFilter" class="remove-focus"
+              (keyup)="applyFilter($event.target.value)"  (paste)="applyFilter($event.target.value)" name="seach" autocomplete="off"
+              type="text" placeholder="Enter keyword to search" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-6 col-xl-6"></div>
+    <div class="col-lg-2 col-xl-3 col-md-10 d-lg-block d-none text-left">
+      <div class="search-wrapper">
+        <form action="" method="" name="search" class="search-box-two">
+          <div class="search-box zoom-align-search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21"
+              height="18" alt="search icon" />
+            <input id="table2Search" [(ngModel)]="tableFilter2" class="remove-focus"
+              (keyup)="applyFilter2($event.target.value)"  (paste)="applyFilter2($event.target.value)" name="seach"
+              autocomplete="off" type="text" placeholder="Enter keyword to search" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-lg-10 col-xl-9 pl-0" style="overflow-x: scroll;">
+      <table matSort mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width:100%">
+        <ng-container matColumnDef="GatewayName">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>GatewayName </th>
+          <td mat-cell *matCellDef="let element" class="table-txt" (click)="rowSelected(element)">
+            {{element.GatewayName }} </td>
+        </ng-container>
+        <ng-container matColumnDef="GatewayAcgName">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Gateway ACG No</th>
+          <mat-cell style="margin-top:8%;" *matCellDef="let element;let i = dataIndex;"
+            (click)="disableOtherEditOption(element.editMode=false,element)">
+            <ng-container *ngIf="!element.editMode">
+              <input type="text" [(ngModel)]="element.GatewayAcgName" name="GatewayAcgName{{i}}{{element.ID}}"
+                id="GatewayAcgName{{i}}{{element.ID}}" (focusout)="updateAcgNo(element.editMode=true,element)" numbersOnly>
+            </ng-container>
+            <span class="add-comment" style="width:100%;" *ngIf="element.editMode">
+              {{element.GatewayAcgName}}
+            </span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="SerialNo">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef> Serial No </th>
+          <td mat-cell *matCellDef="let element" class="table-txt" (click)="rowSelected(element)"> {{element.SerialNo}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="NumberOfClients">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>No.Of Clients </th>
+          <td mat-cell *matCellDef="let element" class="table-txt" (click)="rowSelected(element)">
+            {{element.NumberOfClients}} </td>
+        </ng-container>
+        <ng-container matColumnDef="LastOnline">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef> Last Time Online </th>
+          <td mat-cell *matCellDef="let element" class="table-txt" (click)="rowSelected(element)">
+            {{element.LastOnline}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor: pointer;">
+        </tr>
+
+      </table>
+    </div>
+    <div class="d-block d-lg-none pb-1 pt-3 col-md-6 d-xl-none">
+      <div class="row">
+        <div class="col-lg-4 col-md-10 text-left">
+          <div class="search-wrapper">
+            <form action="" method="" name="search" class="">
+              <div style="width: 100%" class="search-box search-box-two zoom-align-search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21"
+                  height="18" alt="search icon" />
+                <input id="table2Search" [(ngModel)]="tableFilter2" class="remove-focus"
+                  (keyup)="applyFilter2($event.target.value)"  (paste)="applyFilter2($event.target.value)" name="seach"
+                  autocomplete="off" type="text" placeholder="Enter keyword to search" />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-12 col-lg-2 col-xl-3 pl-0">
+      <table matSort mat-table [dataSource]="dataSource2" class="mat-elevation-z8" style="width:100%;">
+        <ng-container matColumnDef="AssetName">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Asset Name</th>
+          <td mat-cell *matCellDef="let element" class="table-txt"> {{element.AssetName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="UnitName">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef> Unit Id </th>
+          <td mat-cell *matCellDef="let element" class="table-txt"> {{element.UnitName}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-7 pad-0 col-xs-7">
+      <table cellpadding="0" cellspacing="0" class="communication-table m-b-10">
+        <tr>
+          <td width="6%">
+            <h6>33</h6>
+            <p>OVERALL</p>
+          </td>
+          <td width="6%">
+            <h6>12</h6>
+            <p>ONLINE</p>
+          </td>
+          <td width="6%">
+            <h6>12</h6>
+            <p>OFFLINE</p>
+          </td>
+          <td width="8%">
+            <h6 style="color:#d42e2e">5</h6>
+            <p style="color:#d02424;">TOTAL CLIENTS</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-3 text-right col-xs-3"><span class="time-class ">Last Sync: {{refreshtime|date:'d/M/y hh:mm:ss a'}}<i
+      style="vertical-align:middle;cursor: pointer;" class="material-icons" (click)="loadTable()">
+          refresh
+        </i></span></div>
+  </div>
+  
+  <div class="col-12 row">
+    <div class="col-5 text-left">
+      <div class="search-wrapper">
+        <form action="" method="" name="search" class="search-box-one">
+          <div class="search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21" height="18"
+              alt="search icon" />
+            <input id="table1Search" [(ngModel)]="tableFilter" class="remove-focus"
+              (keyup)="applyFilter($event.target.value)" (keydown)="filterEnter($event)" name="seach" autocomplete="off"
+              type="text" placeholder="Enter keyword to search" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-5 text-left">
+      <div class="search-wrapper">
+        <form action="" method="" name="search" class="search-box-two">
+          <div class="search-box"><img class="search-icon" src="../../../assets/icon/search-ic.png" width="21" height="18"
+              alt="search icon" />
+            <input id="table2Search" [(ngModel)]="tableFilter2" class="remove-focus"
+              (keyup)="applyFilter2($event.target.value)" (keydown)="filterEnter($event)" name="seach" autocomplete="off"
+              type="text" placeholder="Enter keyword to search" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 row">
+  
+    <table matSort mat-table [dataSource]="dataSource" class="mat-elevation-z8 col-6" style="width:100%">
+      <ng-container matColumnDef="GatewayName">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>GatewayName </th>
+        <td mat-cell *matCellDef="let element" class="table-txt"  (click)="rowSelected(element)"> {{element.GatewayName }} </td>
+      </ng-container>
+      <ng-container matColumnDef="GatewayACGNO">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Gateway ACG No</th>
+        <mat-cell  style="margin-top:8%;" *matCellDef="let element;let i = dataIndex;" (click)="disableOtherEditOption(element.editMode=false,element)">
+          <ng-container *ngIf="!element.editMode">
+            <input type="text" [(ngModel)]="element.GatewayACGNO"  name="GatewayACGNO{{i}}{{element.ID}}"  id="GatewayACGNO{{i}}{{element.ID}}" (focusout)="element.editMode=true" numbersOnly>
+          </ng-container>
+            <span class="add-comment" style="width:100%;" *ngIf="element.editMode" >
+             {{element.GatewayACGNO}}
+            </span>
+          
+          </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="SerialNO">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef> Serial No </th>
+        <td mat-cell *matCellDef="let element" class="table-txt"  (click)="rowSelected(element)"> {{element.SerialNO}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="NumberOfClients">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>No.Of Clients </th>
+        <td mat-cell *matCellDef="let element" class="table-txt"  (click)="rowSelected(element)"> {{element.NumberOfClients}} </td>
+      </ng-container>
+      <ng-container matColumnDef="LastOnline">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef> Last Time Online </th>
+        <td mat-cell *matCellDef="let element" class="table-txt" (click)="rowSelected(element)"> {{element.LastOnline}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"  style="cursor: pointer;">
+      </tr>
+  
+    </table>
+  
+    <table matSort mat-table [dataSource]="dataSource2" class="mat-elevation-z8 col-4"
+      style="width:100%;    margin-left: 1%;">
+      <ng-container matColumnDef="AssetName">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef>Asset Name</th>
+        <td mat-cell *matCellDef="let element" class="table-txt"> {{element.AssetName}} </td>
+      </ng-container>
+      <ng-container matColumnDef="UnitName">
+        <th mat-sort-header mat-header-cell *matHeaderCellDef> Unit Id </th>
+        <td mat-cell *matCellDef="let element" class="table-txt"> {{element.UnitName}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+  
+    </table>
+  
+  </div>
+   -->

@@ -1,0 +1,331 @@
+<style>
+  .usage-time-hover {
+    margin-top: -188px !important; 
+  }
+
+  .usage-time-hover-point {
+    border-color: transparent transparent rgba(215, 234, 255, 0.11) transparent;
+    margin-top: 149px;
+  }
+
+  /* .stat-overview-table th {
+    font-family: robotoCondensedregular;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: condensed;
+    letter-spacing: 0.9px;
+    padding: 20px 0px 20px 1% !important;
+    color: #9b9b9b;
+    text-align: center;
+  }
+
+  .stat-overview-table td {
+    font-family: robotoregular;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.9px;
+    padding: 15px 0px 15px 1%;
+    color: #4d4d61;
+    text-align: center;
+  } */
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 1%;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #45AFDF;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(26, 153, 212);
+  }
+</style>
+<div class="modal-header pl-0">
+  <h4 class="modal-title dash-h6">CHARGERS</h4>
+  <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="dash-box table-scroll state-overview-table2">
+    <table mat-table [dataSource]="dataSource3" matSort class="mat-elevation-z8" cellspacing="0"
+            cellpadding="0" class="stat-overview-table" style="width:100%;">
+    
+            <ng-container matColumnDef="SiteName" >
+              <th class="table-txt-head table-header align-left" style="background: white !important" mat-header-cell
+              *matHeaderCellDef >Site Name
+            </th>
+            <td class="table-txt align-left" mat-cell *matCellDef="let element" style="cursor: pointer;"  matTooltip="{{element.SiteName}}">
+              {{element.SiteName?.length>22?element.SiteName.substring(0,22)+'...':element.SiteName}}
+            </td>
+            </ng-container>
+            <ng-container matColumnDef="Units">
+              <th class="table-txt-head table-header" style="background: white !important;" mat-header-cell
+              *matHeaderCellDef >Units
+            </th>
+            <td class="table-txt" mat-cell *matCellDef="let element">
+                    {{element.Units}}
+            </td>
+            </ng-container>
+            <ng-container matColumnDef="Usage">
+              <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+              *matHeaderCellDef >Usage
+            </th>
+            <td class="table-txt" mat-cell *matCellDef="let element">
+              <div class="hover-dropdown">
+                    {{element.Usage}}% 
+                    <!-- <img *ngIf="element.TotalHourCharged>=element.AhChargeHours && stateOverview!='LAST THREE MONTHS'"
+                    src="assets/icon/td-arrow-down.png" class="create-report-img">
+                  <img *ngIf="element.TotalHourCharged<element.AhChargeHours && stateOverview!='LAST THREE MONTHS'"
+                    src="assets/icon/td-arrow-up.png" class="create-report-img">  -->
+
+                    <div id="hover" 
+                    class="hover-div idling-div hover-div-second" style="margin-left:76px;width: 300px;"
+                    [ngClass]="{'usage-time-hover':(equipmentOverviewDatas?.length-4)<=(ind)}">
+                    <div class="hover-div-point"
+                      [ngClass]="{'usage-time-hover-point':(equipmentOverviewDatas?.length-4)<=(ind)}"></div>
+                    <div class="row m-t-25 pad-0-25 m-b-25">
+                      <div class="col-md-1"></div>
+                      <div class="col-md-3 form-group text-center">
+                        <p style="color: #ea4256;">{{element?.TotalHourCharged}}%</p>
+                        <p class="span-label1">TOTAL CHARGED</p>
+                      </div>
+                      <div class="col-md-7 form-group text-center">
+                        <p>{{element?.AhChargeHours}}%</p>
+                        <p class="span-label1">AMP HOURS CHARGED</p>
+                      </div>
+                    </div>
+                    <!-- <div class="hover-div-footer text-center">View details >></div> -->
+                  </div>
+                </div>
+            </td>
+            </ng-container>
+            <ng-container matColumnDef="KwhPerCharger">
+              <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+              *matHeaderCellDef >KwhPerCharger
+            </th>
+            <td class="table-txt" mat-cell *matCellDef="let element">
+                    {{element.KwhPerCharger}}%
+            </td>
+            </ng-container>
+            <ng-container matColumnDef="Faults">
+              <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+              *matHeaderCellDef >Faults
+            </th>
+            <td class="table-txt" mat-cell *matCellDef="let element"  (mouseenter)="openAlarms2(element)" style="color: #ea4256;">
+              <div class="hover-dropdown">
+                    {{element.Faults}}
+        
+                        <div class="hover-div alarm-div hover-div-third" style="margin-left:70px;"
+                          [ngClass]="{'usage-time-hover':(equipmentOverviewDatas?.length-4)<=(ind)}">
+                          <div class="hover-div-point"
+                            [ngClass]="{'usage-time-hover-point':(equipmentOverviewDatas?.length-4)<=(ind)}"></div>
+                          <div class="row m-t-25 pad-0-25">
+                            <div class="col-md-12 form-group text-left">
+                              <p class="span-label4">TOP 5 ALARM TYPES</p>
+                            </div>
+                          </div>
+                          <div class="row pad-0-25" *ngFor="let item of popupAlarmDatas2">
+                            <div class="col-md-2 form-group text-left">
+                              <p class="span-label5">{{item?.EventTotal}}</p>
+                            </div>
+                            <div class="col-md-10 form-group text-left">
+                              <p class="span-label2">{{item?.EventName}}</p>
+                            </div>
+                          </div>
+                          <div class="hover-div-footer" (click)="alarmNavigation(element)" style="cursor: pointer;">View details >></div>
+                        </div>
+                      </div>
+
+            </td>
+            </ng-container>
+            <ng-container matColumnDef="Equalizations">
+              <th class="table-txt-head table-header" style="background: white !important" mat-header-cell
+              *matHeaderCellDef >Equalizations
+            </th>
+            <td class="table-txt" mat-cell *matCellDef="let element">
+                    {{element.Equalizations}}
+            </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="Personincharge">
+              <th class="table-txt-head table-header" style="background: white !important;padding:0px;" mat-header-cell
+              *matHeaderCellDef >Person In Charge
+            </th>
+            <td style="cursor:pointer"  class="table-txt" mat-cell *matCellDef="let element" matTooltip="{{element.Personincharge}}" (click)="openPersonIncharge(element)" >
+                    {{element.Personincharge}}
+            </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns3">
+          </table>
+    </div>
+    <!-- 
+      <table cellspacing="0" cellpadding="0" class="stat-overview-table">
+        <thead>
+          <tr>
+            <th *ngFor="let item of equipmentOverviewDatas2.TableHeadings" (click)="equipmentHeaderChange2(item)"
+              class="site-name" style="text-align:unset;padding-left: 2% !important">
+              <span>
+                {{item}}
+              </span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of equipmentOverviewDatas2?.TableRecords; let ind=index;">
+            <td class="text-left" style="cursor:pointer" *ngFor="let col of equipmentOverviewColumn2; let j=index;"
+              style="cursor:pointer;padding-left: 2%" [ngClass]="{'txt-tr':col!='SiteName'?true:false}">
+              <div *ngIf="j==0" id="{{ind}}{{col}}sitename" class="hover-dropdown">
+                {{item[col]}}
+              </div>
+              <div *ngIf="j!=0 && col!='IdleTime' && col!='Usage' && col!='AmpHoursCharged' && col!='Alarms/Faults'
+              && col!='Alarms' && col!='Faults' && col!='ChargerUsage'" id="{{ind}}{{col}}actual"
+                class="hover-dropdown">
+                <div class="row">
+                  <div class="col-xl-8 col-lg-8 col-md-5 col-sm-3 col-3" style="padding-left:18%;">
+                    {{item[col]}}
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="col=='IdleTime'" id="{{ind}}{{col}}IdleTime" class="hover-dropdown">
+                <div class="row">
+                  <div class="col-6 pr-0">{{item.IdleTime}}%</div>
+                  <div class="col-5 pl-0">
+                    <img *ngIf="item.PreIdlingTime>=item.IdlingBatteries  && stateOverview!='LAST THREE MONTHS'"
+                      src="assets/icon/td-arrow-up.png" class="create-report-img">
+                    <img *ngIf="item.PreIdlingTime<item.IdlingBatteries  && stateOverview!='LAST THREE MONTHS'"
+                      src="assets/icon/td-arrow-down.png" class="create-report-img">
+                  </div>
+                </div>
+                <div *ngIf="batteriesEnable && chargesEnable && col=='IdleTime'" id="{{ind}}{{col}}hover"
+                  class="hover-div idling-div hover-div-second" style="margin-left:76px;"
+                  [ngClass]="{'usage-time-hover':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  <div class="hover-div-point"
+                    [ngClass]="{'usage-time-hover-point':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  </div>
+                  <div class="row m-t-25 pad-0-25 m-b-25">
+                    <div class="col-md-1"></div>
+                 
+                    <div class="col-md-4 form-group">
+                      <p>{{item.IdlingChargers}}%</p>
+                      <p class="span-label1">CHARGERS</p>
+                    </div>
+                  </div>
+                  <div class="hover-div-footer text-center">View details >></div>
+                </div>
+              </div>
+              <div *ngIf="col=='Usage'" id="{{ind}}{{col}}Usage" class="hover-dropdown">
+                <div class="row">
+                  <div class="col-xl-8 col-lg-8 col-md-5 col-sm-3 col-3" style="text-align: center;">
+                    <span>
+                      {{item[col]}}%
+
+                      <img *ngIf="item.BatteryCharged>=item.BatteryDischarged && stateOverview!='LAST THREE MONTHS'"
+                        src="assets/icon/td-arrow-down.png" class="create-report-img">
+                      <img *ngIf="item.BatteryCharged<item.BatteryDischarged  && stateOverview!='LAST THREE MONTHS'"
+                        src="assets/icon/td-arrow-up.png" class="create-report-img">
+                    </span>
+                  </div>
+                </div>
+                <div id="{{ind}}{{col}}hover" *ngIf="col=='Usage' && item.BatteryCharged"
+                  class="hover-div idling-div hover-div-second" style="margin-left:76px;"
+                  [ngClass]="{'usage-time-hover':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  <div class="hover-div-point"
+                    [ngClass]="{'usage-time-hover-point':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  </div>
+                  <div class="row m-t-25 pad-0-25 m-b-25">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3 form-group text-center">
+                      <p style="color: #ea4256;">{{item.BatteryCharged}}%</p>
+                      <p class="span-label1">BATTERIES</p>
+                    </div>
+                    <div class="col-md-7 form-group text-center">
+                      <p>{{item.BatteryDischarged}}%</p>
+                      <p class="span-label1">BATTERIES DISCHARGED</p>
+                    </div>
+                  </div>
+                  <div class="hover-div-footer text-center">View details >></div>
+                </div>
+              </div>
+              <div *ngIf="col=='ChargerUsage'" id="{{ind}}{{col}}ChargerUsage" class="hover-dropdown">
+                <div class="row">
+                  <div class="col-xl-8 col-lg-8 col-md-5 col-sm-3 col-3" style="text-align: center;">
+                    <span>
+                      {{item[col]}}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="col=='AmpHoursCharged'" id="{{ind}}{{col}}AmpHoursCharged" class="hover-dropdown">
+                <span>
+                  {{item.TotalHourCharged>item.AmpHoursCharged?item.TotalHourCharged:item.AmpHoursCharged}}%
+                  <img *ngIf="item.TotalHourCharged>=item.AmpHoursCharged  && stateOverview!='LAST THREE MONTHS'"
+                    src="assets/icon/td-arrow-down2.png" class="create-report-img">
+                  <img *ngIf="item.TotalHourCharged<item.AmpHoursCharged  && stateOverview!='LAST THREE MONTHS'"
+                    src="assets/icon/td-arrow-up2.png" class="create-report-img">
+                </span>
+                <div id="{{ind}}{{col}}hover" *ngIf="col=='AmpHoursCharged'"
+                  class="hover-div idling-div hover-div-second" style="margin-left:76px;"
+                  [ngClass]="{'usage-time-hover':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  <div class="hover-div-point"
+                    [ngClass]="{'usage-time-hover-point':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  </div>
+                  <div class="row m-t-25 pad-0-25 m-b-25 text-center">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4 form-group">
+                      <p style="color: #ea4256;">{{item.TotalHourCharged}}%</p>
+                      <p class="span-label1">TOTAL HOURS</p>
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <p>{{item.AmpHoursCharged}}%</p>
+                      <p class="span-label1">AMP HOURS</p>
+                    </div>
+                  </div>
+                  <div class="hover-div-footer text-center">View details >></div>
+                </div>
+              </div>
+              <div *ngIf="col=='Alarms/Faults' || col=='Alarms' || col=='Faults'" id="{{ind}}{{col}}Alarms/Faults"
+                class="hover-dropdown" (mouseenter)="openAlarms2(item)">
+                <div class="row">
+                  <div class="col-xl-8 col-lg-8 col-md-5 col-sm-3" style="text-align: center;">
+                    <span style="color: #ea4256;">{{item[col]}}</span>
+                  </div>
+                </div>
+                <div class="hover-div alarm-div hover-div-third" style="margin-left:50px;"
+                  [ngClass]="{'usage-time-hover':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  <div class="hover-div-point"
+                    [ngClass]="{'usage-time-hover-point':(equipmentOverviewDatas2?.TableRecords?.length-4)<=(ind)}">
+                  </div>
+                  <div class="row m-t-25 pad-0-25">
+                    <div class="col-md-12 form-group text-left">
+                      <p class="span-label4">TOP 5 ALARM TYPES</p>
+                    </div>
+                  </div>
+                  <div class="row pad-0-25" *ngFor="let item of popupAlarmDatas">
+                    <div class="col-md-2 form-group text-left">
+                      <p class="span-label5">{{item?.EventTotal}}</p>
+                    </div>
+                    <div class="col-md-10 form-group text-left">
+                      <p class="span-label2">{{item?.EventName}}</p>
+                    </div>
+                  </div>
+                  <div class="hover-div-footer">View details >></div>
+                </div>
+              </div>
+            </td>
+        </tbody>
+      </table>
+    </div> -->
+  </div>
+</div>

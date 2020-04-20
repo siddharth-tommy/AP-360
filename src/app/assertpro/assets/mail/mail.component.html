@@ -1,0 +1,42 @@
+<div>
+  <!-- <span class="ml-3" style="    font-size: 16px;color: #EA4256;" mat-button color="accent"><b>HIGH IMPACT ALARM</b></span> -->
+  <div class="container body-content">
+    <div class="container">
+      <div class="row justify-content-start" style="padding-top:10px;">
+        <b><label>Sent Message to {{data.name}}</label></b>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-12 label-value">
+
+          <mat-form-field class="example-full-width">
+            <textarea cdkFocusInitial [(ngModel)]="message" matInput placeholder="Message"></textarea>
+          </mat-form-field>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 label-value">
+          <mat-form-field class="example-full-width">
+            <input [(ngModel)]="answer1" matInput placeholder="Answer 1">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 label-value">
+          <mat-form-field class="example-full-width">
+            <input matInput [(ngModel)]="answer2" placeholder="Answer 2">
+          </mat-form-field>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()">Send</button>
+</div>

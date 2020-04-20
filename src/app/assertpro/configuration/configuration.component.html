@@ -1,0 +1,45 @@
+<!-- <app-fixedmenubar></app-fixedmenubar>
+<app-fixedsidebar></app-fixedsidebar> -->
+<div class="dash-body">
+  <div *ngIf="siteId!=''" class="container-fluid">
+    <div  class="row" style="border-bottom: 1px solid rgba(167, 167, 180, 0.22);">
+      <div class="col-sm-1 col-md-2 col-lg-2 col-xl-2"></div>
+      <div class="col-sm-10 col-md-9 col-lg-8 col-xl-6">
+        <div class="row">
+          <div class="col-md-8 col-sm-10 col-md-10 col-xl-8">
+            <div class="row">
+              <div *ngIf="assetTypeEnable" class="col-md-3 col-sm-3 col-xl-3 col-xs-12 text-center">
+                <div id="ASSETTYPE" class="ud-menu" [ngClass]="{'active-ud': udmenu=='ASSET TYPE'}"
+                  (click)="tabChange('ASSET TYPE')">
+                  ASSET TYPE</div>
+              </div>
+              <div *ngIf="checkListEnable" class="col-md-3 col-sm-3 col-xl-3 col-xs-12 text-center">
+                <div id="CHECKLIST" class="ud-menu" [ngClass]="{'active-ud': udmenu=='CHECKLIST'}"
+                  (click)="tabChange('CHECKLIST')">
+                  CHECKLIST</div>
+              </div>
+              <div *ngIf="debugEnable" class="col-md-3 col-sm-3 col-xl-3 col-xs-12 text-center">
+                <div id="DEBUG" class="ud-menu" [ngClass]="{'active-ud': udmenu=='DEBUG'}" (click)="tabChange('DEBUG')">
+                  DEBUG</div>
+              </div>
+              <div *ngIf="comserver" class="col-md-3 col-sm-3 col-xl-3 col-xs-12 text-center">
+                <div id="COMSERVER" class="ud-menu" [ngClass]="{'active-ud': udmenu=='COMSERVER'}"
+                  (click)="tabChange('COMSERVER')">
+                  COMSERVER</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-md-2 col-sm-2 col-xl-4"></div>
+        </div>
+     
+      </div>
+      <div class="col-md-1 col-lg-2 col-xl-4"></div>
+    </div>
+    <assettypecomponent *ngIf="udmenu=='ASSET TYPE'"></assettypecomponent>
+    <checklistcomponent *ngIf="udmenu=='CHECKLIST'"></checklistcomponent>
+    <comservercomponent *ngIf="udmenu=='COMSERVER'"></comservercomponent>
+    <debugcomponent *ngIf="udmenu=='DEBUG'"></debugcomponent>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+export class RoleModel {
+    dashboard: boolean = false;
+    dashboardId:string=''
+    asset: boolean = false;
+    assetId:string=''
+    equipment:boolean=false;
+    equipmentId:string=''
+    batteries:boolean=false;
+    batteriesId:string;
+    charges:boolean=false;
+    chargesId:string=''
+    gateways:boolean=false;
+    gatewaysId:string=''
+    userDirectory: boolean = false;
+    userDirectoryId:string=''
+    operator:boolean=false;
+    operatorId:string=''
+    webUser:boolean=false;
+    webUserId:string=''
+    tracker: boolean = false;
+    trackerId:string=''
+    location:boolean=false;
+    locationId:string=''
+    history:boolean=false;
+    historyId:string=''
+    geofence:boolean=false;
+    geofenceId:string=''
+    reportsId:string=''
+    reports: boolean = false;
+    messaging: boolean = false;
+    messagingId:string=''
+    notification: boolean = false;
+    alarmAlert:boolean=false;
+    alarmAlertId:string=''
+    incident:boolean=false;
+    incidentId:string=''
+    notificationId:string=''
+    configuration: boolean = false;
+    configurationId:string=''
+    assetType:boolean=false;
+    assetTypeId:string=''
+    checkList:boolean=false;
+    checkListId:string=''
+    debug:boolean=false;
+    debugId:string=''
+    comserver:boolean=false;
+    comserverId:string=''
+    admin: boolean = false;
+    adminId:string=''
+    company:boolean = false;
+    companyId:string=''
+    vendortype:boolean = false;
+    vendortypeId:string=''
+    stockpage:boolean = false;
+    stockpageId:string=''
+    constructor(values: Object = {}) {
+        Object.assign(this, values);
+    }
+}

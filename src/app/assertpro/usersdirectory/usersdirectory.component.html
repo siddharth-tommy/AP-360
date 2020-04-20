@@ -1,0 +1,609 @@
+<!-- <app-fixedmenubar #fixedmenubarComponent></app-fixedmenubar>
+<app-fixedsidebar></app-fixedsidebar> -->
+<webusersidebar-component *ngIf="siteName!='All Sites'" #webusersidebar (previsous)="openPrevios($event)" (valueChange)='webuserChanged($event)'
+  (saveorupdate)="webuserMain_table()">
+</webusersidebar-component>
+<rolefunction-component *ngIf="siteName!='All Sites'"  #rolefunction (valueChange)="aftercloseRoleFunction($event)"></rolefunction-component>
+<accesslevel-component *ngIf="siteName!='All Sites'" #accesslevel></accesslevel-component>
+<app-addoperator *ngIf="siteName!='All Sites'" #addoperator (operatorSave)="operatorTable()" (cancelEdit)="afterOpeatorEdit()"></app-addoperator>
+<editoperatorname-component *ngIf="siteName!='All Sites'" #editoperatorname (valueChange)="editOperatorSidebar()"></editoperatorname-component>
+<incidentbar-component *ngIf="siteName!='All Sites'" #createincidentbar (valueChange)="openIncidenHistory($event)"></incidentbar-component>
+<div *ngIf="loader" class="loading-indicator">
+  <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+</div>
+<div class="container-fluid" style="background-color:#f8fdff;" *ngIf="siteName!='All Sites'">
+  <div class="row">
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12 side-bar"></div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12 bg-empty-div-one"
+      style="border-bottom: 1px solid rgba(167, 167, 180, 0.22);"></div>
+    <div class="col-md-8 col-sm-8 col-xl-8 col-xs-12 main-div bg-empty-div-one" style="margin-top: 35px;">
+
+
+      <div class="row" style="border-bottom: 1px solid rgba(167, 167, 180, 0.22);">
+        <div class="col-md-8 col-sm-8 col-md-8 col-xs-12">
+
+          <div class="row">
+            <div *ngIf="operatorEnable" class="col-md-3 col-sm-3 col-xl-3 col-12 text-center">
+              <div class="ud-menu" [ngClass]="{'active-ud': udmenu=='operators'}" (click)="udmenuactive('operators')">
+                Operators</div>
+            </div>
+            <div *ngIf="webUserEnable" class="col-md-4 col-sm-5 col-xl-3 col-12 text-center">
+              <div class="ud-menu" [ngClass]="{'active-ud': udmenu=='webuser'}" (click)="udmenuactive('webuser')">web
+                users</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-sm-4 col-xl-4 col-xs-12 form-group"></div>
+      </div>
+
+    </div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12 bg-empty-div-one"
+      style="border-bottom: 1px solid rgba(167, 167, 180, 0.22);"></div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12 bg-empty-div-one"
+      style="border-bottom: 1px solid rgba(167, 167, 180, 0.22);"></div>
+  </div>
+  <div class="row" [hidden]="udmenu!='operators' || !operatorEnable">
+    <div class="col-2"></div>
+    <div class="col-9">
+
+    </div>
+    <div class="col-1 col-xl-1 col-lg-1"></div>
+  </div>
+  <div class="ud-sub-container2" [hidden]="udmenu!='webuser' || !webUserEnable">
+
+    <div class="row pb-4 pt-3">
+      <div class="col-xl-2 col-lg-2 col-md-2"></div>
+      <div class="col-md-6 col-xl-6 col-lg-6 col-sm-5 col-5 form-group head-group">
+        <div class="row">
+          <div class="col-xl-3 col-lg-4 col-md-5 col-sm-12 col-12">
+            <h6 class="ud-h6"><span class="all-web-user-text">ALL WEB USERS</span></h6>
+          </div>
+          <div class="col-xl-6 col-lg-7 col-md-7 col-sm-12 col-12 search-alignment">
+            <form class="form-alignment-search " style="display: -webkit-inline-box" action="" method="" name="search">
+              <div class="search-box search-box-zoom-adjust"><img class="search-icon"
+                  src="../../../assets/icon/search-ic.png" width="21" height="18" alt="search icon" />
+                <input [(ngModel)]="tableFilter2" class="remove-focus" (keyup)="applyFilter2($event.target.value)"
+                (paste)="applyFilter2($event.target.value)"
+                  autocomplete="off" name="seach" type="text" placeholder="Enter keyword to search" />
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <div style="cursor: pointer;text-align:right"
+        class="img-group col-lg-3 col-xl-3 col-sm-7 col-md-3 col-7 form-group">
+        <div><img (click)="openAccesslevel()" class="p-l-15" src="../../../assets/icon/role-settings.png">
+          <img style="cursor: pointer;" (click)="deleteRecord()" class="p-l-15"
+            src="../../../assets/icon/delete-btn.png">
+          <img class="p-l-15" (click)="opensideBar()" src="../../../assets/icon/add-btn.png"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-2 col-lg-2 col-md-2"></div>
+      <div class="col-xl-9 col-lg-9 col-md-9 table-web-user">
+        <table mat-table [dataSource]="dataSource2" matSort class="mat-elevation-z8" style="width:100%;">
+
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th style="padding-top:1%" mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle2() : null"
+                [checked]="selection2.hasValue() && isAllSelected2()"
+                [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+              </mat-checkbox>
+            </th>
+            <td style="padding-top:1%" mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                [checked]="selection2.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="WebUserName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td style="cursor: pointer;" (click)="openWebUserEditMode(element)" mat-cell *matCellDef="let element">
+              <span class="table-txt" style="color:#169bd7;">{{element.WebUserName}}</span></td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="Role">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+            <td mat-cell *matCellDef="let element">
+              <span class="table-txt">{{element.roleName}}</span> </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="Phone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
+            <td mat-cell *matCellDef="let element" class="table-txt">
+              <span><img src="../../../assets/icon/call.png" alt=""></span><span class="ml-2">{{element.Phone}} </span>
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="Email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+            <td mat-cell *matCellDef="let element" class="table-txt">
+              <span><img src="../../../assets/icon/send-msg.png" alt=""></span><span class="ml-2">{{element.Email}}
+              </span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="Status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td style="cursor: pointer;" (click)="confirmationDialog(element,i)" mat-cell
+              *matCellDef="let element;let i=index;">
+
+              <div *ngIf="element.Status=='Active'" class="online-btn-web-user"><span
+                  class="online-txt text-center">{{element.Status}}</span></div>
+              <div *ngIf="element.Status!='Active'" class="inactive-btn-web-user"><span
+                  class="online-txt text-center">{{element.Status}}</span></div>
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns2;">
+          </tr>
+        </table>
+        <mat-paginator id="2" #matpage2 [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid background" *ngIf="siteName!='All Sites'">
+  <div class="row" [hidden]="udmenu!='operators' || !operatorEnable">
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12"></div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12"></div>
+    <div class="col-md-9 col-sm-8 col-xl-9 col-lg-9">
+      <div class="row">
+        <div class="form-group col-md-6 col-sm-6 col-xl-6 col-xs-12" style="margin-top:17px">
+          <h6 class="ud-h6">OPERATORS STATS</h6>
+        </div>
+
+        <div class="col-md-6 col-sm-6 col-xl-6 col-xs-12 text-right create-report-button" style="margin-top:17px">
+          <a class="create-btn form-group"><img src="assets/icon/create-report.png" class="create-report-img">Create
+            report</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12"></div>
+    <div class="col-md-1 col-sm-1 col-xl-1 col-xs-12"></div>
+
+  </div>
+  <div class="row" [hidden]="udmenu=='webuser' || !webUserEnable">
+    <div class="col-2"></div>
+    <div class="col-9 mb-2">
+      <div class="row">
+        <div class="col-lg-4 col-xl-4" id="performer">
+          <div class="ud-box">
+            <div class="row">
+              <div class="col-8 performer-title">BEST PERFORMERS <span style="margin-right: 2%">OF</span>
+                <div id="accident" class="btn-group" dropdown>
+                  <a id="button-basic" dropdownToggle aria-controls="dropdown-basic"
+                    style="cursor:pointer;color:#169bd7;" matTooltip="{{performerType}}">
+                    {{!maxScreen && performerType?.length>5?performerType.substring(0,3)+'...':performerType}}
+
+                  </a>
+                  <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                    class="dropdown-menu dropdown-menu-right" style="border:0;">
+                    <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                    <div *ngFor="let type of performerTypeList;let i=index;">
+                      <div id="accident{{i}}" (click)="loadPerformer(type)" class="alarm-txt"
+                        style="height:30px;padding-left: 14px;padding-top: 6px;"
+                        [ngClass]="{'active-alarmmenu':type==performerType}">{{type}}</div>
+                    </div>
+                    <!-- </div> -->
+                  </ul>
+                </div>
+              </div>
+              <div *ngIf="performersList.length>10" style="cursor:pointer;" class="col-4 performer-show text-right"
+                (click)="openPerformer()">All
+                rating
+              </div>
+              <div *ngIf="performersList.length==0"></div>
+            </div>
+            <div class="row button-row">
+              <div class="col-lg-5 col-xl-5 col-md-12 col-sm-12 col-xs-12 mb-2 mr-2"
+                (click)="performerdiv('productivity')">
+                <div class="text-center performer-item" [ngClass]="{'active-performer': performermenu=='productivity'}">
+                  Productivity
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-xl-4 col-md-12 col-sm-12 col-xs-12 mb-2 mb-2 cost-effective-btn"
+                (click)="performerdiv('costEffective')">
+                <div class="text-center performer-item"
+                  [ngClass]="{'active-performer': performermenu=='costEffective'}">
+                  Cost effective
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 pb-3">
+                <div class="empty-widget-msg" *ngIf="performersList.length==0">No data available</div>
+                <!-- If -->
+                <div *ngIf="performersList.length!=0">
+                  <table cellpadding="0" cellspacing="0" class="performer-table m-t-15">
+
+                    <tr *ngFor="let item of performersList| slice:0:10; let ind=index;">
+                      <td width="50%">
+                        <div (click)="openeditoperatornameBar(item)" matTooltip="{{item.OperatorName}}">
+                            {{item.OperatorName?.length>13?item.OperatorName.substring(0,10)+'...':item.OperatorName}}</div>
+                      </td>
+                      <td width="35%" *ngIf="item.Productivity!=undefined?(item.Productivity<=79 && item.Productivity>=26):(item.CostEffective<=79 && item.CostEffective>=26)">
+                        <div class="performer-progress">
+                          <div class="progress-bar performer-progress-bar" role="progressbar" aria-valuenow="90"
+                            aria-valuemin="0" aria-valuemax="100"
+                            [ngStyle]="{'width':item.range+'%','background': '#dee652'}">
+                          </div>
+                        </div>
+                      </td>
+                      <td width="35%" *ngIf="item.Productivity!=undefined?(item.Productivity<=25 && item.Productivity>=1):(item.CostEffective<=25 && item.CostEffective>=1)">
+                        <div class="performer-progress">
+                          <div class="progress-bar performer-progress-bar" role="progressbar" aria-valuenow="90"
+                            aria-valuemin="0" aria-valuemax="100"
+                            [ngStyle]="{'width':item.range+'%','background': '#ff0446'}">
+                          </div>
+                        </div>
+                      </td>
+                     
+                      <td width="35%" *ngIf="(item.Productivity!=undefined?item.Productivity>=80:item.CostEffective>=80)">
+                        <div class="performer-progress">
+                          <div class="progress-bar performer-progress-bar" role="progressbar" aria-valuenow="90"
+                            aria-valuemin="0" aria-valuemax="100"
+                            [ngStyle]="{'width':item.range+'%','background': '#73e100'}">
+                          </div>
+                        </div>
+                      </td>
+                      <td text-align="center">{{item.Productivity}}{{item.CostEffective}}%</td>
+                    </tr>
+                  </table>
+                </div>
+                <!-- Else -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-xl-4" id="troublemaker">
+          <div class="ud-box">
+            <div class="row">
+              <div class="col-8 performer-title">TROUBLEMAKERS <span style="margin-right: 2%">OF</span>
+                <div id="accident" class="btn-group" dropdown> <a id="button-basic" dropdownToggle
+                    aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7;"
+                    matTooltip="{{trobleMakerType}}">
+                    {{!maxScreen && trobleMakerType?.length>5?trobleMakerType.substring(0,5)+'...':trobleMakerType}}
+                  </a>
+                  <ul id="dropdown-basic" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                    class="dropdown-menu dropdown-menu-right" style="border:0;">
+                    <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                    <div *ngFor="let type of performerTypeList;let i=index;">
+                      <div id="accident{{i}}" (click)="loadTrobleMaker(type)" class="alarm-txt"
+                        style="height:30px;padding-left: 14px;padding-top: 6px;"
+                        [ngClass]="{'active-alarmmenu':type==trobleMakerType}">{{type}}</div>
+                    </div>
+                    <!-- </div> -->
+                  </ul>
+                </div>
+              </div>
+              <div *ngIf="mostTrobleMakerList.length>10" style="cursor: pointer;"
+                class="col-4 performer-show text-right" (click)="openTrouble()">All
+                rating</div>
+              <div *ngIf="mostTrobleMakerList.length==0"></div>
+            </div>
+            <div class="row">
+              <div class="col-lg-5 col-xl-5 col-md-12 col-xs-12 col-sm-12 c mt-2">
+                <div class="troublemaker-bar1"></div><span class="troublemaker-bar-span">high
+                  impact</span>
+              </div>
+              <div class="col-lg-7 col-xl-7 col-md-12 col-xs-12 col-sm-12 mt-2">
+                <div class="troublemaker-bar2"></div><span class="troublemaker-bar-span">impact</span>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-2 mr-2"
+                (click)="troublemakerdiv('impacts')">
+                <div class="text-center troublemaker-item"
+                  [ngClass]="{'active-troublemaker': troublemakermenu=='impacts'}">
+                  Impacts
+                </div>
+              </div>
+              <div class="col-3 mt-2 cost-effective-btn-two" (click)="troublemakerdiv('alarms')">
+                <div class="text-center troublemaker-item box-align-two"
+                  [ngClass]="{'active-troublemaker': troublemakermenu=='alarms'}">
+                  Alarms
+                </div>
+              </div>
+              <div class="col-4"></div>
+            </div>
+            <div *ngIf="troublemakermenu=='impacts'" class="row">
+              <div class="col-12 pb-3">
+                <div class="empty-widget-msg" *ngIf="mostTrobleMakerList.length==0">No data available</div>
+                <!-- If -->
+                <div *ngIf="mostTrobleMakerList.length!=0">
+                  <table cellpadding="0" cellspacing="0" class="performer-table m-t-15">
+                    <tr *ngFor="let item of mostTrobleMakerList| slice:0:10; let ind=index;">
+                      <td width="50%">
+                        <div (click)="openeditoperatornameBar()" matTooltip="{{item.Name}}{{item.SiteName}}">
+                          {{item.Name?.length>13?item.Name.substring(0,11)+'...':item.Name}}
+                          {{item.SiteName?.length>13?item.SiteName.substring(0,11)+'...':item.SiteName}}
+                        </div>
+                      </td>
+                      <td *ngIf="item.HighImpact==0 && item.Impact==0" text-align="center"
+                        class="col-5 col-sm-5 col-md-5 col-lg-5  col-lg-5" style="padding-left:3%;">
+                        No TroubleMakers</td>
+                      <td width="35%" *ngIf="item.HighImpact!=0 || item.Impact!=0">
+                        <div class="progress troublemaker-progress" style="width:100%;">
+                          <div class="progress-bar troublemaker-progress-bar" role="progressbar" aria-valuenow="90"
+                            aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width':item.range+'%'}">
+                          </div> 
+                        </div>
+                      </td>
+                      <td width="15%" class="text-right"><span
+                          style="color: #ea4256;"> {{item.HighImpact}}</span>/{{item.Impact}}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <!-- Else -->
+              </div>
+            </div>
+            <div *ngIf="troublemakermenu!='impacts'" class="row">
+              <div class="col-12">
+                <div class="empty-widget-msg" *ngIf="mostTrobleMakerList.length==0">No data available</div>
+                <!-- If -->
+                <div *ngIf="mostTrobleMakerList.length!=0">
+                  <table cellpadding="0" cellspacing="0" class="performer-table m-t-15">
+                    <tr *ngFor="let item of mostTrobleMakerList| slice:0:10; let ind=index;">
+                      <td width="50%">
+                        <div (click)="openeditoperatornameBar()" matTooltip="{{item.OperatorName}}{{item.Name}}">
+                          {{item.OperatorName?.length>13?item.OperatorName.substring(0,11)+'...':item.OperatorName}}
+                          {{item.Name?.length>13?item.Name.substring(0,11)+'...':item.Name}}
+                        </div>
+                      </td>
+                      <td *ngIf="item.HighAlarms==0 && item.TotalAlarms==0" text-align="center"
+                        class="col-5 col-sm-5 col-md-5 col-lg-5  col-lg-5" style="padding-left:3%;">No TroubleMakers
+                      </td>
+                      <td width="35%" *ngIf="item.HighAlarms!=0 || item.TotalAlarms!=0">
+                        <div class="progress troublemaker-progress" style="width:100%;">
+                          <div class="progress-bar troublemaker-progress-bar" role="progressbar" aria-valuenow="90"
+                            aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width':item.range+'%'}">
+                          </div>
+                        </div>
+                      </td>
+                      <td width="15%" class="text-right"><span
+                          style="color: #ea4256;"> {{item.HighAlarms}}</span>/{{item.TotalAlarms}}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <!-- Else -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-xl-4" id="safety">
+          <div class="ud-box" style="height:100%;">
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-8 performer-title pad-0">SAFETY COMPLIANCE</div>
+              <div class="col-3 performer-show pad-0 text-right"></div>
+            </div>
+            <div class="row" style="height: 49%;">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 m-t-b-30">
+                <p class="chart-p">CURRENT WEEK</p>
+                <canvas style="width: 140px;height: 100px" id="chart1"></canvas>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 m-t-b-30">
+                <p class="chart-p">PREVIOUS WEEK</p>
+                <canvas style="width: 140px;height: 100px" id="chart2"></canvas>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 pad-0 text-center final-four-point-coloumns m-b-22">
+                <div class="text-left saftycomplaince-label">
+                  <div>
+                    <div class="chart-dot" style="background-color:#b3e7ff"></div><span
+                      class="chart-span">Completed</span>
+                  </div>
+                  <div>
+                    <div class="chart-dot" style="background-color:#169bd7"></div><span
+                      class="chart-span">Skipped</span>
+                  </div>
+                  <div>
+                    <div class="chart-dot" style="background-color:#ea4256"></div><span class="chart-span">Logout</span>
+                  </div>
+                  <div>
+                    <div class="chart-dot" style="background-color:#50e3c2"></div><span class="chart-span">Maint.
+                      lockout</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:4%">
+        <div class="col-md-12 col-xl-8 col-lg-7 col-sm-12 col-12 form-group head-group">
+          <div class="row">
+            <div class="pr-0 col-xl-3 col-lg-4 col-md-5 col-sm-12 col-12">
+              <h6 class="ud-h6"><span style="font-size: 16px;margin-top: 4%;" class="all-web-user-text">
+                  ALL OPERATORS</span>
+              </h6>
+            </div>
+            <div class="col-xl-6 col-lg-7 col-md-7 col-sm-12 col-12 search-alignment">
+              <form class="form-alignment-search " style="display: -webkit-inline-box" action="" method=""
+                name="search">
+                <div class="search-box search-box-zoom-adjust"><img class="search-icon"
+                    src="../../../assets/icon/search-ic.png" width="21" height="18" alt="search icon" />
+                  <input [(ngModel)]="tableFilter" class="remove-focus" (keyup)="applyFilter($event.target.value)"
+                  (paste)="applyFilter($event.target.value)"
+                    autocomplete="off" name="seach" type="text" placeholder="Enter keyword to search" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 col-sm-12 col-xl-4 col-xs-12 col-md-12 form-group btn-align">
+          <a (click)="openAddOperator()" id="addoperator"
+            style="background-color:#169bd7;color: white !important;cursor:pointer" class="add-operator-btn">Add
+            Operator</a>
+          <a id="availableactions" style="color:#169bd7 !important;cursor:pointer;" class="avail-btn" dropdown
+            dropdownToggle>Available Actions
+            <div class="btn-group">
+              <i style="vertical-align: middle;" class="material-icons">
+                arrow_drop_down
+                <a id="button-basic" aria-controls="dropdown-basic" style="cursor:pointer;color:#169bd7">
+                </a>
+                <ul id="dropdown-basic dropdown-basic-final" *dropdownMenu role="menu" aria-labelledby="button-basic"
+                  class="dropdown-menu drop-down-table-avail-btn dropdown-menu-right"
+                  style="border:0;margin-left: -119px !important;padding-left: 35px">
+                  <!-- <div style="box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.12);width:175px;margin-left:25px;"> -->
+                  <div *ngFor="let type of availableActionsList">
+                    <div (click)="clickAvailableAction(type)" class="alarm-txt" style="height:30px"
+                      [ngClass]="{'active-alarmmenu':type==selectedAvailable}">{{type}}</div>
+                  </div>
+                  <!-- </div> -->
+                </ul>
+              </i>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div style="box-shadow: 1px 3px 15px 2px grey;">
+        <div class="table-outer-layer">
+          <div class="table-div" style="overflow-x:auto;">
+            <table style="width: 135%" #firstTable #firstTableSort="matSort" mat-table [dataSource]="dataSource" matSort
+              class="mat-elevation-z8 userdetails-table">
+
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <th style="padding-top:1%;padding-left: 1%;padding-right: 1.5%;width: 6%" mat-header-cell
+                  *matHeaderCellDef>
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <td style="padding-top:1%;padding-left: 1%;padding-right: 1.5%" mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <!-- Position Column -->
+              <ng-container matColumnDef="BadgeNo" style="text-align: left;">
+                <th style="padding-left: 1px;width:10%" class="table-txt-head table-header" mat-header-cell
+                  *matHeaderCellDef mat-sort-header> Badge Number
+                </th>
+                <td style="text-align: left;padding-left:1px" mat-cell *matCellDef="let element">
+                  <span class="table-txt">{{element.BadgeNo}}</span></td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="OperatorName" style="text-align: left;">
+                <th class="table-txt-head" style="text-align: left;width: 10%" mat-header-cell *matHeaderCellDef
+                  mat-sort-header>
+                  Name
+                </th>
+                <td style="cursor: pointer;" (click)="openeditoperatornameBar(element)" mat-cell
+                  *matCellDef="let element">
+                  <span class="table-txt" style="color:#169bd7;">{{element.OperatorName}}</span> </td>
+              </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef="AccessLevel">
+                <th class="table-txt-head" style="text-align: left;width: 10%" mat-header-cell *matHeaderCellDef
+                  mat-sort-header> Access level </th>
+                <td mat-cell *matCellDef="let element" style="text-align: left">
+                  <!-- <span><img src="../../../assets/icon/call.png" alt=""></span> -->
+                  <span class="table-txt"> {{element.AccessLevelName}}</span> </td>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="Department">
+                <th style="text-align: left;width: 10%" class="table-txt-head" mat-header-cell *matHeaderCellDef
+                  mat-sort-header>
+                  Department(s) </th>
+                <td mat-cell *matCellDef="let element" style="padding-right: 1%">
+                  <!-- <span><img src="../../../assets/icon/send-msg.png" alt=""></span> -->
+                  <span style="color:#169bd7;" class="table-txt"> {{element.Department}} </span> </td>
+              </ng-container>
+
+              <ng-container matColumnDef="YTDUsage">
+                <th style="text-align: left;width: 10%" class="table-txt-head table-header" mat-header-cell
+                  *matHeaderCellDef mat-sort-header> YTD
+                  usage(%) </th>
+                <td style="text-align: left;" mat-cell *matCellDef="let element" style="text-align: left">
+
+                  <span class="table-txt">{{element.YTDUsage}}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="YTDAlarm">
+                <th style="text-align: left;width: 10%" class="table-txt-head table-header" mat-header-cell
+                  *matHeaderCellDef mat-sort-header> YTD
+                  alarms </th>
+                <td style="text-align: center;" mat-cell *matCellDef="let element" style="text-align: left">
+                  <span class="table-txt">{{element.YTDAlarm}}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="YTDIncidents">
+                <th style="text-align: left;width: 10%" class="table-txt-head table-header" mat-header-cell
+                  *matHeaderCellDef mat-sort-header> YTD
+                  incidents </th>
+                <td style="text-align: center;" mat-cell *matCellDef="let element" style="text-align: left">
+
+                  <span class="table-txt">{{element.YTDIncidents}}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="YTDCompliance">
+                <th style="text-align: left;width: 10%" class="table-txt-head table-header" mat-header-cell
+                  *matHeaderCellDef mat-sort-header> YTD
+                  compliance </th>
+                <td style="text-align: left;" mat-cell *matCellDef="let element">
+                  <span class="table-txt">{{element.YTDCompliance}}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Certificate">
+                <th style="text-align: left;width: 10%" class="table-txt-head table-header" mat-header-cell
+                  *matHeaderCellDef mat-sort-header> Certification </th>
+                <td style="text-align: left;" mat-cell *matCellDef="let element">
+
+                  <span class="table-txt">{{element.Certificate}}</span>
+                 <br *ngIf="element.Certificate=='Expiring'"> <span *ngIf="element.Certificate=='Expiring'" class="table-txt">{{element?.ExpDate}}</span>
+
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Status">
+                <th class="table-txt-head" mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td style="cursor: pointer;" (click)="confirmationDialog1(element,i)" mat-cell
+                  *matCellDef="let element;let i=index;">
+
+                  <div *ngIf="element.Status=='Active'" class="online-btn"><span
+                      class="online-txt text-center">{{element.Status}}</span></div>
+                  <div *ngIf="element.Status!='Active'" class="inactive-btn"><span
+                      class="online-txt text-center">{{element.Status}}</span></div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="addincident">
+                <th style="text-align: center;white-space: pre;" class="table-txt-head" mat-header-cell *matHeaderCellDef
+                  mat-sort-header> Add
+                  incident </th>
+                <td (click)="openIncident(element)" style="text-align: center;cursor: pointer;" mat-cell
+                  *matCellDef="let element">
+                  <span class="table-txt"> <img src="../../../assets/icon/add-incident.png" alt=""> </span>
+                </td>
+              </ng-container>
+              <tr style="text-align: left;" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+          </div>
+        </div>
+        <mat-paginator #matpage [pageSizeOptions]="[10, 20,50,100,200]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+</div>

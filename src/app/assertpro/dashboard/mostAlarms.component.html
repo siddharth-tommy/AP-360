@@ -1,0 +1,75 @@
+
+<style>
+  .table-class{
+    padding: 0 12px 12px 12px;
+  }
+  /* width */
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #45AFDF; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background:rgb(26, 153, 212); 
+  }
+  </style>
+<div class="modal-header">
+  <h4 class="modal-title">ALARMS </h4>
+  <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="col-md-12" id="alarms">
+  <div class="dash-box ">
+    <div class="row mar-0">
+      <div class="col-12 pad-0">
+        <!-- If -->
+        <div *ngIf="!overView"  class="table-class scroolbar-fix">
+          <table cellpadding="0" cellspacing="0" class="prodictive-table m-t-15">
+            <tr *ngFor="let item of mostAlarmDatas">
+              <td width="50%">
+                <div (click)="siteidis(item.ID)">{{item.SiteName}}</div>
+              </td>
+              <td width="35%">
+                  <div *ngIf="item.Unactioned==0 && item.Actioned==0">No Alarms</div>
+                <div *ngIf="item.Unactioned!=0 || item.Actioned!=0" class="progress accidents-progress" style="width:100%;">
+                  <div class="progress-bar accidents-progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0"
+                    aria-valuemax="100"  [ngStyle]="{'width':item.range+'%'}">
+                  </div>
+                </div>
+              </td>
+              <td width="15%" class="text-right"><span style="color: #ea4256;">{{item.Unactioned}}</span><span style="color: #57b8dc;">/{{item.Actioned}}</span></td>
+            </tr>
+          </table>
+
+        </div>
+        <!-- Else -->
+        <div  *ngIf="overView"  class="table-class scroolbar-fix">
+          <table cellpadding="0" cellspacing="0" class="prodictive-table m-t-15">
+            <tr *ngFor="let item of mostAlarmDatas">
+              <td width="50%">{{item.AssetTypeName}}</td>
+              <td width="35%">
+                  <div *ngIf="item.Unactioned==0 && item.Actioned==0">No Alarms</div>
+                <div *ngIf="item.Unactioned!=0 || item.Actioned!=0" class="progress accidents-progress" style="width:100%;">
+                  <div class="progress-bar accidents-progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0"
+                    aria-valuemax="100"  [ngStyle]="{'width':item.range+'%'}">
+                  </div>
+                </div>
+              </td>
+              <td width="15%" class="text-right"><span style="color: #ea4256;">{{item.Unactioned}}</span><span style="color: #57b8dc;">/{{item.Actioned}}</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>

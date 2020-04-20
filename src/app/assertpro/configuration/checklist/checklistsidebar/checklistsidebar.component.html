@@ -1,0 +1,238 @@
+<div #side class="side-bar">
+<div #myDiv class="sidebar-border">
+  <div class="row pt-5 pb-5">
+    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-2 col-2">
+      <svg _ngcontent-c3="" xml:space="preserve" id="closeSideBar" (click)="goBack()"
+        class="cursor side-bar-back-icon" xmlns:xlink="http://www.w3.org/1999/xlink" height="20px"
+        style="enable-background:new 0 0 31.494 31.494;" version="1.1" viewBox="0 0 31.494 31.494" width="20px" x="0px"
+        xmlns="http://www.w3.org/2000/svg" y="0px">
+        <path _ngcontent-c3=""
+          d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+          fill="#169bd7"></path>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+        <g _ngcontent-c3=""></g>
+      </svg>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3"></div>
+    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-7 col-7">
+        <a class="ml-2" (click)="resetEdit()"> <img style="cursor:pointer" class="edit-img-two"
+          src="../../../../assets/icon/icons-reset-ic.png" alt="">
+        <span class="reset-text mr-2"> Reset </span></a>
+      <a class="cursor" (click)="cancelEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+        <span class="cancel-text"> Cancel </span></a>
+      <a class="cursor" class="ml-2" (click)="saveEdit()"> <img src="../../../assets/icon/icons-apply-ic.png" alt="">
+        <span class="apply-text"> Apply </span></a>
+    </div>
+  </div>
+  <div class="row pb-5">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="title-text">{{editMode==true?'EDITING':'CREATING'}} CHECKLIST</div>
+    </div>
+  </div>
+  <div class="row pb-2">
+    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+      Fill from Checklist
+    </div>
+    <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-4 dark-text">
+      <div class="btn-group" dropdown id="checklist" [isDisabled]="type" style="width:100%;height: 100%;">
+        <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}" dropdownToggle
+          aria-controls="dropdown-disabled-menu">
+          Pick checklist...
+          <span style="position: absolute;right:0;padding-right: 2%;">
+            <img src="assets/common/inputs-dropdown.png">
+          </span>
+        </div>
+        <ul id="classificationUsed" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+          aria-labelledby="button-disabled-menu" style="margin-top:10px;">
+          <li *ngFor="let checklistItems of checklistArray;let i=index;">
+            <!-- {{checklistItems.name}} -->
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 dark-text">
+      (Optional)
+    </div>
+  </div>
+
+  <mat-tab-group (selectedTabChange)="sidebarActive($event.index)" [(selectedIndex)]="tabIndex">
+    <div>
+    <mat-tab class="title-fonts" label="CHECKLIST INFO">
+      <div class="row pt-5">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Checklist name
+        </div>
+        <!-- <div *ngIf="!editShow" class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          
+        </div> -->
+        <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          <input type="text" maxlength="45" [(ngModel)]="chacklistName" class="help-input" placeholder="Checklist Name">
+        </div>
+      </div>
+      <div class="row pt-5">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          System
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-2 col-sm-4 col-4 dark-text">
+           <mat-radio-group  [(ngModel)]="radioOptions">
+              <mat-radio-button class="ultimate-right-align" value="1"><span style="font-size: 14px">Ultimate</span>
+              </mat-radio-button>
+              <mat-radio-button value="2"><span style="font-size: 14px">Advanced</span>
+              </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="row pt-5">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Description
+        </div>
+        <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          <textarea maxlength="280" style="border: 1px solid #CBEEFF;background: #F0F8FF" rows="4" cols="40"
+            cdkFocusInitial [(ngModel)]="messageBox" matInput placeholder="Type checklist description here"></textarea>
+        </div>
+      </div>
+      <div class="row pt-5">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Site
+        </div>
+        <div class="col-xl-6 col-lg-5 col-md-5 col-sm-6 col-6 light-text">
+          <!-- <commonasset #commonasset [header]="''" [deapartment]="false"></commonasset> -->
+          <singlesite-component #singlesitecomponent [header]="''">
+          </singlesite-component>
+        </div>
+      </div>
+      <div class="row pt-5">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Set as default
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-4">
+          <mat-slide-toggle [(ngModel)]="setasDefault_TogglerButton" class="toggle">
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row pt-4">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Set language
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-4">
+          <div class="language-button" (click)="languageButton()"
+            [ngClass]="{'language-button-color':lang_English==true}">
+            <div class="language-button-text">English</div>
+          </div>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-4">
+          <div class="language-button" (click)="languageButton()"
+            [ngClass]="{'language-button-color':lang_Espanol==true}">
+            <div class="language-button-text">Espanol</div>
+          </div>
+        </div>
+
+      </div>
+
+
+    </mat-tab>
+  </div>
+  <div>
+    <mat-tab class="title-fonts" label="QUESTIONS">
+        
+      <div style="overflow-x: hidden;overflow-y:auto;height: 630px;scroll-behavior: smooth">
+          <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)" >
+
+     <div class="example-box" *ngFor="let value of model; let i=index" cdkDrag>
+        <div class="row pt-3">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 dark-text">
+          QUESTION {{i+1}}
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          <input [(ngModel)]="value.Name" placeholder="Question" type="text" maxlength="128" class="help-input">
+        </div>
+      </div>
+      <div class="row pt-3">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Answer option 1
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          <input type="text" [(ngModel)]="value.Answer1" placeholder="Answer 1" maxlength="128" class="help-input">
+        </div>
+        <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+            <mat-radio-group aria-label="Select an option" [(ngModel)]="value.ExpAnswer">
+          <mat-radio-button name="{{i}}" value="0"></mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="row pt-3">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Answer option 2
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          <input type="text" [(ngModel)]="value.Answer2" placeholder="Answer 2" maxlength="128" class="help-input">
+        </div>
+        <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+            <mat-radio-group aria-label="Select an option" [(ngModel)]="value.ExpAnswer">
+          <mat-radio-button  name="{{i}}" value="1"></mat-radio-button>
+            </mat-radio-group>
+        </div>
+      </div>
+      <div *ngIf="value.answer3show" class="row pt-3">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+        Answer option 3
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          <input type="text" [(ngModel)]="value.Answer3" placeholder="Answer 3" maxlength="128" class="help-input">
+        </div>
+        <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+            <mat-radio-group aria-label="Select an option" [(ngModel)]="value.ExpAnswer">
+          <mat-radio-button name="{{i}}" value="2"></mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div *ngIf="value.answer4show" class="row pt-3">
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 light-text">
+          Answer option 4
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 light-text">
+          <input type="text" [(ngModel)]="value.Answer4" placeholder="Answer 4" maxlength="128" class="help-input">
+        </div>
+        <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+            <mat-radio-group aria-label="Select an option" [(ngModel)]="value.ExpAnswer">
+                <mat-radio-button name="{{i}}" value="3"></mat-radio-button>
+                </mat-radio-group>
+        </div>
+      </div>
+
+      <div *ngIf='!value.answer4show' class="row pt-3 pb-1">
+        <div (click)="addAnswer(i)" class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4 addanswer-text">
+          <span style="cursor: pointer"> Add answer...</span>
+        </div>
+      </div>
+      
+    </div>
+          </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4"></div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+          <div (click)="addQuestion()" style="cursor: pointer" class="add-question-btn">
+            <div class="add-question-text">ADD QUESTION</div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </div>
+  </mat-tab-group>
+
+</div>
+</div>

@@ -1,0 +1,272 @@
+<div class="container radius-btn-container">
+  <ngx-spinner bdColor="rgba(53,53,53, 0)" size="medium" color="#25242475" type="ball-clip-rotate-multiple"></ngx-spinner>
+  <div class="row radius-btn" style="padding:0;">
+    <div class="col-6" style="padding:0;cursor:pointer" (click)="SetHistoryType('assert')">
+      <div class="text-center" style="padding-top:3px" [ngClass]="{'radio-leftbtn-active':historytype=='assert'}">
+        <span class="ass-oper-txt">Assets</span>
+      </div>
+    </div>
+    <div class="col-6" style="padding:0;cursor:pointer" (click)="SetHistoryType('operator')">
+      <div class="text-center" style="padding-top:3px" [ngClass]="{'radio-rightbtn-active':historytype=='operator'}">
+        <span class="ass-oper-txt">Operators</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container geofence-container">
+  <div class="row">
+    <div class="col-6">
+      <div class="text-left select-geofence">
+        SELECT GEOFENCE
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="text-right geofence-add" (click)="addgeofence()">Add</div>
+    </div>
+  </div>
+</div>
+<div class="container geofence-dropdownbtn-container">
+  <div class="row geofence-dropdownbtn">
+    <div class="btn-group" dropdown #dropdown="bs-dropdown" [autoClose]="true">
+      <a dropdownToggle class="select-drop-item" style="cursor: pointer">
+        {{selectgeofenceName}}<span style="position:absolute;right:0;margin-right:15%"><img src="assets/icon/dropdown-light.png"></span>
+      </a>
+      <ul id="style-5" *dropdownMenu class="dropdown-menu" role="menu" style="width:270px;padding-left:20px;margin-top:10px;border:1px solid #d4f2ff;height:300px;overflow-x: hidden;overflow-y:scroll;">
+        <li *ngFor="let geofence of geofences">
+          <span class="assettype-txt" style="cursor:pointer" (click)="ChangeGeoFence(geofence)">{{geofence.Name}}</span>
+        </li>
+        <span *ngIf="geofences.length==0" class="assettype-txt">No geofence available.</span>
+      </ul>
+    </div>
+  </div>
+</div>
+<div *ngIf="historytype=='assert'">
+  <div class="container search-container">
+    <div class="row">
+      <div class="col-8">
+        <div class="text-left select-geofence">
+          SEARCH FOR ASSET
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="text-right geofence-add" (click)="clearAllasset()">Clear all</div>
+      </div>
+    </div>
+  </div>
+  <div class="container tree-box-container ">
+    <div class="tree-box">
+      <div id="style-5" class="search-btn">
+        <div class="row">
+          <div class="col-auto" style="padding-left:10px;padding-right:0px" *ngFor="let bubble of bubbles">
+            <div class="bubbles bubbles-txt">{{bubble.value}}
+              <a (click)="RemoveFilterItem(bubble)" style="margin-left:10px;cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px" version="1.1"
+                  height="14px" viewBox="0 0 64 64" enable-background="new 0 0 64 64">
+                  <g>
+                    <path fill="#FFFFFF" d="M28.941,31.786L0.613,60.114c-0.787,0.787-0.787,2.062,0,2.849c0.393,0.394,0.909,0.59,1.424,0.59   c0.516,0,1.031-0.196,1.424-0.59l28.541-28.541l28.541,28.541c0.394,0.394,0.909,0.59,1.424,0.59c0.515,0,1.031-0.196,1.424-0.59   c0.787-0.787,0.787-2.062,0-2.849L35.064,31.786L63.41,3.438c0.787-0.787,0.787-2.062,0-2.849c-0.787-0.786-2.062-0.786-2.848,0   L32.003,29.15L3.441,0.59c-0.787-0.786-2.061-0.786-2.848,0c-0.787,0.787-0.787,2.062,0,2.849L28.941,31.786z" />
+                  </g>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-10">
+            <input type="text" style="width:100%;border:none;outline: none;margin-top:2px" placeholder="Enter the name of the asset...."
+              [(ngModel)]="searchText">
+          </div>
+          <div class="col-2">
+            <div class="text-text">
+              <img src="assets/icon/icon-search.png" style="height:15px;margin-top:5px">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="style-5" class="asset-container">
+        <div *ngFor="let assetstype of historyassets|search : searchText">
+          <a [attr.aria-expanded]="assetstype.status" aria-controls="collapseBasic">
+            <img style="cursor:pointer" *ngIf="!assetstype.status" (click)="assetstype.status = !assetstype.status" src="assets/common/assetplus.png">
+            <img style="cursor:pointer" *ngIf="assetstype.status" (click)="assetstype.status = !assetstype.status" src="assets/common/assetminus.png">
+            <span style="cursor:pointer" class="assettype-txt">{{assetstype.assetstype}}</span>
+          </a>
+          <div id="collapseBasic" [collapse]="!assetstype.status">
+            <div *ngFor="let asset of assetstype.assets|subsearch: searchText">
+              <span class="asset-txt" style="cursor: pointer" (click)="AssetItem(assetstype.assetstype+'/'+asset.name,'asset',asset)">{{asset.name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="historytype=='operator'">
+  <div class="container search-container">
+    <div class="row">
+      <div class="col-8">
+        <div class="text-left select-geofence">
+          SEARCH FOR OPERATORS
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="text-right geofence-add" (click)="clearAllasset()">Clear all</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container tree-box-container">
+    <div class="tree-box">
+      <div id="style-5" class="search-btn">
+        <div class="row">
+          <div class="col-auto" style="padding-left:10px;padding-right:0px" *ngFor="let bubble of bubbles">
+            <div class="bubbles bubbles-txt">{{bubble.value}}
+              <a (click)="RemoveOperatorFilterItem(bubble)" style="margin-left:10px;cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px" version="1.1"
+                  height="14px" viewBox="0 0 64 64" enable-background="new 0 0 64 64">
+                  <g>
+                    <path fill="#FFFFFF" d="M28.941,31.786L0.613,60.114c-0.787,0.787-0.787,2.062,0,2.849c0.393,0.394,0.909,0.59,1.424,0.59   c0.516,0,1.031-0.196,1.424-0.59l28.541-28.541l28.541,28.541c0.394,0.394,0.909,0.59,1.424,0.59c0.515,0,1.031-0.196,1.424-0.59   c0.787-0.787,0.787-2.062,0-2.849L35.064,31.786L63.41,3.438c0.787-0.787,0.787-2.062,0-2.849c-0.787-0.786-2.062-0.786-2.848,0   L32.003,29.15L3.441,0.59c-0.787-0.786-2.061-0.786-2.848,0c-0.787,0.787-0.787,2.062,0,2.849L28.941,31.786z" />
+                  </g>
+                </svg>
+
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-10">
+            <!-- <input type="text" style="width:100%;border:none;outline: none;margin-top:2px" placeholder="Enter the name of the asset...."
+                    #box (keyup.enter)="onEnter(box.value)" [(ngModel)]="bubblevalue"> -->
+            <input type="text" style="width:100%;border:none;outline: none;margin-top:2px" placeholder="Enter the name of the operator...."
+              [(ngModel)]="searchText">
+          </div>
+          <div class="col-2">
+            <div class="text-text">
+              <img src="assets/icon/icon-search.png" style="height:15px;margin-top:5px">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="style-5" class="asset-container">
+        <div *ngFor="let operator of historyoperators|operatorsearch: searchText">
+          <div style="cursor:pointer">
+            <span class="assettype-txt" (click)="OperatorItem(operator.OperatorName,'operator',operator)">{{operator.OperatorName}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div style="padding-left:40px;background-color:#f9f9f9;padding-right:50px;margin-top:5px;padding-bottom:30px">
+  <div class="row">
+    <div class="col-6">
+      <div class="text-left set-time-frame-txt" style="margin-top:3px">
+        SET TIMEFRAME
+      </div>
+    </div>
+  </div>
+  <div>
+    <div style="margin-top:10px">
+      <input type="radio" id="test1" name="radio-group" [checked]="TimeStamp=='lasthour'" (click)="Datemanupulation('lasthour')">
+      <label for="test1" class="radio-btn-txt">Last hour</label>
+    </div>
+    <div style="margin-top:10px">
+      <input type="radio" id="test2" name="radio-group" [checked]="TimeStamp=='today'" (click)="Datemanupulation('today')">
+      <label for="test2" class="radio-btn-txt">Today</label>
+    </div>
+    <div style="margin-top:10px">
+      <input type="radio" id="test3" name="radio-group" [checked]="TimeStamp=='yesterday'" (click)="Datemanupulation('yesterday')">
+      <label for="test3" class="radio-btn-txt">Yesterday</label>
+    </div>
+    <div style="margin-top:10px;">
+      <input type="radio" id="test4" name="radio-group" [checked]="TimeStamp=='custom'" (click)="ShowDateModal()">
+      <label for="test4" class="radio-btn-txt">Custom</label>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<div bsModal #datemodel="bs-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="width:550px;height:470px;margin-top:100px">
+
+      <a class="close " style="margin-right:30px;position:absolute;right:0;margin-top:10px;z-index:99999999999" (click)="datemodel.hide()"
+        aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </a>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-4">
+              <div class="text-center">
+                <img src="assets/icon/calcender.png">
+                <span style="margin-left:10px">{{fromDate.month}}</span>/ <span>{{fromDate.day}}</span>/ <span>{{
+                  fromDate.year}}</span>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="text-center" *ngIf="toDate">
+                <img src="assets/icon/calcender.png">
+                <span style="margin-left:10px">{{toDate.month}}</span>/<span>{{toDate.day}}</span>/<span>{{
+                  toDate.year}}</span>
+              </div>
+            </div>
+
+          </div>
+          <div class="row" style="margin-top:10px;margin-bottom:10px">
+            <div class="col-6 assettype-txt">
+              Pick Custom Date
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <div class="col-12">
+              <div class="text-center">
+                <div>
+                  <ngb-datepicker #dp (select)="onDateSelection($event)" [maxDate]="maxDate" [displayMonths]="2"
+                    [dayTemplate]="t" outsideDays="hidden">
+                  </ngb-datepicker>
+                  <ng-template #t let-date let-focused="focused">
+                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)" [class.faded]="isHovered(date) || isInside(date)"
+                      (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+                      {{ date.day }}
+                    </span>
+                  </ng-template>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <div class="col-6 assettype-txt">
+              Pick Custom Time
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <div class="col-5">
+              <timepicker [(ngModel)]="customstarttime" (ngModelChange)="CustomStartDatePick()" [showSpinners]="false"></timepicker>
+            </div>
+            <div class="col-5">
+              <timepicker [(ngModel)]="customendtime" (ngModelChange)="CustomEndDatePick()" [showSpinners]="false"></timepicker>
+            </div>
+            <div class="col-2">
+              <div class="time-save-btn" (click)="Datemanupulation('custom')">
+                <div class="text-center">Save</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

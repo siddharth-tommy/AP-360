@@ -1,0 +1,10 @@
+.dummy-holder{
+    /* height: 80px; */
+    /* background-color: #1D3D57; */
+    background-color:white;
+    width:0px;
+    float:left;
+}
+.content-height{
+    margin-top:80px !important;
+}

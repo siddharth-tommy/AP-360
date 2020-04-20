@@ -1,0 +1,94 @@
+<div class="container-fluid" style="margin-top:-80px;">
+
+  <div class="row">
+    <div class="col-sm-6 d-none d-sm-block  col-12 mask logo-section-layout">
+      <div class="text-center logo-login-page img-fluid">
+        <img src="assets/icon/logo-login-page.png" class="img-fluid">
+      </div>
+    </div>
+    <div class="col-sm-6 col-12 login-scetion-layout">
+
+
+      <div class="row d-sm-none">
+        <div class="col-sm-6  d-sm-block  col-12 mobile-logo-section-layout " style="height:150px;padding-top:50px">
+          <div class="text-center  img-fluid">
+            <img src="assets/icon/logo-login-page.png" class="img-fluid" height="120px" width="120px">
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-9 col-sm-11 col-md-8 col-lg-7 col-xl-6">
+
+          <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#fff" type="ball-clip-rotate-multiple">
+          </ngx-spinner>
+          <div class="text-left">
+            <div *ngIf="!forgotPassword_disabled" class="login-label">Login to your account</div>
+            <div *ngIf="forgotPassword_disabled" class="login-label">Login Forgot Page</div>
+            <div class="input-box-container">
+              <div *ngIf="!forgotPassword_disabled">
+                <div class="input-user-icon">
+                  <img src="assets/icon/mail-sign.png">
+                </div>
+                <input maxlength="16" plete="off" type="text" [formControl]="usernameform" name="username" class="input-box"
+                  placeholder="Enter your Username"
+                  [ngClass]="[!usernameform.valid&&(usernameform.touched ) ? 'input-box-error' : '',  usernameform.valid&&(usernameform.touched ) ? 'input-box-success' : '']"
+                  [(ngModel)]="username">
+                  <div *ngIf="this.username?.length<=2 && this.username?.length>0 && (usernameform.touched)" class="error-txt">Minimum 3 Characters required for User name!
+                  </div>
+                  <div *ngIf="!usernameform.valid && this.username?.length==0" class="error-txt">Username is required!
+                </div>
+          
+              </div>
+              <div *ngIf="forgotPassword_disabled">
+                <div class="input-user-icon">
+                  <img src="assets/icon/mail-sign.png">
+                </div>
+                <input oncopy="return false" onpaste="return false" autocomplete="off" plete="off" type="text" [formControl]="eMailform" name="eMail"
+                  class="input-box" placeholder="Email Address"
+                  [ngClass]="[!eMailform.valid&&(eMailform.touched) ? 'input-box-error' : '',  eMailform.valid&&(eMailform.touched ) ? 'input-box-success' : '']"
+                  [(ngModel)]="eMail" maxlength="128" email="true">
+                <div *ngIf="!eMailform.valid && (eMailform.touched)" class="error-txt">Email is required!
+                </div>
+              </div>
+              <div plete="off" *ngIf="!forgotPassword_disabled">
+                <div class="input-psw-icon">
+                  <img src="assets/icon/password-sign.png">
+                </div>
+                <input oncopy="return false" onpaste="return false" type="password" name="password" [formControl]="passwordform" class="input-box pws-box"
+                  placeholder="Enter your Password"
+                  [ngClass]="[!passwordform.valid&&(passwordform.touched ) ? 'input-box-error' : '',  passwordform.valid&&(passwordform.touched ) ? 'input-box-success' : '']"
+                  [(ngModel)]="password" maxlength="128" password="true">
+                  <div *ngIf="password?.length<8 && password?.length>0 && (passwordform.touched)" class="error-txt">Minimum 8 Characters required for Password!
+                  </div>
+                <div *ngIf="!passwordform.valid && this.password?.length==0 && (passwordform.touched )" class="error-txt">Password is required!
+                </div>
+              </div>
+
+              <div *ngIf="!forgotPassword_disabled" class="login-btn-container">
+                <button class="login-btn" (click)="login()">LOG IN</button>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12" style="cursor: pointer"
+                  *ngIf="forgotPassword_disabled" class="login-btn-container-two  pr-3" 
+                  (click)="forgotClick()">
+                  <button class="login-btn">
+                    Submit</button>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12" (click)="changePassword()"
+                  style="cursor: pointer" *ngIf="forgotPassword_disabled" class="login-btn-container-two">
+                  <button class="login-btn">
+                    Go Back</button>
+                </div>
+              </div>
+              <div *ngIf="!forgotPassword_disabled" (click)="changePassword()"
+                class="text-center forget-text-container">
+                <span class="forget-txt">Forgot password?</span>
+                <span class="help-txt">Get help</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

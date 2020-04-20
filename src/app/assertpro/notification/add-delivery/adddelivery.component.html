@@ -1,0 +1,414 @@
+<div #side class="side-bar">
+<div #addDelivery class="additional-box" id="additional-box">
+  <div class="arrow-left col-1"><i (click)="goBack()" class="material-icons">
+      arrow_back
+    </i>
+  </div>
+    <a class="img-pos"><img (click)="cancel()" src="../../../assets/icon/icons-cancel-ic.png" alt="">
+      <span (click)="cancel()" class="cancel-text"> Cancel </span></a>
+    <a (click)="reSet()"> <img style="margin-left: 2%" src="../../../../assets/icon/icons-reset-ic.png" alt="">
+        <span class="reset-text"> Reset </span></a>
+    <a class="img-pos2" (click)="apply()"><img src="../../../assets/icon/icons-apply-ic.png" alt=""> <span
+        class="apply-text"> Apply
+      </span></a>
+  <div class="nt-txt">
+    ADD DELIVERY RULE
+  </div>
+
+  <br />
+
+
+  <div>
+    <span class="notification-txt">Notification Name</span>
+    <span><input class="txt-box" [(ngModel)]="name" placeholder=""></span>
+  </div>
+
+  <br />
+
+
+
+  <div class="row">
+    <div class="col-5">
+      <div class="help-slide-p">
+        DEPARTMENTS<span class="help-selected-asset" (click)="selectAllDepartment()">{{departmentSelectionList.length}}
+          selected<span class="help-selected-asset1">Select all</span></span>
+      </div>
+
+      <div class="table-pos">
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <!-- <div class="col-10">
+              <input type="text" class="help-asset-search-input" placeholder="Search for departmnet....">
+            </div>
+            <div class="col-2">
+              <div class="text-text">
+                <img src="assets/icon/icon-search.png" style="margin-top:5px">
+              </div>
+            </div> -->
+              <div class="example-chip-list col-10">
+                <div id="style-5" class="search-btn">
+                  <mat-chip-list #chipListdepartment>
+                    <mat-chip selectedColor="accent" *ngFor="let fruit of departmentSelectionList"
+                      [selectable]="selectable" [removable]="removable" (removed)="removedeparment(fruit)">
+                      {{fruit.name}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input [(ngModel)]="department" class="help-asset-search-input"
+                      placeholder="Search for department...." [matChipInputFor]="chipListdepartment"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    <img src="assets/icon/icon-search.png">
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div (click)="departmentSelection(i,item)"
+              *ngFor="let item of departmentList|commonsearchPipe:'NAME':department;let i=index;"><a><span
+                  class="help-asset-txt">{{item.NAME}}</span></a></div>
+            <!-- <div><a><span class="help-asset-txt">Department #2</span></a></div>
+          <div><a><span class="help-asset-txt">Department #3</span></a></div>
+          <div><a><span class="help-asset-txt">Department #4</span></a></div>
+          <div><a><span class="help-asset-txt">Department #5</span></a></div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-6">
+      <div class="help-slide-p">
+        OPERATORS<span class="help-selected-asset" (click)="selectAlloperator()">{{operatorSelectionList.length}}
+          selected<span>Select all</span></span>
+      </div>
+
+      <div class="table-pos">
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <!-- <div class="col-10">
+              <input type="text" class="help-asset-search-input" placeholder="Search for operator....">
+            </div>
+            <div class="col-2">
+              <div class="text-text">
+                <img src="assets/icon/icon-search.png" style="margin-top:5px">
+              </div>
+            </div> -->
+              <div class="example-chip-list col-10">
+                <div id="style-5" class="search-btn">
+                  <mat-chip-list #chipListoperator>
+                    <mat-chip selectedColor="accent" *ngFor="let fruit of operatorSelectionList"
+                      [selectable]="selectable" [removable]="removable" (removed)="removeoperator(fruit)">
+                      {{fruit.name}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input [(ngModel)]="operatortxt" class="help-asset-search-input"
+                      placeholder="Search for operator...." [matChipInputFor]="chipListoperator"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    <img src="assets/icon/icon-search.png">
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div (click)="operatorSelection(i,item)"
+              *ngFor="let item of operatorList|commonsearchPipe:'OperatorName':operatortxt;let i=index;"><a><span
+                  class="help-asset-txt">{{item.OperatorName}}</span></a></div>
+            <!-- <div><a><span class="help-asset-txt">Operator name</span></a></div>
+          <div><a><span class="help-asset-txt">Operator name</span></a></div>
+          <div><a><span class="help-asset-txt">Operator name</span></a></div>
+          <div><a><span class="help-asset-txt">Operator name</span></a></div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col-5">
+      <div class="help-slide-p">
+        ASSET TYPES<span class="help-selected-asset" (click)="selectAllAssetType()">{{assetTypeSelected.length}}
+          selected<span>Select all</span></span>
+      </div>
+
+      <div class="table-pos">
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <!-- <div class="col-10">
+                <input type="text" class="help-asset-search-input" placeholder="Search for asset type....">
+              </div>
+              <div class="col-2">
+                <div class="text-text">
+                  <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                </div>
+              </div> -->
+              <div class="example-chip-list col-10">
+                <div id="style-5" class="search-btn">
+                  <mat-chip-list #chipList>
+                    <mat-chip selectedColor="accent" *ngFor="let fruit of assetTypeSelected" [selectable]="selectable"
+                      [removable]="removable" (removed)="remove(fruit)">
+                      {{fruit.name}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input [(ngModel)]="assettypetxt" class="help-asset-search-input"
+                      placeholder="Search for asset types...." [matChipInputFor]="chipList"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    <img src="assets/icon/icon-search.png">
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div (click)="assetTypeSelection(i,items)"
+              *ngFor="let items of assets|commonsearchPipe:'assetstype':assettypetxt;let i=index;"><a><span
+                  class="help-asset-txt">{{items.assetstype}}</span></a></div>
+            <!-- <div><a><span class="help-asset-txt">Asset_type #2</span></a></div>
+            <div><a><span class="help-asset-txt">Asset_type #3</span></a></div>
+            <div><a><span class="help-asset-txt">Asset_type #4</span></a></div>
+            <div><a><span class="help-asset-txt">Asset_type #5</span></a></div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="col-6">
+      <div class="help-slide-p">
+        ASSETS<span class="help-selected-asset1" (click)="selectAllAssets()">{{assetSelected.length}}
+          selected<span>Select
+            all</span></span>
+      </div>
+
+      <div class="table-pos">
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <!-- <div class="col-10">
+                <input type="text" class="help-asset-search-input" placeholder="Search for asset....">
+              </div>
+              <div class="col-2">
+                <div class="text-text">
+                  <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                </div>
+              </div> -->
+              <div class="example-chip-list col-10">
+                <div id="style-5" class="search-btn">
+                  <mat-chip-list #chipList2>
+                    <mat-chip selectedColor="accent" *ngFor="let fruit of assetSelected" [selectable]="selectable"
+                      [removable]="removable" (removed)="remove2(fruit)">
+                      {{fruit.name}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input [(ngModel)]="assettxt" class="help-asset-search-input" placeholder="Search for asset...."
+                      [matChipInputFor]="chipList2" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    <img src="assets/icon/icon-search.png">
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div (click)="assetSelection(i,items)"
+              *ngFor="let items of assetsList|commonsearchPipe:'name':assettxt;let i=index;"><a><span
+                  class="help-asset-txt">{{items.name}}</span></a></div>
+            <!-- <div><a><span class="help-asset-txt">Asset #2</span></a></div>
+            <div><a><span class="help-asset-txt">Asset #3</span></a></div>
+            <div><a><span class="help-asset-txt">Asset #4</span></a></div>
+            <div><a><span class="help-asset-txt">Asset #5</span></a></div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-5">
+      <div class="help-slide-p">
+        ALARM TYPES<span class="help-selected-asset" (click)="selectAllselection()">{{alarmSelectionList.length}}
+          selected<span>Select
+            all</span></span>
+      </div>
+
+      <div class="table-pos">
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <!-- <div class="col-10">
+                  <input type="text" class="help-asset-search-input" placeholder="Search for alarm type....">
+                </div>
+                <div class="col-2">
+                  <div class="text-text">
+                    <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                  </div>
+                </div> -->
+              <div class="example-chip-list col-10">
+                <div id="style-5" class="search-btn">
+                  <mat-chip-list #chipListalarm>
+                    <mat-chip selectedColor="accent" *ngFor="let fruit of alarmSelectionList" [selectable]="selectable"
+                      [removable]="removable" (removed)="removeselection(fruit)">
+                      {{fruit.AlarmTypeName}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input [(ngModel)]="alarmtxt" class="help-asset-search-input"
+                      placeholder="Search for alarm type...." [matChipInputFor]="chipListalarm"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    <img src="assets/icon/icon-search.png">
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div (click)="alarmSelection(i,items)"
+              *ngFor="let items of alarmList|commonsearchPipe:'AlarmTypeName':alarmtxt;let i=index;"><a><span
+                  class="help-asset-txt">{{items.AlarmTypeName}}</span></a></div>
+            <!-- <div><a><span class="help-asset-txt">Alarm type #2</span></a></div>
+              <div><a><span class="help-asset-txt">Alarm type #3</span></a></div>
+              <div><a><span class="help-asset-txt">Alarm type #4</span></a></div>
+              <div><a><span class="help-asset-txt">Alarm type #5</span></a></div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-6">
+      <div class="help-slide-p">
+        ALERT TYPE<span class="help-selected-asset1" style="padding-left:22%;"
+          (click)="selectAllAssets()">{{assetSelected.length}} selected<span>Select
+            all</span></span>
+      </div>
+
+      <div class="table-pos">
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <div class="example-chip-list col-10">
+                <div id="style-5" class="search-btnx">
+                  <mat-chip-list #chipList2>
+                    <mat-chip selectedColor="accent" *ngFor="let fruit of alertSelected" [selectable]="selectable"
+                      [removable]="removable" (removed)="remove2(fruit)">
+                      {{fruit.name}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input [(ngModel)]="alerttxt" class="help-asset-search-input"
+                      placeholder="Search for alert type...." [matChipInputFor]="chipList2"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    <img src="assets/icon/icon-search.png">
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div (click)="alertSelection(i,items)"
+              *ngFor="let items of alertList|commonsearchPipe:'name':alerttxt;let i=index;"><a><span
+                  class="help-asset-txt">{{items.name}}</span></a></div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <br />
+
+  <div class="blue-bdr"></div>
+
+  <br />
+
+
+  <div class="row">
+    <div class="col-5">
+      <div class="help-slide-p">
+        RECIPIENTS<span class="help-selected-asset" (click)="selectAllrecipient()">{{recipientSelectionList.length}}
+          selected<span>Select
+            all</span></span>
+      </div>
+
+      <div class="table-pos">
+        <div class="help-asset-search">
+          <div class="help-search-btn" id="search-scroll">
+            <div class="row">
+              <!-- <div class="col-10">
+                <input type="text" class="help-asset-search-input" placeholder="Search for Web user....">
+              </div>
+              <div class="col-2">
+                <div class="text-text">
+                  <img src="assets/icon/icon-search.png" style="margin-top:5px">
+                </div>
+              </div> -->
+              <div class="example-chip-list col-10">
+                <div id="style-5" class="search-btn">
+                  <mat-chip-list #chipLisrecipient>
+                    <mat-chip selectedColor="accent" *ngFor="let fruit of recipientSelectionList"
+                      [selectable]="selectable" [removable]="removable" (removed)="removerecipient(fruit)">
+                      {{fruit.WebUserName}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input [(ngModel)]="recipienttxt" class="help-asset-search-input"
+                      placeholder="Search for Web user...." [matChipInputFor]="chipLisrecipient"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                    <img src="assets/icon/icon-search.png">
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="help-asset-container" id="search-scroll">
+            <div (click)="recipientSelection(i,items)"
+              *ngFor="let items of recipientList|commonsearchPipe:'WebUserName':recipienttxt;let i=index;"><a><span
+                  class="help-asset-txt">{{items.WebUserName}}</span></a></div>
+            <!-- <div><a><span class="help-asset-txt">Web user name</span></a></div>
+            <div><a><span class="help-asset-txt">Web user name</span></a></div>
+            <div><a><span class="help-asset-txt">Web user name</span></a></div>
+            <div><a><span class="help-asset-txt">Web user name</span></a></div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-6">
+      <diV>
+        <span class="txt-add">Add email</span> <span class="txt-add1" (click)="addemail()">Add</span>
+      </diV>
+      <div>
+        <input type="text" class="ip-size" style="background-color:#d4f2ff;" placeholder="" [(ngModel)]="tempEmail">
+      </div>
+
+      <br />
+
+      <div *ngFor="let data of EmailList">
+        <span class="email-txt">{{data}}</span><span class=pt-53><img
+            src="../../../../assets/icon/icons-cancel-ic.png"></span>
+      </div>
+
+
+    </div>
+
+    <br />
+
+    <div class="col-12">
+      <mat-checkbox [(ngModel)]="smsCheckbox" class="txt-sms">SMS</mat-checkbox>
+    </div>
+
+    <br />
+
+    <div class="col-12">
+      <mat-checkbox [(ngModel)]="emailCheckbox" class="txt-sms">Email</mat-checkbox>
+    </div>
+
+  </div>
+
+
+</div>
+</div>

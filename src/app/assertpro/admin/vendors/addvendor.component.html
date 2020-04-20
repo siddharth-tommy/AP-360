@@ -1,0 +1,278 @@
+
+
+<div #side class="side-bar"><div #myDiv class="additional-box" id="additional-box">
+  <div *ngIf="loader==true" class="loading-indicator">
+    <mat-spinner style="margin:0 auto;" mode="indeterminate" color="accent"></mat-spinner>
+  </div>
+  <div class="row pt-3">
+    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+      <div style="cursor: pointer">
+        <svg (click)="goBack()" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1"
+          x="0px" y="0px" viewBox="0 0 31.494 31.494" style="enable-background:new 0 0 31.494 31.494;"
+          xml:space="preserve" width="20px" height="20px">
+          <path
+            d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+            fill="#169bd7" />
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-5 col-xl-4"></div>
+
+    <div *ngIf="!editShow" (click)="onEditClilck()"
+      class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 text-center additional-box-edit-text edit-pen-img">
+      <img src="../../../../assets/icon/icons-edit-ic.png" alt="">
+      Edit
+    </div>
+
+    <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-6 text-center">
+      <a *ngIf="editShow" (click)="cancelEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+        <span class="cancel-text"> Cancel </span></a>
+      <a *ngIf="editShow" class="ml-2" (click)="saveEdit()"> <img src="../../../assets/icon/icons-apply-ic.png" alt="">
+        <span class="apply-text"> Apply </span></a>
+    </div>
+
+  </div>
+  <div class="row pt-3">
+    <div *ngIf="editShow" class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-2 left-side-txt">Vendor Name</div>
+    <div *ngIf="!editShow" class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5 vendorname">{{vendorName}}</div>
+    <div *ngIf="editShow" class="col-6 col-sm-6 col-md-9 col-lg-9 col-xl-9" style="padding: 0;">
+      <input [(ngModel)]='vendorName' type="text" class="help-input-address">
+    </div>
+  </div>
+  <div class="row pt-3">
+
+    <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-2 left-side-txt">Contact Person</div>
+
+    <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3 right-side-txt">{{contactPersonName}}</div>
+    <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+      <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+    </div> -->
+    <div *ngIf="editShow" class="col-6 col-sm-6 col-md-9 col-lg-9 col-xl-9" style="padding: 0;">
+      <input [(ngModel)]='contactPersonName' type="text" class="help-input-address">
+    </div>
+  </div>
+
+  <div class="row pt-3">
+
+    <div class="col-2 left-side-txt">Phone</div>
+
+    <div *ngIf="!editShow" class="col-3 right-side-txt">{{phoneNumber}}</div>
+    <div *ngIf="editShow" class="col-5 col-sm-5 col-md-3 col-lg-3 col-xl-3" style="padding: 0;">
+      <input [(ngModel)]='phoneNumber' type="text" class="help-input-address">
+    </div>
+
+    <div class="col-1 left-side-txt">Ext</div>
+    <div *ngIf="!editShow" class="col-1 right-side-txt">{{extNo}}</div>
+    <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+      <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+    </div> -->
+
+    <div *ngIf="editShow" class="col-1" style="padding: 0;">
+      <input [(ngModel)]='extNo' numbersOnly maxlength="3" type="text" class="help-input-ext">
+    </div>
+  </div>
+
+  <div class="row pt-3">
+
+    <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-2 left-side-txt">Email</div>
+
+    <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3 right-side-txt">{{emailid}}</div>
+    <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+      <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+    </div> -->
+    <div *ngIf="editShow" class="col-6 col-sm-6 col-md-9 col-lg-9" style="padding: 0;">
+      <input [(ngModel)]='emailid' email="true" maxlength="128" [formControl]="email" name="email" required type="text" class="help-input-address">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <hr class="hr-line pb-4">
+    </div>
+  </div>
+
+  <div class="row pt-3">
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <div class="row">
+
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-6 left-side-txt">Address</div>
+
+        <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6 right-side-txt">{{address}}</div>
+        <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+            <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+          </div> -->
+        <div *ngIf="editShow" class="col-6 col-sm-6 col-md-2 col-lg-2 col-xl-2" style="padding: 0;">
+          <input [(ngModel)]='address' type="text" class="help-input-address">
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <div class="row">
+        <div class="col-6 col-sm-6 col-md-5 col-lg-5 col-xl-5 left-side-txt">Main Phone</div>
+
+        <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-5 col-lg-7 col-xl-7 right-side-txt mob-view-edit">
+          {{mainPhoneNumber}}</div>
+        <div *ngIf="editShow" class="col-6 col-sm-6 col-md-2 col-lg-2 col-xl-2" style="padding: 0;">
+          <input [(ngModel)]='mainPhoneNumber' numbersOnly type="text" class="help-input-phone mob-view-edit">
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <div class="row">
+
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 left-side-txt mob-view-edit-two">Ext</div>
+        <div *ngIf="!editShow" numbersOnly
+          class="col-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 right-side-txt mob-view-edit">{{mainphoneExtNo}}</div>
+        <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+              <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+            </div> -->
+
+        <div *ngIf="editShow" class="col-1 col-sm-1 col-lg-1 col-md-1 col-xl-1" style="padding: 0;">
+          <input [(ngModel)]='mainphoneExtNo' maxlength="3" numbersOnly type="text"
+            class="help-input-ext mob-view-edit">
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row pt-3">
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <div class="row">
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-6 left-side-txt">Country</div>
+        <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6 right-side-txt pl-0">{{country}}</div>
+        <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+              <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+            </div> -->
+        <div *ngIf="editShow" class="col-6 col-sm-6 col-md-2 col-lg-6 col-xl-6" style="padding: 0;">
+          <!-- <input [(ngModel)]='country' type="text" class="help-input-address"> -->
+          <div class="btn-group" dropdown id="countryname" [isDisabled]="type" style="width:100%;height: 100%;">
+            <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}"
+              dropdownToggle aria-controls="dropdown-disabled-menu">
+              {{country}}
+              <span style="position: absolute;right:0;padding-right: 2%;">
+                <img src="assets/common/inputs-dropdown.png">
+              </span>
+            </div>
+            <ul id="countryList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+              aria-labelledby="button-disabled-menu" style="margin-top:10px;overflow-y: scroll;height: 200px;">
+              <li *ngFor="let data of countryList;let i=index;">
+                <div class="text-left help-site-name" id="countryList{{i}}" (click)="countryChange(data)">
+                  {{data.Name}}</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+        <div class="row">
+            <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-5 left-side-txt">State</div>
+            <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6 right-side-txt pl-0">{{stateNmae}}</div>
+            <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+                    <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+                  </div> -->
+            <div *ngIf="editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6 col-xl-6" style="padding: 0;">
+              <!-- <input [(ngModel)]='stateNmae' type="text" class="help-input-address"> -->
+              <div class="btn-group" dropdown id="statesname" [isDisabled]="type" style="width:100%;height: 100%;">
+                <div class="help-selected-item help-dropdown-menu-item" [ngClass]="{'cursor-point':type!=true}" dropdownToggle
+                  aria-controls="dropdown-disabled-menu">
+                  {{stateNmae}}
+                  <span style="position: absolute;right:0;padding-right: 2%;">
+                    <img src="assets/common/inputs-dropdown.png">
+                  </span>
+                </div>
+                <ul id="sytemUsedList" *dropdownMenu class="dropdown-menu help-dropdown-menu" role="menu"
+                  aria-labelledby="button-disabled-menu" style="margin-top:10px;overflow-y: scroll;height: 200px;">
+                  <li *ngFor="let data of statesList;let i=index;">
+                    <div class="text-left help-site-name" id="statesList{{i}}" (click)="stateChange(data)">
+                      {{data.Name}}</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+  <div class="row pt-3">
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+        <div class="row">
+
+            <div class="col-6 col-sm-6 col-md-5 col-lg-6 col-xl-6 left-side-txt">Fax</div>
+    
+            <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-2 col-lg-2 col-xl-2 right-side-txt mob-view-edit">{{fax}}
+            </div>
+            <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+                        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+                      </div> -->
+            <div *ngIf="editShow" class="col-6 col-sm-6 col-md-2 col-lg-2 col-xl-2" style="padding: 0;">
+              <input [(ngModel)]='fax' type="text" class="help-input-phone mob-view-edit">
+            </div>
+          </div>
+    </div>
+
+  </div>
+  <div class="row pt-3">
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <div class="row">
+
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-6 left-side-txt">City</div>
+
+        <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6 right-side-txt">{{cityName}}</div>
+        <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+                  <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+                </div> -->
+        <div *ngIf="editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6" style="padding: 0;">
+          <input [(ngModel)]='cityName' type="text" class="help-input-address">
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row pt-3">
+    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <div class="row">
+
+        <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-6 left-side-txt">Zip code</div>
+
+        <div *ngIf="!editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6 right-side-txt">{{zipCode}}</div>
+        <!-- <div *ngIf="editEnabled" class="col-5 tampa-txt">
+                    <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="make" />
+                  </div> -->
+        <div *ngIf="editShow" class="col-6 col-sm-6 col-md-8 col-lg-8 col-xl-6" style="padding: 0;">
+          <input [(ngModel)]='zipCode' maxlength="6" numbersOnly type="text" class="help-input-address">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>

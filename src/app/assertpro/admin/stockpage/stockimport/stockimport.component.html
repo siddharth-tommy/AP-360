@@ -1,0 +1,19 @@
+<div class="container-fluid">
+  <div class="row" style="padding-top:10px;">
+    <div class="col-5">
+      <b><label style="white-space:nowrap;">IMPORT INVENTORY</label></b>
+    </div>
+  </div>
+  <br>
+</div>
+<div class="container-fluid"  mat-dialog-content>
+  <div class="row">
+    <div class="col-12">
+      <input type="file" #inputFile (change)="onFileSelect($event.target)" accept=".csv" />
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end" style="padding-top:5px;">
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()">Import</button>
+</div>

@@ -1,0 +1,32 @@
+@import "../../../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+
+.report-dr-down{
+    min-width: 100px;
+    border-radius: 20px;
+    background: #169BD7;
+    height: 30px
+}
+.report-dr-down-txt{
+    color:white;font-size:13px;
+    text-align: center !important
+}
+.report-dr-down-two{
+    min-width: 100px;
+    border-radius: 20px;
+    background: transparent;
+    height: 30px;
+    border: 1px solid #169BD7
+}
+.report-dr-down-two{
+    color:#169BD7;font-size:13px;
+    text-align: center !important
+}
+.example-full-width {
+    width: 100%;
+  }
+  ::ng-deep .mat-input-underline {
+    display: inherit;
+}
+.border-class{
+    border:1px solid #169BD7;
+}

@@ -1,0 +1,435 @@
+<div #side class="side-bar">
+<div #myDiv class="additional-box" id="additional-box">
+  <div class="row mt-4 ml-1 pb-2">
+  <div class="col-2">
+      <svg _ngcontent-c3="" xml:space="preserve" (click)="confirmBack()" class="side-bar-back-icon" xmlns:xlink="http://www.w3.org/1999/xlink"
+      height="20px" id="Capa_1" style="enable-background:new 0 0 31.494 31.494;" version="1.1" viewBox="0 0 31.494 31.494"
+      width="20px" x="0px" xmlns="http://www.w3.org/2000/svg" y="0px">
+      <path _ngcontent-c3="" d="M10.273,5.009c0.444-0.444,1.143-0.444,1.587,0c0.429,0.429,0.429,1.143,0,1.571l-8.047,8.047h26.554  c0.619,0,1.127,0.492,1.127,1.111c0,0.619-0.508,1.127-1.127,1.127H3.813l8.047,8.032c0.429,0.444,0.429,1.159,0,1.587  c-0.444,0.444-1.143,0.444-1.587,0l-9.952-9.952c-0.429-0.429-0.429-1.143,0-1.571L10.273,5.009z"
+        fill="#169bd7"></path>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+      <g _ngcontent-c3=""></g>
+    </svg>
+  </div>
+  <div class="col-5"></div>
+
+  </div>
+  <div class="row pt-1">
+
+    <div class="col-12 bf-five-text" style="font-weight: bold;color:#4D4D61;font-family: robotoCondensedregular;font-size: 90% !important;">ACCESS LEVELS</div>
+    <div class="col-6"></div>
+
+
+  </div>
+
+
+
+
+  <!-- title-text -->
+  <div class="row pt-3">
+    <mat-tab-group (selectedTabChange)="sidebarActive($event.index)"  [(selectedIndex)]="tabIndex">
+      <mat-tab label="ACG ADMIN">
+        <br/>
+        <div class="row">
+          <div class="col-2 col-sm-2 col-xs-12 txt-head pt-2 pb-2">
+            <b>ROLE ACCESS</b>
+          </div>
+          <div class="col-7"></div>
+          <div class="col-3" style="cursor: pointer;">
+              <div class="additional-box-edit-text" *ngIf="!editEnabled" (click)="onAcgAdminEdit()"><img src="../../../../assets/icon/icons-edit-ic.png"
+                alt="">
+              Edit</div>
+        
+              <a *ngIf="editEnabled" (click)="onResetAcgAdmin()"> <img class="edit-img-two" src="../../../../assets/icon/icons-reset-ic.png" alt="">
+                <span class="reset-text"> Reset </span></a>
+            <a *ngIf="editEnabled" (click)="saveRole()"> <img class="edit-img-three" src="../../../assets/icon/icons-apply-ic.png" alt="">
+              <span class="apply-text"> Apply </span></a>
+          </div>
+
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox [disabled]="acgEdit" [(ngModel)]="model.dashboard">Dashboard</mat-checkbox>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit" [(ngModel)]="model.asset">Assets</mat-checkbox>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit" [(ngModel)]="model.userDirectory">User Direcotry</mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit" [(ngModel)]="model.tracker">Tracker</mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit"  [(ngModel)]="model.reports">Reports</mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit"  [(ngModel)]="model.messaging">Messaging</mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit" [(ngModel)]="model.notification">Notifications</mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit"  [(ngModel)]="model.configuration">Configuration</mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+            <mat-checkbox  [disabled]="acgEdit" [(ngModel)]="model.admin">Admin</mat-checkbox>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="CORPORATE ADMIN">
+          <br/>
+          <div class="row">
+            <div class="col-2 col-sm-2 col-xs-12 txt-head pt-2 pb-2">
+              <b>ROLE ACCESS</b>
+            </div>
+            <div class="col-7"></div>
+            <div class="col-3" style="cursor: pointer;">
+                <div class="additional-box-edit-text" *ngIf="!editEnabled" (click)="onCorAdminEdit()"><img src="../../../../assets/icon/icons-edit-ic.png"
+                  alt="">
+                Edit</div>
+          
+                <a *ngIf="editEnabled" (click)="onCorAdminReset()"> <img class="edit-img-two" src="../../../../assets/icon/icons-reset-ic.png" alt="">
+                  <span class="reset-text"> Reset </span></a>
+              <a *ngIf="editEnabled" (click)="onCodminSave()"> <img class="edit-img-three" src="../../../assets/icon/icons-apply-ic.png" alt="">
+                <span class="apply-text"> Apply </span></a>
+            </div>
+  
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.dashboard">Dashboard</mat-checkbox>
+            </div>
+  
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.asset">Assets</mat-checkbox>
+            </div>
+  
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.userDirectory">User Direcotry</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit"  [(ngModel)]="model.tracker">Tracker</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.reports">Reports</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.messaging">Messaging</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.notification">Notifications</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.configuration">Configuration</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="corAdminEdit" [(ngModel)]="model.admin">Admin</mat-checkbox>
+            </div>
+          </div>  
+      </mat-tab>
+      <mat-tab label="SITE ADMIN">
+          <br/>
+          <div class="row">
+            <div class="col-2 col-sm-2 col-xs-12 txt-head pt-2 pb-2">
+              <b>ROLE ACCESS</b>
+            </div>
+            <div class="col-7"></div>
+            <div class="col-3" style="cursor: pointer;">
+                <div class="additional-box-edit-text" *ngIf="!editEnabled" (click)="onSiteAdminEdit()"><img src="../../../../assets/icon/icons-edit-ic.png"
+                  alt="">
+                Edit</div>
+          
+                <a *ngIf="editEnabled" (click)="onSiteAdminReset()"> <img class="edit-img-two" src="../../../../assets/icon/icons-reset-ic.png" alt="">
+                  <span class="reset-text"> Reset </span></a>
+              <a *ngIf="editEnabled" (click)="onSiteAminSave()"> <img class="edit-img-three" src="../../../assets/icon/icons-apply-ic.png" alt="">
+                <span class="apply-text"> Apply </span></a>
+            </div>
+  
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.dashboard">Dashboard</mat-checkbox>
+            </div>
+  
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.asset">Assets</mat-checkbox>
+            </div>
+  
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.userDirectory">User Direcotry</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.tracker">Tracker</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.reports">Reports</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.messaging">Messaging</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.notification">Notifications</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="siteAdminEdit" [(ngModel)]="model.configuration">Configuration</mat-checkbox>
+            </div>
+          </div>  
+      </mat-tab>
+      <mat-tab label="SUPERVISOR"> 
+          <br/>
+          <div class="row">
+            <div class="col-2 col-sm-2 col-xs-12 txt-head pt-2 pb-2">
+              <b>ROLE ACCESS</b>
+            </div>
+            <div class="col-7"></div>
+            <div class="col-3" style="cursor: pointer;">
+                <div class="additional-box-edit-text" *ngIf="!editEnabled" (click)="onRoleAccessEdit()"><img src="../../../../assets/icon/icons-edit-ic.png"
+                  alt="">
+                Edit</div>
+          
+                <a *ngIf="editEnabled" (click)="onRoleAccessReset()"> <img class="edit-img-two" src="../../../../assets/icon/icons-reset-ic.png" alt="">
+                  <span class="reset-text"> Reset </span></a>
+              <a *ngIf="editEnabled" (click)="onRoleAccessave()"> <img class="edit-img-three" src="../../../assets/icon/icons-apply-ic.png" alt="">
+                <span class="apply-text"> Apply </span></a>
+            </div>
+  
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="roleAccessEdit" [(ngModel)]="model.dashboard">Dashboard</mat-checkbox>
+            </div>
+  
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox [disabled]="roleAccessEdit"  [(ngModel)]="model.asset">Assets</mat-checkbox>
+            </div>
+  
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="roleAccessEdit" [(ngModel)]="model.tracker">Tracker</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="roleAccessEdit" [(ngModel)]="model.reports">Reports</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="roleAccessEdit" [(ngModel)]="model.messaging">Messaging</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="roleAccessEdit" [(ngModel)]="model.notification">Notifications</mat-checkbox>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="roleAccessEdit" [(ngModel)]="model.configuration">Configuration</mat-checkbox>
+            </div>
+          </div> -->
+          <!-- <div class="row">
+            <div class="col-1 txt-data-inner col-sm-1 col-xs-12">
+              <mat-checkbox  [disabled]="roleAccessEdit" [(ngModel)]="v49">Admin</mat-checkbox>
+            </div>
+          </div> -->
+      </mat-tab>
+    </mat-tab-group>
+
+
+  </div>
+  <!-- <hr class="hr-line pb-4">
+  <div class="row">
+    <div class="col-8"></div>
+    <div *ngIf="!editEnabled" (click)="onEditClilck()" class="col-3 additional-box-edit-text edit-pen-img"><img src="../../../assets/icon/tick-apply.png"
+        alt="">
+      Edit</div>
+    <a *ngIf="editEnabled" (click)="cancelEdit()"> <img src="../../../assets/icon/icons-cancel-ic.png" alt="">
+      <span class="cancel-text"> Cancel </span></a>
+    <a *ngIf="editEnabled" class="ml-2" (click)="save()"> <img src="../../../assets/icon/icons-apply-ic.png" alt="">
+      <span class="apply-text"> Apply </span></a>
+  </div>
+  <div *ngIf="sidebarmenu=='asset'">
+    <div class="">
+
+      <div class="col-2 station-txt" style="font-weight: bold;color:black">
+        <mat-checkbox class="font-class">Dash Board</mat-checkbox>
+      </div>
+
+      <div class="col-2 station-txt">
+        <mat-checkbox class="font-class">Equipment Dashboard</mat-checkbox>
+      </div>
+      <div class="col-2 station-txt">
+        <mat-checkbox class="font-class">Batteries Dashboard</mat-checkbox>
+      </div>
+      <div class="col-2 station-txt">
+        <mat-checkbox class="font-class">Charges Dashboard</mat-checkbox>
+      </div>
+    </div>
+    <div class="row pt-4">
+    </div>
+    <div class="">
+      <div class="col-2 station-txt" style="font-weight: bold;color:black">
+        <mat-checkbox class="font-class">STATUS</mat-checkbox>
+      </div>
+    </div>
+    <div class="">
+      <div class="col-12 station-txt" style="display: -webkit-box;">
+        <mat-checkbox class="font-class">Status List (Equipment)</mat-checkbox>
+        <div class="col-2 station-txt">
+          <mat-checkbox class="font-class">Status List (Gateway)</mat-checkbox>
+        </div>
+        <div class="col-1 station-txt"></div>
+        <div class="col-2 station-txt">
+          <mat-checkbox class="font-class">Events</mat-checkbox>
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+
+    <div class="row pt-4">
+    </div>
+    <div class="row pt-4">
+    </div>
+    <div class="row pt-4">
+    </div>
+    <div class="row pt-4">
+    </div>
+  </div>
+
+  <!-- Device-info-data -->
+  <!-- <div *ngIf="sidebarmenu!='asset'">
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">ID</div>
+
+      <div class="col-5 tampa-txt">F0986564</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Unit type</div>
+
+      <div class="col-5 tampa-txt">Advanced</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Modem type</div>
+
+      <div class="col-5 tampa-txt">N/A</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Model</div>
+
+      <div class="col-5 tampa-txt">Cell</div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">F/W version</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{fwVersion}}</div>
+      <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="fwVersion" />
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">ICCID number</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{icicdNo}}</div>
+      <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="icicdNo" />
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Serial number</div>
+
+      <div *ngIf="!editEnabled" class="col-5 tampa-txt">{{serialNo}}</div>
+      <div *ngIf="editEnabled" class="col-5 tampa-txt">
+        <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="serialNo" />
+      </div>
+    </div>
+    <div class="row pt-4">
+
+      <div class="col-2 station-txt">Install date/time</div>
+
+      <div class="col-5 pb-5 tampa-txt">05/12/2018 2:48 PM</div>
+
+    </div>
+  </div> -->
+</div>
+</div>
